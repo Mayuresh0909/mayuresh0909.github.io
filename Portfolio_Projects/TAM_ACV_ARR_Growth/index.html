@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TAM Pulse — Global Account Triage &amp; Expansion Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['"Red Hat Display"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+mono: ['"Red Hat Display"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+},
+colors: {
+rh: {
+red: '#EE0000',
+redDark: '#A30000',
+gold: '#F0AB00',
+blue: '#0066CC',
+blueDark: '#004080',
+green: '#3E8635',
+canvas: '#F0F0F0',
+ink: '#151515',
+muted: '#4D4D4D',
+border: '#D2D2D2',
+}
+}
+}
+}
+};
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root {
+color-scheme: light;
+}
+html, body, button, input, select, textarea, th, td {
+font-family: 'Red Hat Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+body {
+background-color: #F0F0F0;
+color: #151515;
+font-size: 15px;
+line-height: 1.5;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+.tabular-nums {
+font-variant-numeric: tabular-nums;
+}
+/* Highlighted Top Case Study Executive Card: White Surface + Red & Gold Glow */
+.case-study-glow {
+background-color: #FFFFFF;
+border: 1px solid rgba(238, 0, 0, 0.28);
+box-shadow:
+0 0 0 1px rgba(240, 171, 0, 0.25),
+0 8px 30px -4px rgba(238, 0, 0, 0.14),
+0 0 44px -6px rgba(240, 171, 0, 0.26);
+}
+.case-study-accent-bar {
+height: 4px;
+background: linear-gradient(90deg, #EE0000 0%, #D9480F 45%, #F0AB00 100%);
+}
+/* Flat Enterprise Surface */
+.pf-card {
+background-color: #FFFFFF;
+border: 1px solid #D2D2D2;
+border-radius: 3px;
+}
+/* Crisp Enterprise Range Slider */
+input[type="range"].weight-slider {
+-webkit-appearance: none;
+appearance: none;
+height: 5px;
+background: #D2D2D2;
+border-radius: 2px;
+outline: none;
+}
+input[type="range"].weight-slider::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 15px;
+height: 15px;
+border-radius: 2px;
+background: #151515;
+border: 2px solid #FFFFFF;
+box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+cursor: pointer;
+transition: background-color 0.12s ease;
+}
+input[type="range"].weight-slider::-webkit-slider-thumb:hover {
+background: #EE0000;
+}
+input[type="range"].weight-slider::-moz-range-thumb {
+width: 15px;
+height: 15px;
+border-radius: 2px;
+background: #151515;
+border: 2px solid #FFFFFF;
+box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+cursor: pointer;
+}
+/* Subtle row update flash */
+@keyframes rowPulseHighlight {
+0% { background-color: #FEF3C7; }
+60% { background-color: #FEF3C7; }
+100% { background-color: transparent; }
+}
+.row-updated {
+animation: rowPulseHighlight 2.2s ease-out forwards;
+}
+::-webkit-scrollbar {
+width: 7px;
+height: 7px;
+}
+::-webkit-scrollbar-track {
+background: #F0F0F0;
+}
+::-webkit-scrollbar-thumb {
+background: #B8B8B8;
+border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+background: #8A8A8A;
+}
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+<header class="sticky top-0 z-30 bg-[#151515] text-white border-b-2 border-[#EE0000]">
+<div class="max-w-[1460px] mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-4">
+<!-- Left: Brand Identity -->
+<div class="flex items-center gap-3.5 min-w-0">
+<div class="w-9 h-9 rounded-[3px] bg-[#242424] border border-[#3C3C3C] flex items-center justify-center shrink-0">
+<!-- Custom Geometric Pulse / Telemetry SVG Mark -->
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<rect x="2.5" y="2.5" width="19" height="19" rx="2" stroke="#EE0000" stroke-width="1.6" />
+<path d="M4.5 12H8L10.2 7.5L13.4 16.5L16 11L17.4 12H19.5" stroke="#FFFFFF" stroke-width="1.9" stroke-linecap="square" stroke-linejoin="miter" />
+</svg>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2.5">
+<h1 class="text-base sm:text-lg font-bold tracking-tight text-white truncate">TAM Pulse</h1>
+<span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-[2px] text-xs font-semibold bg-[#2A2A2A] text-[#F0AB00] border border-[#444444]">Global TAM Operations</span>
+</div>
+<p class="text-xs sm:text-[13px] text-[#B8B8B8] truncate">Enterprise Account Health Triage &amp; Expansion Engine</p>
+</div>
+</div>
+
+<!-- Right: Impact Summary & CSV Export -->
+  <div class="flex items-center gap-3 shrink-0">
+    <div class="hidden xl:flex items-center gap-2.5 px-3.5 py-1.5 rounded-[2px] bg-[#212121] border border-[#3C3C3C] text-[13px] font-medium text-[#E0E0E0] tabular-nums">
+      <span class="w-2 h-2 rounded-full bg-[#F0AB00]"></span>
+      <span class="font-bold text-white">+7.5%</span><span>Regional TAM</span>
+      <span class="text-[#555555]">|</span>
+      <span class="font-bold text-white">+4.0%</span><span>Global TAM Growth</span>
+      <span class="text-[#555555]">|</span>
+      <span class="font-bold text-white">+2.4%</span><span>Services Lift</span>
+    </div>
+
+    <button id="btn-export-csv" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-[3px] text-[13px] font-semibold text-white bg-[#262626] border border-[#4A4A4A] hover:bg-[#333333] hover:border-[#6A6A6A] transition-colors">
+      <i data-lucide="download" class="w-4 h-4 text-[#D2D2D2]"></i>
+      <span>Export CSV Report</span>
+    </button>
+  </div>
+</div>
+
+</header>
+<main class="flex-1 max-w-[1460px] w-full mx-auto px-5 sm:px-8 py-6 space-y-6">
+
+    <!-- ===================================================================
+     2. TOP EXECUTIVE SHOWCASE: PM CASE STUDY & SCORING ARCHITECTURE
+        (White Surface with Red & Gold Ambient Glow — Front & Center)
+==================================================================== -->
+<section aria-label="Product Management Case Study and Scoring Architecture" class="case-study-glow rounded-[3px] overflow-hidden">
+  <div class="case-study-accent-bar"></div>
+  <div class="p-6 sm:p-7 space-y-6">
+    <!-- Executive Header -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-[#E5E5E5]">
+      <div class="space-y-1.5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-[2px] bg-[#FAEAE8] text-[#A30000] border border-[#EE0000]/30 text-xs font-bold uppercase tracking-wider">Core Product Architecture</span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-[2px] bg-[#FDF6E2] text-[#8F5C00] border border-[#F0AB00]/50 text-xs font-bold uppercase tracking-wider">PM Case Study &amp; Production Prototype</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-[#151515]">
+          Global TAM Account Triage &amp; Paid Advisory Expansion Engine
+        </h2>
+        <p class="text-[15px] text-[#4D4D4D] max-w-4xl leading-relaxed">
+          Built to replace reactive spreadsheet tracking across North America, EMEA, and APAC enterprise accounts with an explainable, weighted telemetry model and standardized 30-60-90 day TAM intervention workflows.
+        </p>
+      </div>
+      <!-- Verified Headline Impact Strip -->
+      <div class="grid grid-cols-3 gap-3 shrink-0">
+        <div class="px-4 py-3 rounded-[3px] bg-[#FAFAFA] border border-[#D2D2D2]">
+          <div class="text-xl sm:text-2xl font-extrabold text-[#A30000] tabular-nums">+7.5%</div>
+          <div class="text-xs font-semibold text-[#151515] mt-0.5">Regional TAM</div>
+        </div>
+        <div class="px-4 py-3 rounded-[3px] bg-[#FAFAFA] border border-[#D2D2D2]">
+          <div class="text-xl sm:text-2xl font-extrabold text-[#151515] tabular-nums">+4.0%</div>
+          <div class="text-xs font-semibold text-[#151515] mt-0.5">Global Growth</div>
+        </div>
+        <div class="px-4 py-3 rounded-[3px] bg-[#FAFAFA] border border-[#D2D2D2]">
+          <div class="text-xl sm:text-2xl font-extrabold text-[#8F5C00] tabular-nums">+2.4%</div>
+          <div class="text-xs font-semibold text-[#151515] mt-0.5">Services Lift</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-Column Core Architecture Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <!-- Column 1: Problem -->
+      <div class="p-5 rounded-[3px] bg-[#FAFAFA] border border-[#E0E0E0] flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-2.5">
+            <span class="px-2 py-0.5 rounded-[2px] bg-[#151515] text-white text-xs font-bold tracking-wide">01 / PROBLEM</span>
+            <h3 class="text-base font-bold text-[#151515]">The Global TAM Triage Bottleneck</h3>
+          </div>
+          <p class="text-[14.5px] text-[#333333] leading-relaxed">
+            Enterprise Technical Account Managers carrying 15–25 complex accounts relied on lagging QBR notes and disconnected support queues. High-ARR accounts drifted into renewal contraction from silent entitlement under-utilization and executive sponsor churn, while healthy high-utilization clusters went unmonetized without structured expansion triggers.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-[#E5E5E5] text-[13px] font-semibold text-[#A30000]">
+          Result before engine: Reactive Sev-1 firefighting &amp; missed renewal signals
+        </div>
+      </div>
+
+      <!-- Column 2: Scoring Logic -->
+      <div class="p-5 rounded-[3px] bg-[#FFFFFF] border border-[#D2D2D2] flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-2.5">
+            <span class="px-2 py-0.5 rounded-[2px] bg-[#EE0000] text-white text-xs font-bold tracking-wide">02 / ARCHITECTURE</span>
+            <h3 class="text-base font-bold text-[#151515]">Weighted Health Scoring Model</h3>
+          </div>
+          <p class="text-[14.5px] text-[#333333] leading-relaxed mb-3">
+            Four normalized telemetry signals compute an explainable <strong class="font-bold text-[#151515]">0–100</strong> composite health score in real time:
+          </p>
+          <div class="grid grid-cols-2 gap-2 text-[13px]">
+            <div class="p-2.5 rounded-[2px] bg-[#F7F7F7] border border-[#E0E0E0]">
+              <div class="font-bold text-[#151515] tabular-nums">35% Adoption</div>
+              <div class="text-xs text-[#4D4D4D] mt-0.5">min(100, (adopt / 90) * 100)</div>
+            </div>
+            <div class="p-2.5 rounded-[2px] bg-[#F7F7F7] border border-[#E0E0E0]">
+              <div class="font-bold text-[#151515] tabular-nums">30% Ticket Stability</div>
+              <div class="text-xs text-[#4D4D4D] mt-0.5">100 - spike*1.4 - sev1*12</div>
+            </div>
+            <div class="p-2.5 rounded-[2px] bg-[#F7F7F7] border border-[#E0E0E0]">
+              <div class="font-bold text-[#151515] tabular-nums">20% Exec Sponsor</div>
+              <div class="text-xs text-[#4D4D4D] mt-0.5">Active 100 | Reorg 55 | Vacant 15</div>
+            </div>
+            <div class="p-2.5 rounded-[2px] bg-[#F7F7F7] border border-[#E0E0E0]">
+              <div class="font-bold text-[#151515] tabular-nums">15% Renewal Buffer</div>
+              <div class="text-xs text-[#4D4D4D] mt-0.5">&ge;180d: 100 down to &lt;45d: 30</div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3.5 pt-3 border-t border-[#E5E5E5] flex flex-wrap gap-2 text-xs font-semibold">
+          <span class="px-2 py-0.5 rounded-[2px] bg-[#FAEAE8] text-[#A30000] border border-[#EE0000]/30">At-Risk: Score &lt; 55 or Sev-1 &ge; 3</span>
+          <span class="px-2 py-0.5 rounded-[2px] bg-[#F3FAF2] text-[#1E4F18] border border-[#3E8635]/40">Expansion: &ge; 78 Score, &ge; 82% Adopt, &le; 10% Spike</span>
+        </div>
+      </div>
+
+      <!-- Column 3: Business Impact -->
+      <div class="p-5 rounded-[3px] bg-[#FAFAFA] border border-[#E0E0E0] flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-2.5">
+            <span class="px-2 py-0.5 rounded-[2px] bg-[#F0AB00] text-[#151515] text-xs font-bold tracking-wide">03 / OUTCOMES</span>
+            <h3 class="text-base font-bold text-[#151515]">Verified Commercial Impact</h3>
+          </div>
+          <ul class="space-y-2.5 text-[14.5px] text-[#333333] leading-relaxed">
+            <li class="flex items-start gap-2">
+              <span class="mt-1.5 w-2 h-2 rounded-full bg-[#EE0000] shrink-0"></span>
+              <span><strong class="font-bold text-[#151515]">+7.5% Regional TAM Expansion:</strong> Early surfacing of high-utilization fleets ready for Dedicated Principal TAM upgrades.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="mt-1.5 w-2 h-2 rounded-full bg-[#F0AB00] shrink-0"></span>
+              <span><strong class="font-bold text-[#151515]">+4.0% Global TAM Growth:</strong> Standardized 30-60-90 day triage playbooks cut contraction risk across NA, EMEA, and APAC.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="mt-1.5 w-2 h-2 rounded-full bg-[#3E8635] shrink-0"></span>
+              <span><strong class="font-bold text-[#151515]">+2.4% Incremental Services Lift:</strong> Direct CRM upsell staging embeds commercial co-sell inside daily TAM operations.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-4 pt-3 border-t border-[#E5E5E5] text-[13px] font-semibold text-[#151515]">
+          Explore the interactive live prototype below &darr;
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     3. LIVE TELEMETRY PROTOTYPE HEADER + TOP KPI SUMMARY STRIP
+==================================================================== -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+  <div>
+    <h2 class="text-lg font-bold text-[#151515]">Live Portfolio Telemetry &amp; Triage Workspace</h2>
+    <p class="text-[14px] text-[#4D4D4D]">Interactive 15-account simulation powered by the weighted scoring model above. Click any account row to launch its 30-60-90 playbook.</p>
+  </div>
+  <span class="text-xs font-semibold uppercase tracking-wider text-[#4D4D4D] tabular-nums">15 Global Enterprise Accounts</span>
+</div>
+
+<section aria-label="Portfolio Key Performance Indicators" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="kpi-strip">
+  <!-- Dynamically populated by JS -->
+</section>
+
+<!-- ===================================================================
+     4. FILTER, WEIGHT CALIBRATION & ACTION TOOLBAR
+==================================================================== -->
+<section class="pf-card">
+  <div class="p-4 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3.5">
+    <!-- Left Filters: Region, Segment Buttons, Search -->
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Region Dropdown -->
+      <div class="relative">
+        <label for="filter-region" class="sr-only">Filter by Region</label>
+        <select id="filter-region" class="appearance-none bg-white border border-[#B8B8B8] text-[#151515] text-[14px] font-medium rounded-[3px] pl-3.5 pr-9 py-2 focus:outline-none focus:border-[#0066CC] focus:ring-1 focus:ring-[#0066CC] cursor-pointer">
+          <option value="ALL">All Regions</option>
+          <option value="North America">North America</option>
+          <option value="EMEA">EMEA</option>
+          <option value="APAC">APAC</option>
+        </select>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-[#4D4D4D] pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2"></i>
+      </div>
+
+      <!-- Health Segment Buttons (Live Dynamic Counts) -->
+      <div id="segment-pills" class="inline-flex flex-wrap items-center border border-[#B8B8B8] rounded-[3px] overflow-hidden divide-x divide-[#D2D2D2] bg-white" role="group" aria-label="Filter by Health Status">
+        <!-- Dynamically populated by JS -->
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative flex-1 min-w-[230px] sm:w-68">
+        <i data-lucide="search" class="w-4 h-4 text-[#6A6A6A] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+        <input id="filter-search" type="text" placeholder="Search account, ID, or TAM..." class="w-full bg-white border border-[#B8B8B8] text-[14px] text-[#151515] placeholder:text-[#6A6A6A] rounded-[3px] pl-9 pr-8 py-2 focus:outline-none focus:border-[#0066CC] focus:ring-1 focus:ring-[#0066CC]" />
+        <button id="btn-clear-search" type="button" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-[#6A6A6A] hover:text-[#151515]" title="Clear search">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Controls: Scoring Weights Toggle & Re-Run AI Health Scoring -->
+    <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+      <button id="btn-toggle-weights" type="button" aria-expanded="false" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-[3px] text-[14px] font-semibold text-[#151515] bg-white border border-[#B8B8B8] hover:bg-[#F5F5F5] transition-colors">
+        <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#4D4D4D]"></i>
+        <span>Scoring Weights</span>
+        <span id="weights-badge" class="px-1.5 py-0.5 rounded-[2px] bg-[#F0F0F0] text-xs font-bold text-[#151515] border border-[#D2D2D2] tabular-nums">35/30/20/15</span>
+      </button>
+
+      <button id="btn-rerun-scoring" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-[3px] text-[14px] font-semibold text-white bg-[#EE0000] hover:bg-[#C9190B] active:bg-[#A30000] transition-colors disabled:opacity-70 disabled:cursor-wait">
+        <i id="rerun-icon" data-lucide="refresh-cw" class="w-4 h-4 text-white"></i>
+        <span>Re-Run AI Health Scoring</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Telemetry Ingestion Banner (shown during 400ms AI scoring sync) -->
+  <div id="sync-banner" class="hidden border-t border-[#D2D2D2] bg-[#FDF6E2] px-4 py-2.5 flex items-center justify-between text-[13.5px] text-[#7A4B00]">
+    <div class="flex items-center gap-2 font-semibold">
+      <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-[#B45309]"></i>
+      <span>Syncing cluster telemetry &amp; re-scoring global enterprise portfolio...</span>
+    </div>
+    <span class="text-xs font-semibold uppercase tracking-wide text-[#8F5C00]">Prometheus + Zendesk + Salesforce</span>
+  </div>
+
+  <!-- Collapsible Scoring Weight Calibration Strip -->
+  <div id="weights-panel" class="hidden border-t border-[#D2D2D2] bg-[#F7F7F7] px-4 py-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3.5">
+      <div>
+        <span class="text-[14px] font-bold text-[#151515]">Health Algorithm Weight Calibration</span>
+        <span class="ml-2 text-[13px] text-[#4D4D4D]">Adjust signal weights to test portfolio sensitivity in real time (auto-normalized).</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="weights-sum-pill" class="text-xs font-bold px-2.5 py-1 rounded-[2px] bg-[#F3FAF2] text-[#1E4F18] border border-[#3E8635]/40 tabular-nums">Sum: 100%</span>
+        <button id="btn-reset-weights" type="button" class="text-[13px] font-semibold text-[#0066CC] hover:text-[#004080] underline underline-offset-2">Reset Defaults</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white border border-[#D2D2D2] rounded-[3px] p-3">
+        <div class="flex items-center justify-between text-[13.5px] mb-2">
+          <span class="font-semibold text-[#151515]">Adoption %</span>
+          <span id="val-weight-adoption" class="font-bold text-[#151515] tabular-nums">35%</span>
+        </div>
+        <input id="slider-weight-adoption" type="range" min="0" max="70" step="5" value="35" class="w-full weight-slider" />
+      </div>
+      <div class="bg-white border border-[#D2D2D2] rounded-[3px] p-3">
+        <div class="flex items-center justify-between text-[13.5px] mb-2">
+          <span class="font-semibold text-[#151515]">Ticket Stability %</span>
+          <span id="val-weight-ticket" class="font-bold text-[#151515] tabular-nums">30%</span>
+        </div>
+        <input id="slider-weight-ticket" type="range" min="0" max="70" step="5" value="30" class="w-full weight-slider" />
+      </div>
+      <div class="bg-white border border-[#D2D2D2] rounded-[3px] p-3">
+        <div class="flex items-center justify-between text-[13.5px] mb-2">
+          <span class="font-semibold text-[#151515]">Exec Sponsor %</span>
+          <span id="val-weight-exec" class="font-bold text-[#151515] tabular-nums">20%</span>
+        </div>
+        <input id="slider-weight-exec" type="range" min="0" max="70" step="5" value="20" class="w-full weight-slider" />
+      </div>
+      <div class="bg-white border border-[#D2D2D2] rounded-[3px] p-3">
+        <div class="flex items-center justify-between text-[13.5px] mb-2">
+          <span class="font-semibold text-[#151515]">Renewal Buffer %</span>
+          <span id="val-weight-renewal" class="font-bold text-[#151515] tabular-nums">15%</span>
+        </div>
+        <input id="slider-weight-renewal" type="range" min="0" max="70" step="5" value="15" class="w-full weight-slider" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     5. INTERACTIVE SORTABLE ACCOUNT PORTFOLIO TABLE
+==================================================================== -->
+<section class="pf-card overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse" aria-label="Enterprise Account Health Portfolio">
+      <thead>
+        <tr id="table-headers" class="border-b-2 border-[#D2D2D2] bg-[#F7F7F7] text-xs font-bold uppercase tracking-wider text-[#333333] select-none">
+          <!-- Populated dynamically -->
+        </tr>
+      </thead>
+      <tbody id="accounts-tbody" class="divide-y divide-[#E5E5E5] text-[14px]">
+        <!-- Populated dynamically -->
+      </tbody>
+    </table>
+  </div>
+  <!-- Table Footer Metadata -->
+  <div class="px-5 py-3.5 bg-[#F7F7F7] border-t border-[#D2D2D2] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[13px] text-[#4D4D4D]">
+    <div id="table-footer-summary" class="font-semibold text-[#151515] tabular-nums">Showing 15 of 15 enterprise accounts</div>
+    <div class="flex flex-wrap items-center gap-4">
+      <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-[2px] bg-[#EE0000]"></span>At-Risk (&lt;55 or &ge;3 Sev-1)</span>
+      <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-[2px] bg-[#3E8635]"></span>Expansion-Ready (&ge;78 Score, &ge;82% Adopt, &le;10% Spike)</span>
+      <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-[2px] bg-[#0066CC]"></span>Healthy</span>
+    </div>
+  </div>
+</section>
+
+</main>
+<div id="drawer-root" class="fixed inset-0 z-40 pointer-events-none" aria-hidden="true">
+<div id="drawer-backdrop" class="fixed inset-0 bg-black/40 opacity-0 transition-opacity duration-200"></div>
+
+<aside id="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-account-name" class="fixed inset-y-0 right-0 w-full max-w-2xl bg-white border-l-2 border-[#151515] shadow-2xl transform translate-x-full transition-transform duration-200 ease-out flex flex-col">
+  <!-- Drawer Top Sticky Header -->
+  <div class="px-6 py-5 border-b border-[#D2D2D2] bg-[#F7F7F7] flex items-start justify-between gap-4 shrink-0">
+    <div id="drawer-header-content" class="min-w-0 flex-1">
+      <!-- Populated dynamically -->
+    </div>
+    <button id="btn-close-drawer" type="button" class="p-2 rounded-[3px] text-[#4D4D4D] hover:text-[#151515] hover:bg-[#E5E5E5] transition-colors shrink-0" aria-label="Close playbook drawer">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+  </div>
+
+  <!-- Drawer Scrollable Body -->
+  <div id="drawer-body" class="flex-1 overflow-y-auto p-6 space-y-6">
+    <!-- Populated dynamically -->
+  </div>
+</aside>
+
+</div>
+<div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none" aria-live="polite"></div>
+<script>
+(function () {
+'use strict';
+
+/* -------------------------------------------------------------------
+1. SAFE UTILITIES & FORMATTING
+-------------------------------------------------------------------- */
+function escapeHTML(value) {
+if (value === null || value === undefined) return '';
+return String(value)
+.replace(/&/g, '&amp;')
+.replace(/</g, '&lt;')
+.replace(/>/g, '&gt;')
+.replace(/"/g, '&quot;')
+.replace(/'/g, '&#39;');
+}
+
+function formatCurrency(num) {
+return new Intl.NumberFormat('en-US', {
+style: 'currency',
+currency: 'USD',
+maximumFractionDigits: 0
+}).format(num);
+}
+
+function formatSignedPct(num) {
+if (num > 0) return '+' + num + '%';
+return num + '%';
+}
+
+function getNowTimeLabel() {
+const now = new Date();
+return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+/* -------------------------------------------------------------------
+2. COMPLETE 15-ACCOUNT GLOBAL ENTERPRISE DATASET (UNABRIDGED)
+-------------------------------------------------------------------- */
+const RAW_ACCOUNTS = [
+{
+id: 'ACC-101',
+name: 'Apex Financial Holdings',
+region: 'North America',
+arr: 640000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Sarah Jenkins',
+adoptionPct: 41,
+ticketSpikePct: 48,
+sev1Count: 3,
+execSponsor: 'Vacant / Unresponsive',
+daysToRenewal: 38,
+upsellSku: 'TAM-DED-10: Dedicated Principal TAM (1.0 FTE)',
+upsellValue: 85000,
+staged: false,
+context: 'Post-merger infrastructure consolidation stalled production cluster rollout; new VP of Infrastructure has not joined QBRs.'
+},
+{
+id: 'ACC-102',
+name: 'Vanguard Retail Group',
+region: 'North America',
+arr: 520000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Marcus Vance',
+adoptionPct: 94,
+ticketSpikePct: -8,
+sev1Count: 0,
+execSponsor: 'Active',
+daysToRenewal: 145,
+upsellSku: 'TAM-EDG-05: Edge Fleet Expansion & Principal TAM',
+upsellValue: 72000,
+staged: true,
+context: 'Exceeded licensed core capacity across 120 distribution hubs ahead of schedule; platform team requesting multi-cluster GitOps advisory.'
+},
+{
+id: 'ACC-103',
+name: 'MedCore Health Systems',
+region: 'North America',
+arr: 480000,
+currentTier: 'Pooled Enterprise Success',
+tamOwner: 'Sarah Jenkins',
+adoptionPct: 36,
+ticketSpikePct: 62,
+sev1Count: 4,
+execSponsor: 'Reorg / Transition',
+daysToRenewal: 52,
+upsellSku: 'TAM-RES-04: Production Resilience & HIPAA Advisory',
+upsellValue: 64000,
+staged: false,
+context: 'Repeated storage operator latency incidents during EHR batch windows triggered executive escalation and renewal scrutiny.'
+},
+{
+id: 'ACC-104',
+name: 'Titan Logistics & Freight',
+region: 'North America',
+arr: 390000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Devon Brooks',
+adoptionPct: 88,
+ticketSpikePct: 2,
+sev1Count: 0,
+execSponsor: 'Active',
+daysToRenewal: 210,
+upsellSku: 'TAM-AUT-03: Enterprise Automation Advisory Pack',
+upsellValue: 54000,
+staged: false,
+context: 'High self-service adoption across CI/CD pipelines; VP Platform Engineering asked for FinOps chargeback and multi-region DR blueprints.'
+},
+{
+id: 'ACC-105',
+name: 'Stratos Cloud Media',
+region: 'North America',
+arr: 310000,
+currentTier: 'Pooled Enterprise Success',
+tamOwner: 'Devon Brooks',
+adoptionPct: 72,
+ticketSpikePct: 11,
+sev1Count: 1,
+execSponsor: 'Active',
+daysToRenewal: 165,
+upsellSku: 'TAM-DES-02: Designated TAM Upgrade (0.25 FTE)',
+upsellValue: 36000,
+staged: false,
+context: 'Steady workload growth with minor upgrade questions; prime candidate to transition from pooled support to named TAM cadence.'
+},
+{
+id: 'ACC-201',
+name: 'NordBank Financial AB',
+region: 'EMEA',
+arr: 780000,
+currentTier: 'Dedicated Principal TAM',
+tamOwner: 'Henrik Lindqvist',
+adoptionPct: 92,
+ticketSpikePct: -12,
+sev1Count: 0,
+execSponsor: 'Active',
+daysToRenewal: 190,
+upsellSku: 'TAM-SOV-08: Sovereign DORA Compliance & TAM Expansion',
+upsellValue: 110000,
+staged: true,
+context: 'Benchmark reference customer in Nordics; expanding regulated banking workloads into Frankfurt and Stockholm availability zones.'
+},
+{
+id: 'ACC-202',
+name: 'RheinMetall Automotive AG',
+region: 'EMEA',
+arr: 590000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Elena Rostova',
+adoptionPct: 44,
+ticketSpikePct: 54,
+sev1Count: 3,
+execSponsor: 'Vacant / Unresponsive',
+daysToRenewal: 41,
+upsellSku: 'TAM-DED-10: Dedicated Principal TAM + Upgrade Recovery',
+upsellValue: 78000,
+staged: false,
+context: 'Blocked on major version upgrade due to custom kernel modules; ticket backlog surged 54% over past 30 days.'
+},
+{
+id: 'ACC-203',
+name: 'Thames Energy & Grid UK',
+region: 'EMEA',
+arr: 460000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Henrik Lindqvist',
+adoptionPct: 86,
+ticketSpikePct: 4,
+sev1Count: 0,
+execSponsor: 'Active',
+daysToRenewal: 130,
+upsellSku: 'TAM-SEC-06: Zero-Trust & NIS2 Security Advisory',
+upsellValue: 62000,
+staged: false,
+context: 'Strong operational stability across smart-grid telemetry clusters; CISO office scoping NIS2 compliance automation.'
+},
+{
+id: 'ACC-204',
+name: 'Iberia Telecom Group',
+region: 'EMEA',
+arr: 410000,
+currentTier: 'Pooled Enterprise Success',
+tamOwner: 'Elena Rostova',
+adoptionPct: 68,
+ticketSpikePct: 14,
+sev1Count: 1,
+execSponsor: 'Active',
+daysToRenewal: 115,
+upsellSku: 'TAM-DES-02: Designated TAM Upgrade (0.25 FTE)',
+upsellValue: 42000,
+staged: false,
+context: '5G edge core rollout progressing on schedule; engineering leads requested bi-weekly architecture office hours.'
+},
+{
+id: 'ACC-205',
+name: 'Helvetia Pharma AG',
+region: 'EMEA',
+arr: 350000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Henrik Lindqvist',
+adoptionPct: 74,
+ticketSpikePct: 6,
+sev1Count: 0,
+execSponsor: 'Reorg / Transition',
+daysToRenewal: 175,
+upsellSku: 'TAM-VAL-03: GxP Validation & Release Readiness TAM',
+upsellValue: 48000,
+staged: false,
+context: 'Healthy technical footprint, though recent R&D IT leadership reshuffle requires proactive executive sponsor re-mapping.'
+},
+{
+id: 'ACC-301',
+name: 'Nippon Precision Robotics',
+region: 'APAC',
+arr: 690000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Kenji Takahashi',
+adoptionPct: 91,
+ticketSpikePct: -5,
+sev1Count: 0,
+execSponsor: 'Active',
+daysToRenewal: 160,
+upsellSku: 'TAM-DED-10: Dedicated Principal TAM (APAC Bilingual)',
+upsellValue: 95000,
+staged: true,
+context: '91% node utilization across Yokohama and Osaka robotics plants; CTO sponsoring global factory standardization.'
+},
+{
+id: 'ACC-302',
+name: 'Southern Cross Banking',
+region: 'APAC',
+arr: 540000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Priya Nair',
+adoptionPct: 39,
+ticketSpikePct: 45,
+sev1Count: 2,
+execSponsor: 'Reorg / Transition',
+daysToRenewal: 48,
+upsellSku: 'TAM-RES-04: APRA CPS-230 Resilience & TAM Recovery',
+upsellValue: 68000,
+staged: false,
+context: 'Delayed hybrid cloud migration caused 61% of purchased entitlements to sit idle; high commercial contraction risk at renewal.'
+},
+{
+id: 'ACC-303',
+name: 'SingaPort Maritime Logistics',
+region: 'APAC',
+arr: 430000,
+currentTier: 'Pooled Enterprise Success',
+tamOwner: 'Priya Nair',
+adoptionPct: 47,
+ticketSpikePct: 38,
+sev1Count: 3,
+execSponsor: 'Vacant / Unresponsive',
+daysToRenewal: 64,
+upsellSku: 'TAM-DES-02: Designated TAM + Incident Stabilization',
+upsellValue: 48000,
+staged: false,
+context: 'Repeated ingress certificate expiration and DNS routing outages degraded confidence among port terminal operators.'
+},
+{
+id: 'ACC-304',
+name: 'Bharat Digital Payments',
+region: 'APAC',
+arr: 370000,
+currentTier: 'Designated TAM (0.25 FTE)',
+tamOwner: 'Priya Nair',
+adoptionPct: 79,
+ticketSpikePct: 9,
+sev1Count: 1,
+execSponsor: 'Active',
+daysToRenewal: 140,
+upsellSku: 'TAM-SCL-04: Peak-Traffic Scale & Chaos Engineering TAM',
+upsellValue: 46000,
+staged: false,
+context: 'Handling 4x festival transaction volume; team wants pre-event capacity stress testing and SLO tuning.'
+},
+{
+id: 'ACC-305',
+name: 'Seoul Semiconductor Corp',
+region: 'APAC',
+arr: 320000,
+currentTier: 'Pooled Enterprise Success',
+tamOwner: 'Kenji Takahashi',
+adoptionPct: 71,
+ticketSpikePct: 7,
+sev1Count: 0,
+execSponsor: 'Active',
+daysToRenewal: 195,
+upsellSku: 'TAM-DES-02: Designated TAM Upgrade (0.25 FTE)',
+upsellValue: 38000,
+staged: false,
+context: 'Stable wafer-fab analytics deployment; clean candidate for structured quarterly roadmap reviews and TAM attach.'
+}
+];
+
+const DEFAULT_WEIGHTS = {
+adoption: 35,
+ticketStability: 30,
+execSponsor: 20,
+renewalBuffer: 15
+};
+
+/* -------------------------------------------------------------------
+3. APPLICATION STATE
+-------------------------------------------------------------------- */
+const state = {
+accounts: RAW_ACCOUNTS.map(function (acc) {
+return Object.assign({}, acc, {
+scoreDelta: 0,
+playbookChecks: [false, false, false],
+notes: []
+});
+}),
+weights: Object.assign({}, DEFAULT_WEIGHTS),
+filters: {
+region: 'ALL',
+segment: 'ALL',
+search: ''
+},
+sort: {
+key: 'healthScore',
+dir: 'asc'
+},
+selectedAccountId: null,
+weightsPanelOpen: false,
+isSyncing: false
+};
+
+/* -------------------------------------------------------------------
+4. DETERMINISTIC WEIGHTED HEALTH SCORING ENGINE
+-------------------------------------------------------------------- */
+function computeAccountHealth(account, weights) {
+const adoptionSub = Math.min(100, Math.round((account.adoptionPct / 90) * 100));
+
+const rawTicket = 100 - (account.ticketSpikePct * 1.4) - (account.sev1Count * 12);
+const ticketSub = Math.round(Math.max(0, Math.min(100, rawTicket)));
+
+let execSub = 15;
+if (account.execSponsor === 'Active') {
+execSub = 100;
+} else if (account.execSponsor === 'Reorg / Transition') {
+execSub = 55;
+}
+
+let renewalSub = 30;
+if (account.daysToRenewal >= 180) {
+renewalSub = 100;
+} else if (account.daysToRenewal >= 90) {
+renewalSub = 80;
+} else if (account.daysToRenewal >= 45) {
+renewalSub = 55;
+}
+
+const wSum = weights.adoption + weights.ticketStability + weights.execSponsor + weights.renewalBuffer;
+const safeSum = wSum > 0 ? wSum : 100;
+const effectiveW = wSum > 0 ? weights : DEFAULT_WEIGHTS;
+
+const weighted =
+(adoptionSub * effectiveW.adoption) +
+(ticketSub * effectiveW.ticketStability) +
+(execSub * effectiveW.execSponsor) +
+(renewalSub * effectiveW.renewalBuffer);
+
+const healthScore = Math.round(weighted / safeSum);
+
+let status = 'HEALTHY';
+if (healthScore < 55 || account.sev1Count >= 3) {
+status = 'AT_RISK';
+} else if (healthScore >= 78 && account.adoptionPct >= 82 && account.ticketSpikePct <= 10) {
+status = 'EXPANSION_READY';
+}
+
+return {
+healthScore: healthScore,
+status: status,
+subScores: {
+adoption: adoptionSub,
+ticketStability: ticketSub,
+execSponsor: execSub,
+renewalBuffer: renewalSub
+}
+};
+}
+
+function getEnrichedAccounts() {
+return state.accounts.map(function (acc) {
+const calc = computeAccountHealth(acc, state.weights);
+return Object.assign({}, acc, calc);
+});
+}
+
+/* -------------------------------------------------------------------
+5. PLAYBOOK & DIAGNOSTIC GENERATORS
+-------------------------------------------------------------------- */
+function buildRootCauseDiagnosis(acc) {
+if (acc.status === 'AT_RISK') {
+return (
+'Account health dropped to ' + acc.healthScore + '/100 due to constrained platform adoption (' +
+acc.adoptionPct + '%) paired with a ' + formatSignedPct(acc.ticketSpikePct) +
+' 30-day support ticket spike and ' + acc.sev1Count + ' Sev-1 incident' + (acc.sev1Count === 1 ? '' : 's') +
+'. With executive sponsorship currently "' + acc.execSponsor + '" and ' + acc.daysToRenewal +
+' days until renewal, immediate engineering stabilization is required. Context: ' + acc.context
+);
+}
+if (acc.status === 'EXPANSION_READY') {
+return (
+'Strong operational momentum (' + acc.healthScore + '/100 health score) driven by ' +
+acc.adoptionPct + '% licensed adoption and a ' + formatSignedPct(acc.ticketSpikePct) +
+' ticket trend with ' + acc.sev1Count + ' Sev-1 incidents. Executive sponsorship is "' +
+acc.execSponsor + '" with ' + acc.daysToRenewal + ' days of renewal runway—ideal conditions to convert into ' +
+acc.upsellSku.split(':')[0] + '. Context: ' + acc.context
+);
+}
+return (
+'Steady baseline performance (' + acc.healthScore + '/100) with ' + acc.adoptionPct +
+'% adoption and ' + formatSignedPct(acc.ticketSpikePct) + ' ticket volume delta (' +
+acc.sev1Count + ' Sev-1s). Executive sponsor status is "' + acc.execSponsor +
+'" across a ' + acc.daysToRenewal + '-day renewal horizon. Focus on incremental adoption milestones to unlock expansion readiness. Context: ' +
+acc.context
+);
+}
+
+function buildPlaybookSteps(acc) {
+if (acc.status === 'AT_RISK') {
+return [
+{
+phase: 'Days 1–30: Stabilize',
+title: 'Sev-1 War Room & Backlog Burn-Down',
+detail: 'Assign senior SRE triage for ' + acc.sev1Count + ' Sev-1 root causes and reduce the ' + formatSignedPct(acc.ticketSpikePct) + ' ticket surge below +10%.'
+},
+{
+phase: 'Days 31–60: Value Realization',
+title: 'Entitlement Unblock & Architecture Workshop',
+detail: 'Run guided cluster rollout workshop to lift adoption from ' + acc.adoptionPct + '% toward 70%+ baseline before renewal lock.'
+},
+{
+phase: 'Days 61–90: Executive Alignment',
+title: 'Sponsor Re-Mapping & Renewal De-Risk Plan',
+detail: 'Rebuild VP-level governance cadence (currently "' + acc.execSponsor + '") ahead of the ' + acc.daysToRenewal + '-day renewal window.'
+}
+];
+}
+if (acc.status === 'EXPANSION_READY') {
+return [
+{
+phase: 'Days 1–30: Baseline',
+title: 'Utilization & Capacity Benchmark Brief',
+detail: 'Publish telemetry report showing ' + acc.adoptionPct + '% adoption and ' + formatSignedPct(acc.ticketSpikePct) + ' ticket efficiency to platform leads.'
+},
+{
+phase: 'Days 31–60: Architecture & Value',
+title: 'Multi-Cluster Scaling & Governance Blueprint',
+detail: 'Co-design next-wave workload architecture and scope ' + acc.upsellSku.split(':')[0] + ' deliverables.'
+},
+{
+phase: 'Days 61–90: Commercial Expansion',
+title: 'Executive QBR & Upsell Proposal Sign-Off',
+detail: 'Present ROI business case with Account Executive to close +' + formatCurrency(acc.upsellValue) + ' TAM advisory expansion.'
+}
+];
+}
+return [
+{
+phase: 'Days 1–30: Baseline',
+title: 'Telemetry Hygiene & Ticket Deflection Audit',
+detail: 'Review ' + formatSignedPct(acc.ticketSpikePct) + ' ticket themes and clear recurring configuration questions with platform ops.'
+},
+{
+phase: 'Days 31–60: Architecture & Value',
+title: 'Feature Adoption Enablement Session',
+detail: 'Drive unused module adoption from ' + acc.adoptionPct + '% past the 82% expansion-readiness threshold.'
+},
+{
+phase: 'Days 61–90: Executive Alignment',
+title: 'Mid-Cycle Value Review & Tier Evaluation',
+detail: 'Validate executive sponsor ("' + acc.execSponsor + '") goals and introduce ' + acc.upsellSku.split(':')[0] + ' roadmap alignment.'
+}
+];
+}
+
+/* -------------------------------------------------------------------
+6. FILTERING & SORTING HELPERS
+-------------------------------------------------------------------- */
+function getRegionAndSearchFiltered(enrichedAccounts) {
+const region = state.filters.region;
+const q = state.filters.search.trim().toLowerCase();
+
+return enrichedAccounts.filter(function (acc) {
+if (region !== 'ALL' && acc.region !== region) return false;
+if (q) {
+const hay = (acc.name + ' ' + acc.id + ' ' + acc.tamOwner + ' ' + acc.currentTier).toLowerCase();
+if (hay.indexOf(q) === -1) return false;
+}
+return true;
+});
+}
+
+function getFullyFilteredAndSortedAccounts() {
+const enriched = getEnrichedAccounts();
+const baseFiltered = getRegionAndSearchFiltered(enriched);
+const seg = state.filters.segment;
+
+const segmentFiltered = baseFiltered.filter(function (acc) {
+if (seg === 'ALL') return true;
+return acc.status === seg;
+});
+
+const sortKey = state.sort.key;
+const dirMult = state.sort.dir === 'asc' ? 1 : -1;
+
+segmentFiltered.sort(function (a, b) {
+let valA = a[sortKey];
+let valB = b[sortKey];
+
+if (sortKey === 'status') {
+const order = { AT_RISK: 1, HEALTHY: 2, EXPANSION_READY: 3 };
+valA = order[a.status] || 99;
+valB = order[b.status] || 99;
+}
+
+if (typeof valA === 'string' && typeof valB === 'string') {
+return valA.localeCompare(valB) * dirMult;
+}
+return ((valA || 0) - (valB || 0)) * dirMult;
+});
+
+return {
+enrichedAll: enriched,
+baseFiltered: baseFiltered,
+visible: segmentFiltered
+};
+}
+
+/* -------------------------------------------------------------------
+7. RENDERERS (KPI STRIP, SEGMENT BUTTONS, TABLE, DRAWER)
+-------------------------------------------------------------------- */
+function renderKPIStrip(visibleAccounts, totalCount) {
+const totalArr = visibleAccounts.reduce(function (sum, a) { return sum + a.arr; }, 0);
+const atRisk = visibleAccounts.filter(function (a) { return a.status === 'AT_RISK'; });
+const atRiskArr = atRisk.reduce(function (sum, a) { return sum + a.arr; }, 0);
+
+const expansion = visibleAccounts.filter(function (a) { return a.status === 'EXPANSION_READY'; });
+const avgExpAdopt = expansion.length > 0
+? Math.round(expansion.reduce(function (sum, a) { return sum + a.adoptionPct; }, 0) / expansion.length)
+: 0;
+
+const totalPipeline = visibleAccounts.reduce(function (sum, a) { return sum + a.upsellValue; }, 0);
+const stagedPipeline = visibleAccounts.reduce(function (sum, a) { return a.staged ? sum + a.upsellValue : sum; }, 0);
+const unstagedPipeline = totalPipeline - stagedPipeline;
+
+const kpiHTML = [
+// Card 1: Total Filtered ARR
+'<div class="pf-card p-5 border-t-[3px] border-t-[#151515] flex flex-col justify-between">',
+'<div class="flex items-center justify-between gap-2">',
+'<span class="text-[13px] font-bold uppercase tracking-wide text-[#4D4D4D]">Total Filtered ARR</span>',
+'<i data-lucide="dollar-sign" class="w-4 h-4 text-[#4D4D4D]"></i>',
+'</div>',
+'<div class="mt-2.5">',
+'<div class="text-3xl font-extrabold tracking-tight text-[#151515] tabular-nums">' + formatCurrency(totalArr) + '</div>',
+'<div class="mt-2 flex items-center gap-2 text-[13.5px] text-[#4D4D4D] tabular-nums">',
+'<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-[#F0F0F0] text-[#151515] font-bold border border-[#D2D2D2]">' + visibleAccounts.length + ' of ' + totalCount + '</span>',
+'<span>Global Accounts</span>',
+'</div>',
+'</div>',
+'</div>',
+
+// Card 2: At-Risk Accounts
+'<div class="pf-card p-5 border-t-[3px] border-t-[#EE0000] flex flex-col justify-between">',
+'<div class="flex items-center justify-between gap-2">',
+'<span class="text-[13px] font-bold uppercase tracking-wide text-[#4D4D4D]">At-Risk Accounts</span>',
+'<span class="px-2 py-0.5 rounded-[2px] text-xs font-bold bg-[#FAEAE8] text-[#A30000] border border-[#EE0000]/30">Triage Priority</span>',
+'</div>',
+'<div class="mt-2.5">',
+'<div class="flex items-baseline gap-2">',
+'<span class="text-3xl font-extrabold tracking-tight text-[#A30000] tabular-nums">' + atRisk.length + '</span>',
+'<span class="text-[14px] text-[#4D4D4D]">accounts flagged</span>',
+'</div>',
+'<div class="mt-2 text-[13.5px] text-[#333333] tabular-nums">',
+'<span class="font-bold text-[#A30000]">' + formatCurrency(atRiskArr) + '</span>',
+' <span class="text-[#4D4D4D]">ARR exposed</span>',
+'</div>',
+'</div>',
+'</div>',
+
+// Card 3: Expansion-Ready Accounts
+'<div class="pf-card p-5 border-t-[3px] border-t-[#3E8635] flex flex-col justify-between">',
+'<div class="flex items-center justify-between gap-2">',
+'<span class="text-[13px] font-bold uppercase tracking-wide text-[#4D4D4D]">Expansion-Ready</span>',
+'<span class="px-2 py-0.5 rounded-[2px] text-xs font-bold bg-[#F3FAF2] text-[#1E4F18] border border-[#3E8635]/40">Upsell Qualified</span>',
+'</div>',
+'<div class="mt-2.5">',
+'<div class="flex items-baseline gap-2">',
+'<span class="text-3xl font-extrabold tracking-tight text-[#1E4F18] tabular-nums">' + expansion.length + '</span>',
+'<span class="text-[14px] text-[#4D4D4D]">accounts ready</span>',
+'</div>',
+'<div class="mt-2 text-[13.5px] text-[#333333] tabular-nums">',
+'<span class="font-bold text-[#1E4F18]">' + avgExpAdopt + '%</span>',
+' <span class="text-[#4D4D4D]">avg platform adoption</span>',
+'</div>',
+'</div>',
+'</div>',
+
+// Card 4: Projected TAM Advisory Pipeline
+'<div class="pf-card p-5 border-t-[3px] border-t-[#0066CC] flex flex-col justify-between">',
+'<div class="flex items-center justify-between gap-2">',
+'<span class="text-[13px] font-bold uppercase tracking-wide text-[#4D4D4D]">Projected TAM Pipeline</span>',
+'<i data-lucide="trending-up" class="w-4 h-4 text-[#0066CC]"></i>',
+'</div>',
+'<div class="mt-2.5">',
+'<div class="text-3xl font-extrabold tracking-tight text-[#151515] tabular-nums">' + formatCurrency(totalPipeline) + '</div>',
+'<div class="mt-2 flex flex-wrap items-center gap-2 text-xs tabular-nums">',
+'<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-[#F3FAF2] text-[#1E4F18] border border-[#3E8635]/40 font-bold">Staged: ' + formatCurrency(stagedPipeline) + '</span>',
+'<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-[#F0F0F0] text-[#4D4D4D] border border-[#D2D2D2] font-semibold">Unstaged: ' + formatCurrency(unstagedPipeline) + '</span>',
+'</div>',
+'</div>',
+'</div>'
+].join('');
+
+document.getElementById('kpi-strip').innerHTML = kpiHTML;
+}
+
+function renderSegmentPills(baseFilteredAccounts) {
+const counts = {
+ALL: baseFilteredAccounts.length,
+AT_RISK: baseFilteredAccounts.filter(function (a) { return a.status === 'AT_RISK'; }).length,
+EXPANSION_READY: baseFilteredAccounts.filter(function (a) { return a.status === 'EXPANSION_READY'; }).length,
+HEALTHY: baseFilteredAccounts.filter(function (a) { return a.status === 'HEALTHY'; }).length
+};
+
+const defs = [
+{ id: 'ALL', label: 'All' },
+{ id: 'AT_RISK', label: 'At-Risk' },
+{ id: 'EXPANSION_READY', label: 'Expansion-Ready' },
+{ id: 'HEALTHY', label: 'Healthy' }
+];
+
+const html = defs.map(function (d) {
+const active = state.filters.segment === d.id;
+let activeCls = 'bg-[#151515] text-white';
+if (active && d.id === 'AT_RISK') activeCls = 'bg-[#EE0000] text-white';
+if (active && d.id === 'EXPANSION_READY') activeCls = 'bg-[#3E8635] text-white';
+if (active && d.id === 'HEALTHY') activeCls = 'bg-[#0066CC] text-white';
+
+const inactiveCls = 'bg-white text-[#333333] hover:bg-[#F5F5F5]';
+
+return (
+'<button type="button" data-segment="' + d.id + '" class="px-3.5 py-2 text-[13.5px] font-semibold transition-colors tabular-nums ' + (active ? activeCls : inactiveCls) + '">' +
+escapeHTML(d.label) + ' <span class="ml-0.5 opacity-90">(' + counts[d.id] + ')</span>' +
+'</button>'
+);
+}).join('');
+
+document.getElementById('segment-pills').innerHTML = html;
+}
+
+function renderTableHeaders() {
+const columns = [
+{ key: 'name', label: 'Account Name & Tier', align: 'left' },
+{ key: 'region', label: 'Region', align: 'left' },
+{ key: 'arr', label: 'ARR ($)', align: 'right' },
+{ key: 'adoptionPct', label: 'Adoption Rate', align: 'left' },
+{ key: 'ticketSpikePct', label: '30d Ticket Spike', align: 'right' },
+{ key: 'daysToRenewal', label: 'Renewal', align: 'right' },
+{ key: 'healthScore', label: 'Health Score', align: 'left' },
+{ key: 'status', label: 'Status', align: 'left' },
+{ key: null, label: 'Action', align: 'right' }
+];
+
+const html = columns.map(function (col) {
+if (!col.key) {
+return '<th scope="col" class="px-4 py-3.5 text-right font-bold">' + col.label + '</th>';
+}
+const isSorted = state.sort.key === col.key;
+const iconName = isSorted
+? (state.sort.dir === 'asc' ? 'arrow-up' : 'arrow-down')
+: 'chevrons-up-down';
+const iconCls = isSorted ? 'text-[#EE0000]' : 'text-[#8A8A8A] group-hover:text-[#151515]';
+const justify = col.align === 'right' ? 'justify-end' : 'justify-start';
+
+return (
+'<th scope="col" class="px-4 py-3.5 text-' + col.align + '">' +
+'<button type="button" data-sort="' + col.key + '" class="group inline-flex items-center gap-1.5 ' + justify + ' hover:text-[#151515] transition-colors font-bold uppercase tracking-wider">' +
+'<span>' + col.label + '</span>' +
+'<i data-lucide="' + iconName + '" class="w-3.5 h-3.5 ' + iconCls + '"></i>' +
+'</button>' +
+'</th>'
+);
+}).join('');
+
+document.getElementById('table-headers').innerHTML = html;
+}
+
+function getStatusBadgeHTML(status) {
+if (status === 'AT_RISK') {
+return '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] text-xs font-bold bg-[#FAEAE8] text-[#A30000] border border-[#EE0000]/30 whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-[#EE0000]"></span>At-Risk</span>';
+}
+if (status === 'EXPANSION_READY') {
+return '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] text-xs font-bold bg-[#F3FAF2] text-[#1E4F18] border border-[#3E8635]/40 whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-[#3E8635]"></span>Expansion-Ready</span>';
+}
+return '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] text-xs font-bold bg-[#E7F1FA] text-[#004080] border border-[#73BCF7] whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-[#0066CC]"></span>Healthy</span>';
+}
+
+function renderAccountsTable(visibleAccounts, totalCount) {
+const tbody = document.getElementById('accounts-tbody');
+
+if (visibleAccounts.length === 0) {
+tbody.innerHTML = (
+'<tr>' +
+'<td colspan="9" class="px-6 py-12 text-center">' +
+'<div class="inline-flex flex-col items-center gap-2 text-[#4D4D4D]">' +
+'<i data-lucide="search-x" class="w-6 h-6 text-[#6A6A6A]"></i>' +
+'<p class="text-[15px] font-bold text-[#151515]">No enterprise accounts match the active filters</p>' +
+'<p class="text-[14px] text-[#4D4D4D]">Try clearing your search query or switching region/health segments.</p>' +
+'</div>' +
+'</td>' +
+'</tr>'
+);
+document.getElementById('table-footer-summary').textContent = 'Showing 0 of ' + totalCount + ' enterprise accounts';
+return;
+}
+
+const rowsHTML = visibleAccounts.map(function (acc) {
+const isSelected = state.selectedAccountId === acc.id;
+const updatedCls = acc.scoreDelta !== 0 ? 'row-updated' : '';
+const rowHighlight = isSelected ? 'bg-[#E7F1FA]/60 hover:bg-[#E7F1FA]/80' : 'hover:bg-[#FAFAFA]';
+
+let adoptBarCls = 'bg-[#0066CC]';
+if (acc.adoptionPct >= 82) adoptBarCls = 'bg-[#3E8635]';
+else if (acc.adoptionPct < 55) adoptBarCls = 'bg-[#EE0000]';
+
+let spikeCls = 'text-[#333333]';
+if (acc.ticketSpikePct >= 25) spikeCls = 'text-[#A30000] font-bold';
+else if (acc.ticketSpikePct < 0) spikeCls = 'text-[#1E4F18] font-bold';
+
+let renewalBadge = '<span class="tabular-nums font-medium text-[#151515]">' + acc.daysToRenewal + 'd</span>';
+if (acc.daysToRenewal <= 45) {
+renewalBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-[#FAEAE8] text-[#A30000] border border-[#EE0000]/30 tabular-nums font-bold">' + acc.daysToRenewal + 'd</span>';
+} else if (acc.daysToRenewal <= 60) {
+renewalBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-[2px] bg-[#FDF6E2] text-[#8F5C00] border border-[#F0AB00]/50 tabular-nums font-bold">' + acc.daysToRenewal + 'd</span>';
+}
+
+let scorePillCls = 'bg-[#E7F1FA] text-[#004080] border-[#73BCF7]';
+let scoreBarCls = 'bg-[#0066CC]';
+if (acc.status === 'AT_RISK') {
+scorePillCls = 'bg-[#FAEAE8] text-[#A30000] border-[#EE0000]/30';
+scoreBarCls = 'bg-[#EE0000]';
+} else if (acc.status === 'EXPANSION_READY') {
+scorePillCls = 'bg-[#F3FAF2] text-[#1E4F18] border-[#3E8635]/40';
+scoreBarCls = 'bg-[#3E8635]';
+}
+
+let deltaBadge = '';
+if (acc.scoreDelta > 0) {
+deltaBadge = '<span class="ml-1 text-xs font-bold text-[#1E4F18] tabular-nums">+' + acc.scoreDelta + '</span>';
+} else if (acc.scoreDelta < 0) {
+deltaBadge = '<span class="ml-1 text-xs font-bold text-[#A30000] tabular-nums">' + acc.scoreDelta + '</span>';
+}
+
+const stagedBadge = acc.staged
+? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-[2px] bg-[#F3FAF2] text-[#1E4F18] border border-[#3E8635]/40 text-xs font-bold"><i data-lucide="check" class="w-3 h-3"></i>Staged</span>'
+: '';
+
+return (
+'<tr data-account-id="' + escapeHTML(acc.id) + '" class="cursor-pointer transition-colors ' + rowHighlight + ' ' + updatedCls + '">' +
+// 1. Account Name & Tier
+'<td class="px-4 py-4">' +
+'<div class="flex items-center gap-2 flex-wrap">' +
+'<span class="font-bold text-[15px] text-[#151515]">' + escapeHTML(acc.name) + '</span>' +
+stagedBadge +
+'</div>' +
+'<div class="mt-0.5 flex items-center gap-2 text-[13px] text-[#4D4D4D]">' +
+'<span class="font-semibold text-[#151515]">' + escapeHTML(acc.id) + '</span>' +
+'<span class="text-[#B8B8B8]">•</span>' +
+'<span>' + escapeHTML(acc.currentTier) + '</span>' +
+'</div>' +
+'</td>' +
+// 2. Region
+'<td class="px-4 py-4 whitespace-nowrap">' +
+'<span class="inline-flex items-center px-2.5 py-0.5 rounded-[2px] bg-[#F0F0F0] text-[#151515] border border-[#D2D2D2] text-[13px] font-medium">' + escapeHTML(acc.region) + '</span>' +
+'</td>' +
+// 3. ARR ($)
+'<td class="px-4 py-4 text-right whitespace-nowrap tabular-nums font-bold text-[14.5px] text-[#151515]">' +
+formatCurrency(acc.arr) +
+'</td>' +
+// 4. Adoption Rate
+'<td class="px-4 py-4 whitespace-nowrap">' +
+'<div class="flex items-center gap-2.5 w-32">' +
+'<div class="flex-1 h-2 bg-[#E5E5E5] rounded-[1px] overflow-hidden">' +
+'<div class="h-full ' + adoptBarCls + '" style="width: ' + acc.adoptionPct + '%"></div>' +
+'</div>' +
+'<span class="tabular-nums text-[#151515] font-semibold w-10 text-right">' + acc.adoptionPct + '%</span>' +
+'</div>' +
+'</td>' +
+// 5. 30-Day Ticket Spike
+'<td class="px-4 py-4 text-right whitespace-nowrap tabular-nums ' + spikeCls + '">' +
+formatSignedPct(acc.ticketSpikePct) +
+(acc.sev1Count > 0 ? '<div class="text-xs font-medium text-[#4D4D4D]">' + acc.sev1Count + ' Sev-1</div>' : '') +
+'</td>' +
+// 6. Renewal Window
+'<td class="px-4 py-4 text-right whitespace-nowrap">' +
+renewalBadge +
+'</td>' +
+// 7. Health Score
+'<td class="px-4 py-4 whitespace-nowrap">' +
+'<div class="flex items-center gap-2">' +
+'<span class="inline-flex items-center justify-center w-10 py-0.5 rounded-[2px] border text-[13.5px] font-bold tabular-nums ' + scorePillCls + '">' + acc.healthScore + '</span>' +
+'<div class="w-12 h-2 bg-[#E5E5E5] rounded-[1px] overflow-hidden hidden sm:block">' +
+'<div class="h-full ' + scoreBarCls + '" style="width: ' + acc.healthScore + '%"></div>' +
+'</div>' +
+deltaBadge +
+'</div>' +
+'</td>' +
+// 8. Status Badge
+'<td class="px-4 py-4 whitespace-nowrap">' +
+getStatusBadgeHTML(acc.status) +
+'</td>' +
+// 9. Action
+'<td class="px-4 py-4 text-right whitespace-nowrap">' +
+'<button type="button" data-open-playbook="' + escapeHTML(acc.id) + '" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-[3px] text-[13px] font-semibold text-[#0066CC] bg-white border border-[#0066CC] hover:bg-[#E7F1FA] transition-colors">' +
+'<span>View Playbook</span>' +
+'<i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>' +
+'</button>' +
+'</td>' +
+'</tr>'
+);
+}).join('');
+
+tbody.innerHTML = rowsHTML;
+document.getElementById('table-footer-summary').textContent = 'Showing ' + visibleAccounts.length + ' of ' + totalCount + ' enterprise accounts';
+}
+
+/* -------------------------------------------------------------------
+8. SLIDE-OVER INTERVENTION & PLAYBOOK DRAWER RENDERER
+-------------------------------------------------------------------- */
+function renderDrawer() {
+const root = document.getElementById('drawer-root');
+const backdrop = document.getElementById('drawer-backdrop');
+const panel = document.getElementById('drawer-panel');
+
+if (!state.selectedAccountId) {
+root.setAttribute('aria-hidden', 'true');
+root.classList.add('pointer-events-none');
+backdrop.classList.remove('opacity-100');
+backdrop.classList.add('opacity-0');
+panel.classList.add('translate-x-full');
+panel.classList.remove('translate-x-0');
+return;
+}
+
+const acc = getEnrichedAccounts().find(function (a) { return a.id === state.selectedAccountId; });
+if (!acc) return;
+
+root.setAttribute('aria-hidden', 'false');
+root.classList.remove('pointer-events-none');
+backdrop.classList.remove('opacity-0');
+backdrop.classList.add('opacity-100');
+panel.classList.remove('translate-x-full');
+panel.classList.add('translate-x-0');
+
+const scoreCls = acc.status === 'AT_RISK'
+? 'bg-[#FAEAE8] text-[#A30000] border-[#EE0000]/30'
+: (acc.status === 'EXPANSION_READY' ? 'bg-[#F3FAF2] text-[#1E4F18] border-[#3E8635]/40' : 'bg-[#E7F1FA] text-[#004080] border-[#73BCF7]');
+
+document.getElementById('drawer-header-content').innerHTML = (
+'<div class="flex flex-wrap items-center gap-2">' +
+'<span class="text-xs font-bold px-2 py-0.5 rounded-[2px] bg-white border border-[#B8B8B8] text-[#151515]">' + escapeHTML(acc.id) + '</span>' +
+getStatusBadgeHTML(acc.status) +
+'<span class="inline-flex items-center px-2.5 py-0.5 rounded-[2px] border text-xs font-bold tabular-nums ' + scoreCls + '">Score: ' + acc.healthScore + '/100</span>' +
+'</div>' +
+'<h2 id="drawer-account-name" class="mt-2.5 text-xl font-bold tracking-tight text-[#151515] truncate">' + escapeHTML(acc.name) + '</h2>' +
+'<div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13.5px] text-[#333333]">' +
+'<span class="inline-flex items-center gap-1.5"><i data-lucide="globe" class="w-4 h-4 text-[#4D4D4D]"></i>' + escapeHTML(acc.region) + '</span>' +
+'<span class="inline-flex items-center gap-1.5"><i data-lucide="user-check" class="w-4 h-4 text-[#4D4D4D]"></i>TAM: <strong class="font-bold text-[#151515]">' + escapeHTML(acc.tamOwner) + '</strong></span>' +
+'<span class="inline-flex items-center gap-1 tabular-nums"><i data-lucide="dollar-sign" class="w-4 h-4 text-[#4D4D4D]"></i>ARR: <strong class="font-bold text-[#151515]">' + formatCurrency(acc.arr) + '</strong></span>' +
+'<span class="inline-flex items-center gap-1 tabular-nums"><i data-lucide="calendar" class="w-4 h-4 text-[#4D4D4D]"></i>Renewal: <strong class="font-bold text-[#151515]">' + acc.daysToRenewal + 'd</strong></span>' +
+'</div>' +
+'<div class="mt-1.5 text-[13px] text-[#4D4D4D]">Current Tier: <strong class="font-semibold text-[#151515]">' + escapeHTML(acc.currentTier) + '</strong> • Exec Sponsor: <strong class="font-semibold text-[#151515]">' + escapeHTML(acc.execSponsor) + '</strong></div>'
+);
+
+const wSum = state.weights.adoption + state.weights.ticketStability + state.weights.execSponsor + state.weights.renewalBuffer || 100;
+const factors = [
+{ label: 'Adoption Rate', raw: acc.adoptionPct + '%', sub: acc.subScores.adoption, weight: Math.round((state.weights.adoption / wSum) * 100) },
+{ label: 'Ticket Stability', raw: formatSignedPct(acc.ticketSpikePct) + ' / ' + acc.sev1Count + ' Sev-1', sub: acc.subScores.ticketStability, weight: Math.round((state.weights.ticketStability / wSum) * 100) },
+{ label: 'Exec Sponsor', raw: acc.execSponsor, sub: acc.subScores.execSponsor, weight: Math.round((state.weights.execSponsor / wSum) * 100) },
+{ label: 'Renewal Buffer', raw: acc.daysToRenewal + ' days', sub: acc.subScores.renewalBuffer, weight: Math.round((state.weights.renewalBuffer / wSum) * 100) }
+];
+
+const factorsHTML = factors.map(function (f) {
+let barColor = 'bg-[#0066CC]';
+if (f.sub >= 80) barColor = 'bg-[#3E8635]';
+else if (f.sub < 50) barColor = 'bg-[#EE0000]';
+
+return (
+'<div class="p-3 rounded-[3px] border border-[#D2D2D2] bg-[#FAFAFA]">' +
+'<div class="flex items-center justify-between text-[13px] mb-1.5">' +
+'<span class="font-semibold text-[#151515]">' + escapeHTML(f.label) + ' <span class="text-[#4D4D4D] font-normal">(' + f.weight + '% wt)</span></span>' +
+'<span class="font-bold text-[#151515] tabular-nums">' + f.sub + '/100</span>' +
+'</div>' +
+'<div class="w-full h-2 bg-[#E0E0E0] rounded-[1px] overflow-hidden">' +
+'<div class="h-full ' + barColor + '" style="width: ' + f.sub + '%"></div>' +
+'</div>' +
+'<div class="mt-1.5 text-xs text-[#4D4D4D] truncate">' + escapeHTML(f.raw) + '</div>' +
+'</div>'
+);
+}).join('');
+
+const steps = buildPlaybookSteps(acc);
+const completedCount = acc.playbookChecks.filter(Boolean).length;
+const stepsHTML = steps.map(function (step, idx) {
+const checked = Boolean(acc.playbookChecks[idx]);
+return (
+'<label class="flex items-start gap-3 p-3.5 rounded-[3px] border ' + (checked ? 'border-[#3E8635]/50 bg-[#F3FAF2]' : 'border-[#D2D2D2] bg-white hover:bg-[#FAFAFA]') + ' cursor-pointer transition-colors">' +
+'<input type="checkbox" data-playbook-check="' + idx + '" ' + (checked ? 'checked' : '') + ' class="mt-1 h-4 w-4 rounded-[2px] border-[#8A8A8A] text-[#0066CC] focus:ring-[#0066CC] cursor-pointer" />' +
+'<div class="flex-1 min-w-0">' +
+'<div class="text-xs font-bold uppercase tracking-wide ' + (checked ? 'text-[#1E4F18]' : 'text-[#0066CC]') + '">' + escapeHTML(step.phase) + '</div>' +
+'<div class="text-[14.5px] font-bold mt-0.5 ' + (checked ? 'line-through text-[#6A6A6A]' : 'text-[#151515]') + '">' + escapeHTML(step.title) + '</div>' +
+'<p class="text-[13.5px] mt-0.5 leading-relaxed ' + (checked ? 'line-through text-[#6A6A6A]' : 'text-[#333333]') + '">' + escapeHTML(step.detail) + '</p>' +
+'</div>' +
+'</label>'
+);
+}).join('');
+
+const notesHTML = acc.notes.length > 0
+? acc.notes.map(function (note) {
+return (
+'<div class="px-3.5 py-2.5 rounded-[3px] bg-[#FAFAFA] border border-[#D2D2D2] text-[13.5px]">' +
+'<div class="flex items-center justify-between text-xs font-semibold text-[#4D4D4D] mb-1">' +
+'<span>TAM Field Note • ' + escapeHTML(acc.tamOwner) + '</span>' +
+'<span class="tabular-nums">' + escapeHTML(note.timestamp) + '</span>' +
+'</div>' +
+'<p class="text-[#151515]">' + escapeHTML(note.text) + '</p>' +
+'</div>'
+);
+}).join('')
+: '<p class="text-[13px] text-[#6A6A6A] italic">No field notes logged yet for this triage cycle.</p>';
+
+const upsellBtnCls = acc.staged
+? 'bg-[#3E8635] hover:bg-[#2F6827] text-white border-[#3E8635]'
+: 'bg-[#151515] hover:bg-[#333333] text-white border-[#151515]';
+const upsellBtnText = acc.staged ? '✓ Staged in Pipeline' : 'Stage Upsell in Pipeline';
+
+const rationaleText = acc.status === 'AT_RISK'
+? 'Triggered by Sev-1 incident frequency and entitlement under-utilization; attaching structured TAM recovery protects ' + formatCurrency(acc.arr) + ' base ARR.'
+: (acc.status === 'EXPANSION_READY'
+? 'High adoption (' + acc.adoptionPct + '%) and low ticket volatility qualify this account for immediate advisory tier expansion.'
+: 'Proactive tier attach accelerates remaining feature adoption past the 82% benchmark ahead of renewal.');
+
+document.getElementById('drawer-body').innerHTML = (
+// 1. Score Factor Decomposition
+'<section>' +
+'<div class="flex items-center justify-between mb-2.5">' +
+'<h3 class="text-xs font-bold uppercase tracking-wider text-[#4D4D4D]">Score Factor Decomposition</h3>' +
+'<span class="text-xs font-bold text-[#151515] tabular-nums">Weighted Composite: ' + acc.healthScore + '/100</span>' +
+'</div>' +
+'<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' + factorsHTML + '</div>' +
+'</section>' +
+
+// 2. AI Root-Cause Diagnosis
+'<section class="p-4 rounded-[3px] border border-[#73BCF7] bg-[#E7F1FA]/50">' +
+'<div class="flex items-center gap-2 text-[14px] font-bold text-[#004080] mb-1.5">' +
+'<i data-lucide="sparkles" class="w-4 h-4 text-[#0066CC]"></i>' +
+'<span>AI Root-Cause Diagnosis</span>' +
+'</div>' +
+'<p class="text-[14px] text-[#151515] leading-relaxed">' + escapeHTML(buildRootCauseDiagnosis(acc)) + '</p>' +
+'</section>' +
+
+// 3. Interactive 30-60-90 Day Playbook + Field Notes
+'<section>' +
+'<div class="flex items-center justify-between mb-2.5">' +
+'<h3 class="text-xs font-bold uppercase tracking-wider text-[#4D4D4D]">30-60-90 Day TAM Action Playbook</h3>' +
+'<span class="px-2.5 py-0.5 rounded-[2px] text-xs font-bold ' + (completedCount === 3 ? 'bg-[#F3FAF2] text-[#1E4F18] border border-[#3E8635]/40' : 'bg-[#F0F0F0] text-[#151515] border border-[#D2D2D2]') + ' tabular-nums">' + completedCount + ' / 3 Steps Completed</span>' +
+'</div>' +
+'<div class="space-y-2.5">' + stepsHTML + '</div>' +
+
+'<div class="mt-4 pt-4 border-t border-[#D2D2D2]">' +
+'<form id="form-add-note" class="flex items-center gap-2">' +
+'<input id="input-field-note" type="text" placeholder="Log TAM field note (e.g., QBR confirmed with VP Eng)..." class="flex-1 bg-white border border-[#B8B8B8] rounded-[3px] px-3.5 py-2 text-[14px] text-[#151515] placeholder:text-[#6A6A6A] focus:outline-none focus:border-[#0066CC] focus:ring-1 focus:ring-[#0066CC]" />' +
+'<button type="submit" class="px-4 py-2 rounded-[3px] text-[14px] font-semibold text-[#151515] bg-[#F0F0F0] hover:bg-[#E0E0E0] border border-[#B8B8B8] transition-colors shrink-0">Add</button>' +
+'</form>' +
+'<div class="mt-3 space-y-2">' + notesHTML + '</div>' +
+'</div>' +
+'</section>' +
+
+// 4. Recommended Paid TAM Advisory Upsell Card
+'<section class="p-4 rounded-[3px] border ' + (acc.staged ? 'border-[#3E8635] bg-[#F3FAF2]' : 'border-[#D2D2D2] bg-[#F7F7F7]') + '">' +
+'<div class="flex items-start justify-between gap-3">' +
+'<div>' +
+'<span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider ' + (acc.staged ? 'text-[#1E4F18]' : 'text-[#0066CC]') + '">' +
+'<i data-lucide="package-plus" class="w-4 h-4"></i>' +
+'Recommended Paid TAM Advisory Upsell' +
+'</span>' +
+'<h4 class="text-[15px] font-bold text-[#151515] mt-1">' + escapeHTML(acc.upsellSku) + '</h4>' +
+'</div>' +
+'<div class="text-right shrink-0">' +
+'<div class="text-lg font-extrabold text-[#1E4F18] tabular-nums">+' + formatCurrency(acc.upsellValue) + '</div>' +
+'<div class="text-[11px] font-semibold text-[#4D4D4D] uppercase tracking-wide">Incremental ARR</div>' +
+'</div>' +
+'</div>' +
+'<p class="text-[13.5px] text-[#333333] mt-2 leading-relaxed">' + escapeHTML(rationaleText) + '</p>' +
+'<div class="mt-4 flex items-center justify-between gap-3">' +
+'<span class="text-xs font-semibold text-[#4D4D4D]">' + (acc.staged ? 'Synced to Salesforce Pipeline' : 'Ready for AE Co-Sell Staging') + '</span>' +
+'<button id="btn-toggle-stage" type="button" data-stage-id="' + escapeHTML(acc.id) + '" class="px-4 py-2 rounded-[3px] text-[13.5px] font-bold border transition-colors ' + upsellBtnCls + '">' +
+upsellBtnText +
+'</button>' +
+'</div>' +
+'</section>'
+);
+}
+
+/* -------------------------------------------------------------------
+9. MASTER RENDER CYCLE
+-------------------------------------------------------------------- */
+function renderAll() {
+const result = getFullyFilteredAndSortedAccounts();
+renderKPIStrip(result.visible, state.accounts.length);
+renderSegmentPills(result.baseFiltered);
+renderTableHeaders();
+renderAccountsTable(result.visible, state.accounts.length);
+renderDrawer();
+
+if (typeof window.lucide !== 'undefined') {
+window.lucide.createIcons();
+}
+}
+
+/* -------------------------------------------------------------------
+10. TOAST NOTIFICATIONS
+-------------------------------------------------------------------- */
+function showToast(message, tone) {
+const container = document.getElementById('toast-container');
+const toast = document.createElement('div');
+
+let borderCls = 'border-[#151515] bg-[#151515] text-white';
+let iconName = 'info';
+let iconCls = 'text-[#F0AB00]';
+
+if (tone === 'success') {
+borderCls = 'border-[#3E8635] bg-[#151515] text-white';
+iconName = 'check-circle-2';
+iconCls = 'text-[#6EC664]';
+}
+
+toast.className = 'pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-[3px] border-l-4 shadow-lg text-[13.5px] font-semibold transition-all duration-200 ' + borderCls;
+toast.innerHTML = (
+'<i data-lucide="' + iconName + '" class="w-4 h-4 shrink-0 ' + iconCls + '"></i>' +
+'<span>' + escapeHTML(message) + '</span>'
+);
+
+container.appendChild(toast);
+if (typeof window.lucide !== 'undefined') {
+window.lucide.createIcons();
+}
+
+setTimeout(function () {
+toast.classList.add('opacity-0', 'translate-y-1');
+setTimeout(function () {
+if (toast.parentNode) toast.parentNode.removeChild(toast);
+}, 220);
+}, 2800);
+}
+
+/* -------------------------------------------------------------------
+11. CSV EXPORT (REAL CLIENT-SIDE BLOB DOWNLOAD)
+-------------------------------------------------------------------- */
+function exportFilteredCSV() {
+const result = getFullyFilteredAndSortedAccounts();
+const rows = result.visible;
+
+function csvCell(val) {
+const str = String(val === null || val === undefined ? '' : val);
+return '"' + str.replace(/"/g, '""') + '"';
+}
+
+const headers = [
+'Account ID',
+'Account Name',
+'Region',
+'ARR ($)',
+'Current Tier',
+'TAM Owner',
+'Adoption (%)',
+'30d Ticket Spike (%)',
+'Sev-1 Count',
+'Exec Sponsor',
+'Days to Renewal',
+'Health Score',
+'Status',
+'Recommended Upsell SKU',
+'Upsell Value ($)',
+'Staged in CRM'
+];
+
+const lines = [headers.map(csvCell).join(',')];
+rows.forEach(function (a) {
+lines.push([
+a.id,
+a.name,
+a.region,
+a.arr,
+a.currentTier,
+a.tamOwner,
+a.adoptionPct,
+a.ticketSpikePct,
+a.sev1Count,
+a.execSponsor,
+a.daysToRenewal,
+a.healthScore,
+a.status,
+a.upsellSku,
+a.upsellValue,
+a.staged ? 'Yes' : 'No'
+].map(csvCell).join(','));
+});
+
+const blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+const url = URL.createObjectURL(blob);
+const link = document.createElement('a');
+link.href = url;
+link.setAttribute('download', 'tam-pulse-portfolio-report.csv');
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+URL.revokeObjectURL(url);
+
+showToast('Exported ' + rows.length + ' accounts to tam-pulse-portfolio-report.csv', 'success');
+}
+
+/* -------------------------------------------------------------------
+12. AI TELEMETRY RE-SCORING ACTION
+-------------------------------------------------------------------- */
+function rerunAIHealthScoring() {
+if (state.isSyncing) return;
+state.isSyncing = true;
+
+const btn = document.getElementById('btn-rerun-scoring');
+const icon = document.getElementById('rerun-icon');
+const banner = document.getElementById('sync-banner');
+
+btn.disabled = true;
+if (icon) icon.classList.add('animate-spin');
+banner.classList.remove('hidden');
+
+const prevScores = {};
+getEnrichedAccounts().forEach(function (a) {
+prevScores[a.id] = a.healthScore;
+});
+
+setTimeout(function () {
+state.accounts = state.accounts.map(function (acc, index) {
+const shouldUpdate = (index % 2 === 0) || Math.random() > 0.45;
+if (!shouldUpdate) {
+return Object.assign({}, acc, { scoreDelta: 0 });
+}
+
+const adoptShift = (Math.random() > 0.45 ? 1 : -1) * (Math.floor(Math.random() * 3) + 2);
+const spikeShift = (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 3) + 2);
+
+const nextAdopt = Math.max(15, Math.min(99, acc.adoptionPct + adoptShift));
+const nextSpike = Math.max(-25, Math.min(80, acc.ticketSpikePct + spikeShift));
+
+return Object.assign({}, acc, {
+adoptionPct: nextAdopt,
+ticketSpikePct: nextSpike
+});
+});
+
+let changedCount = 0;
+state.accounts = state.accounts.map(function (acc) {
+const newCalc = computeAccountHealth(acc, state.weights);
+const delta = newCalc.healthScore - prevScores[acc.id];
+if (delta !== 0) changedCount += 1;
+return Object.assign({}, acc, { scoreDelta: delta });
+});
+
+state.isSyncing = false;
+btn.disabled = false;
+if (icon) icon.classList.remove('animate-spin');
+banner.classList.add('hidden');
+
+renderAll();
+showToast('Cluster telemetry synced — ' + changedCount + ' account scores updated.', 'success');
+}, 400);
+}
+
+/* -------------------------------------------------------------------
+13. WEIGHT CALIBRATION HANDLERS
+-------------------------------------------------------------------- */
+function syncWeightsUI() {
+document.getElementById('slider-weight-adoption').value = state.weights.adoption;
+document.getElementById('slider-weight-ticket').value = state.weights.ticketStability;
+document.getElementById('slider-weight-exec').value = state.weights.execSponsor;
+document.getElementById('slider-weight-renewal').value = state.weights.renewalBuffer;
+
+document.getElementById('val-weight-adoption').textContent = state.weights.adoption + '%';
+document.getElementById('val-weight-ticket').textContent = state.weights.ticketStability + '%';
+document.getElementById('val-weight-exec').textContent = state.weights.execSponsor + '%';
+document.getElementById('val-weight-renewal').textContent = state.weights.renewalBuffer + '%';
+
+const sum = state.weights.adoption + state.weights.ticketStability + state.weights.execSponsor + state.weights.renewalBuffer;
+const sumPill = document.getElementById('weights-sum-pill');
+sumPill.textContent = sum === 100 ? 'Sum: 100%' : 'Raw Sum: ' + sum + '% (Auto-Normalized)';
+sumPill.className = sum === 100
+? 'text-xs font-bold px-2.5 py-1 rounded-[2px] bg-[#F3FAF2] text-[#1E4F18] border border-[#3E8635]/40 tabular-nums'
+: 'text-xs font-bold px-2.5 py-1 rounded-[2px] bg-[#FDF6E2] text-[#8F5C00] border border-[#F0AB00]/50 tabular-nums';
+
+document.getElementById('weights-badge').textContent =
+state.weights.adoption + '/' + state.weights.ticketStability + '/' + state.weights.execSponsor + '/' + state.weights.renewalBuffer;
+}
+
+/* -------------------------------------------------------------------
+14. EVENT WIRING & DELEGATION
+-------------------------------------------------------------------- */
+function bindEvents() {
+document.getElementById('btn-export-csv').addEventListener('click', exportFilteredCSV);
+
+document.getElementById('filter-region').addEventListener('change', function (e) {
+state.filters.region = e.target.value;
+renderAll();
+});
+
+document.getElementById('segment-pills').addEventListener('click', function (e) {
+const btn = e.target.closest('button[data-segment]');
+if (!btn) return;
+state.filters.segment = btn.getAttribute('data-segment');
+renderAll();
+});
+
+const searchInput = document.getElementById('filter-search');
+const clearSearchBtn = document.getElementById('btn-clear-search');
+searchInput.addEventListener('input', function (e) {
+state.filters.search = e.target.value;
+clearSearchBtn.classList.toggle('hidden', !e.target.value);
+renderAll();
+});
+clearSearchBtn.addEventListener('click', function () {
+searchInput.value = '';
+state.filters.search = '';
+clearSearchBtn.classList.add('hidden');
+renderAll();
+});
+
+document.getElementById('btn-toggle-weights').addEventListener('click', function (e) {
+state.weightsPanelOpen = !state.weightsPanelOpen;
+document.getElementById('weights-panel').classList.toggle('hidden', !state.weightsPanelOpen);
+e.currentTarget.setAttribute('aria-expanded', String(state.weightsPanelOpen));
+});
+
+[
+{ id: 'slider-weight-adoption', key: 'adoption' },
+{ id: 'slider-weight-ticket', key: 'ticketStability' },
+{ id: 'slider-weight-exec', key: 'execSponsor' },
+{ id: 'slider-weight-renewal', key: 'renewalBuffer' }
+].forEach(function (item) {
+document.getElementById(item.id).addEventListener('input', function (e) {
+state.weights[item.key] = Number(e.target.value);
+syncWeightsUI();
+renderAll();
+});
+});
+
+document.getElementById('btn-reset-weights').addEventListener('click', function () {
+state.weights = Object.assign({}, DEFAULT_WEIGHTS);
+syncWeightsUI();
+renderAll();
+showToast('Scoring weights reset to 35 / 30 / 20 / 15 defaults.', 'info');
+});
+
+document.getElementById('btn-rerun-scoring').addEventListener('click', rerunAIHealthScoring);
+
+document.getElementById('table-headers').addEventListener('click', function (e) {
+const btn = e.target.closest('button[data-sort]');
+if (!btn) return;
+const key = btn.getAttribute('data-sort');
+if (state.sort.key === key) {
+state.sort.dir = state.sort.dir === 'asc' ? 'desc' : 'asc';
+} else {
+state.sort.key = key;
+state.sort.dir = (key === 'name' || key === 'region' || key === 'healthScore' || key === 'daysToRenewal') ? 'asc' : 'desc';
+}
+renderAll();
+});
+
+document.getElementById('accounts-tbody').addEventListener('click', function (e) {
+const row = e.target.closest('tr[data-account-id]');
+if (!row) return;
+state.selectedAccountId = row.getAttribute('data-account-id');
+renderAll();
+});
+
+document.getElementById('btn-close-drawer').addEventListener('click', function () {
+state.selectedAccountId = null;
+renderAll();
+});
+document.getElementById('drawer-backdrop').addEventListener('click', function () {
+state.selectedAccountId = null;
+renderAll();
+});
+
+const drawerBody = document.getElementById('drawer-body');
+drawerBody.addEventListener('change', function (e) {
+const checkbox = e.target.closest('input[data-playbook-check]');
+if (!checkbox || !state.selectedAccountId) return;
+const idx = Number(checkbox.getAttribute('data-playbook-check'));
+const acc = state.accounts.find(function (a) { return a.id === state.selectedAccountId; });
+if (!acc) return;
+acc.playbookChecks[idx] = checkbox.checked;
+renderDrawer();
+if (typeof window.lucide !== 'undefined') window.lucide.createIcons();
+});
+
+drawerBody.addEventListener('click', function (e) {
+const stageBtn = e.target.closest('#btn-toggle-stage');
+if (!stageBtn) return;
+const id = stageBtn.getAttribute('data-stage-id');
+const acc = state.accounts.find(function (a) { return a.id === id; });
+if (!acc) return;
+acc.staged = !acc.staged;
+renderAll();
+showToast(
+acc.staged
+? acc.name + ' upsell (+' + formatCurrency(acc.upsellValue) + ') staged in CRM pipeline.'
+: acc.name + ' upsell removed from staged pipeline.',
+acc.staged ? 'success' : 'info'
+);
+});
+
+drawerBody.addEventListener('submit', function (e) {
+if (e.target.id !== 'form-add-note') return;
+e.preventDefault();
+const input = document.getElementById('input-field-note');
+const text = input.value.trim();
+if (!text || !state.selectedAccountId) return;
+const acc = state.accounts.find(function (a) { return a.id === state.selectedAccountId; });
+if (!acc) return;
+acc.notes.unshift({
+text: text,
+timestamp: getNowTimeLabel()
+});
+renderDrawer();
+if (typeof window.lucide !== 'undefined') window.lucide.createIcons();
+showToast('TAM field note logged for ' + acc.id, 'success');
+});
+
+document.addEventListener('keydown', function (e) {
+if (e.key === 'Escape' && state.selectedAccountId) {
+state.selectedAccountId = null;
+renderAll();
+}
+});
+}
+
+/* -------------------------------------------------------------------
+15. BOOTSTRAP ON DOMCONTENTLOADED
+-------------------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', function () {
+syncWeightsUI();
+bindEvents();
+renderAll();
+});
+})();
+</script>
+</body>
+</html>
