@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealArchitect — Modular Services & SOW Recommendation Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Red+Hat+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Red Hat Display"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"Red Hat Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            rh: {
+              red: '#EE0000',
+              redDark: '#A30000',
+              black: '#151515',
+              charcoal: '#212427',
+              surface: '#F4F5F6',
+              border: '#D2D2D2',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      font-family: 'Red Hat Display', sans-serif;
+      background-color: #F3F4F6;
+      color: #151515;
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    button, input, select, textarea, label, optgroup {
+      font-family: 'Red Hat Display', sans-serif;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Executive Case Study Highlight: Crisp White with Warm Gold + Red Hat Red Ambient Glow */
+    .case-study-spotlight {
+      background-color: #FFFFFF;
+      border: 1px solid #E5D4C0;
+      box-shadow:
+        0 0 0 1px rgba(238, 0, 0, 0.14),
+        0 14px 36px -8px rgba(238, 0, 0, 0.15),
+        0 0 42px -4px rgba(245, 158, 11, 0.28);
+    }
+
+    /* Enterprise Hairline Card Surface */
+    .enterprise-panel {
+      background-color: #FFFFFF;
+      border: 1px solid #D4D7DD;
+      border-radius: 4px;
+    }
+
+    /* Industrial Range Slider */
+    input[type="range"].da-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 2px;
+      background: #D4D7DD;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].da-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 2px;
+      background: #151515;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 0 0 1px #151515, 0 1px 3px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: background-color 0.12s ease;
+    }
+
+    input[type="range"].da-slider::-webkit-slider-thumb:hover {
+      background: #EE0000;
+      box-shadow: 0 0 0 1px #EE0000, 0 1px 3px rgba(0, 0, 0, 0.25);
+    }
+
+    input[type="range"].da-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 2px;
+      background: #151515;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 0 0 1px #151515, 0 1px 3px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: background-color 0.12s ease;
+    }
+
+    @media print {
+      body {
+        background-color: #FFFFFF !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .case-study-spotlight {
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#F3F4F6] text-[#151515]">
+
+  <!-- Enterprise Top Bar (Dark Carbon + Red Hat Accent) -->
+  <header class="no-print sticky top-0 z-30 border-b-2 border-[#EE0000] bg-[#151515] text-white">
+    <div class="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+      <div class="flex items-center gap-3.5">
+        <div class="flex h-10 w-10 items-center justify-center rounded border border-neutral-700 bg-[#212427] text-[#EE0000]">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+            <path d="M17.5 14v7M14 17.5h7"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5">
+            <h1 class="text-lg font-bold tracking-tight text-white">DealArchitect</h1>
+            <span class="border border-neutral-700 bg-neutral-800 px-2 py-0.5 font-mono text-xs font-medium uppercase tracking-wider text-neutral-300">CPQ &amp; SOW Engine v2.4</span>
+          </div>
+          <p class="text-xs text-neutral-400">Modular Services Architecture &amp; Commercial Governance System</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <div class="hidden items-center gap-3 border border-neutral-700 bg-[#212427] px-3.5 py-1.5 text-xs font-medium text-neutral-200 md:inline-flex">
+          <span class="inline-block h-2 w-2 bg-emerald-500"></span>
+          <span class="tabular-nums"><strong class="text-white">1.4x</strong> Avg ACV Uplift</span>
+          <span class="text-neutral-600">|</span>
+          <span class="tabular-nums"><strong class="text-white">50%</strong> Faster Sales &amp; GTM Delivery</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-[1440px] px-5 py-8 sm:px-8">
+
+    <!-- ======================================================================= -->
+    <!-- CORE ARCHITECTURE & PM CASE STUDY (PROMOTED TO TOP WITH GOLD/RED GLOW)  -->
+    <!-- ======================================================================= -->
+    <section aria-labelledby="executiveArchitectureHeading" class="case-study-spotlight relative mb-10 overflow-hidden rounded">
+      <!-- Top Gold-to-Red Accent Bar -->
+      <div class="h-1.5 w-full bg-gradient-to-r from-[#EE0000] via-[#D97706] to-[#F59E0B]"></div>
+
+      <div class="p-6 sm:p-8">
+        <!-- Section Header -->
+        <div class="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-neutral-200 pb-5">
+          <div>
+            <div class="mb-1.5 flex items-center gap-2">
+              <span class="bg-[#EE0000] px-2 py-0.5 font-mono text-xs font-semibold uppercase tracking-wider text-white">Executive Architecture Brief</span>
+              <span class="border border-amber-300 bg-amber-50 px-2 py-0.5 font-mono text-xs font-semibold uppercase tracking-wider text-amber-800">Core Product Strategy</span>
+            </div>
+            <h2 id="executiveArchitectureHeading" class="text-2xl font-bold tracking-tight text-[#151515] sm:text-[26px]">
+              Productizing Enterprise Services: Deterministic SKU Architecture &amp; SOW Automation
+            </h2>
+            <p class="mt-1.5 max-w-4xl text-sm leading-relaxed text-neutral-600 sm:text-[15px]">
+              How transforming bespoke, engineer-authored Statements of Work into a deterministic CPQ rules engine eliminated Deal Desk bottlenecks, enforced delivery readiness guardrails, and scaled services attach across enterprise software deals.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3-Pillar Case Study Narrative -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+
+          <!-- 01: The GTM & Services Bottleneck -->
+          <article class="flex flex-col justify-between border border-neutral-200 bg-[#FAFAFA] p-5 lg:col-span-4">
+            <div>
+              <div class="mb-3 flex items-center gap-2.5 border-b border-neutral-200 pb-2.5">
+                <span class="bg-[#151515] px-2 py-0.5 font-mono text-xs font-bold text-white">01</span>
+                <h3 class="text-base font-bold text-[#151515]">The GTM &amp; Services Bottleneck</h3>
+              </div>
+              <p class="text-sm leading-relaxed text-neutral-700 sm:text-[15px]">
+                In enterprise B2B SaaS motions, every non-trivial deployment triggered a bespoke Statement of Work (SOW) drafted manually by Solutions Architects, Services Delivery leads, and Legal Deal Desk.
+              </p>
+              <ul class="mt-3.5 space-y-2 text-sm leading-relaxed text-neutral-700">
+                <li class="flex items-start gap-2">
+                  <span class="mt-1.5 h-1.5 w-1.5 shrink-0 bg-[#EE0000]"></span>
+                  <span><strong>3+ Weeks of Cycle Friction:</strong> Custom legal redlines and technical scoping loops stalled late-stage quarter-end closes.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="mt-1.5 h-1.5 w-1.5 shrink-0 bg-[#EE0000]"></span>
+                  <span><strong>Margin &amp; Scope Erosion:</strong> Inconsistent pricing across reps led to unapproved services discounting to close software paper.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="mt-1.5 h-1.5 w-1.5 shrink-0 bg-[#EE0000]"></span>
+                  <span><strong>Post-Sale Churn Risk:</strong> Low-IT-maturity accounts bought under-scoped QuickStart packages, causing stalled integrations and Year-1 churn.</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- 02: Modular SKU Architecture & Guardrail Logic -->
+          <article class="flex flex-col justify-between border border-neutral-200 bg-white p-5 lg:col-span-5">
+            <div>
+              <div class="mb-3 flex items-center gap-2.5 border-b border-neutral-200 pb-2.5">
+                <span class="bg-[#EE0000] px-2 py-0.5 font-mono text-xs font-bold text-white">02</span>
+                <h3 class="text-base font-bold text-[#151515]">Modular SKU Architecture &amp; Guardrail Logic</h3>
+              </div>
+              <p class="mb-3.5 text-sm leading-relaxed text-neutral-700 sm:text-[15px]">
+                Services are productized into three composable pillars—<strong>(A) Consulting Implementation</strong>, <strong>(B) Role-Based Training</strong>, and <strong>(C) Technical Account Management (TAM)</strong>—governed by three deterministic rules:
+              </p>
+              <div class="space-y-2.5">
+                <div class="border-l-4 border-amber-500 bg-amber-50/70 px-3.5 py-2.5">
+                  <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-amber-900 sm:text-[13px]">
+                    <span class="font-mono">GR-01</span>
+                    <span>Low IT Maturity Protection (Maturity &le; 2)</span>
+                  </div>
+                  <p class="mt-1 text-xs leading-relaxed text-amber-950 sm:text-sm">
+                    Forces <code class="font-mono font-semibold">TRN-CERT-10</code> Admin Bootcamp (or Intensive Lab for Strategic) and auto-elevates the TAM tier by +1 level to prevent onboarding stalls and protect NDR.
+                  </p>
+                </div>
+                <div class="border-l-4 border-amber-500 bg-amber-50/70 px-3.5 py-2.5">
+                  <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-amber-900 sm:text-[13px]">
+                    <span class="font-mono">GR-02</span>
+                    <span>Multi-Region Governance Floor</span>
+                  </div>
+                  <p class="mt-1 text-xs leading-relaxed text-amber-950 sm:text-sm">
+                    Automatically upgrades <code class="font-mono font-semibold">TAM-STD</code> to Dedicated Named TAM (<code class="font-mono font-semibold">TAM-DED-05</code>) whenever Multi-Region Rollout (<code class="font-mono font-semibold">MOD-GLB-501</code>) is scoped.
+                  </p>
+                </div>
+                <div class="border-l-4 border-emerald-600 bg-emerald-50/70 px-3.5 py-2.5">
+                  <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-emerald-900 sm:text-[13px]">
+                    <span class="font-mono">GR-03</span>
+                    <span>DevOps Velocity Credit (Maturity &ge; 4)</span>
+                  </div>
+                  <p class="mt-1 text-xs leading-relaxed text-emerald-950 sm:text-sm">
+                    Rewards mature Platform Ops teams with an automatic <strong>-10% Engineering Credit</strong> on base consulting and <strong>-1.0 week</strong> delivery acceleration.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 03: Verified Commercial Impact -->
+          <article class="flex flex-col justify-between border border-emerald-200 bg-emerald-50/35 p-5 lg:col-span-3">
+            <div>
+              <div class="mb-3 flex items-center gap-2.5 border-b border-emerald-200 pb-2.5">
+                <span class="bg-emerald-700 px-2 py-0.5 font-mono text-xs font-bold text-white">03</span>
+                <h3 class="text-base font-bold text-[#151515]">Verified Impact</h3>
+              </div>
+              <div class="space-y-3">
+                <div class="border border-emerald-200 bg-white p-3.5">
+                  <div class="font-mono text-2xl font-bold text-emerald-700 tabular-nums">1.4x</div>
+                  <div class="mt-0.5 text-sm font-bold text-[#151515]">Average ACV Uplift</div>
+                  <p class="mt-1 text-xs leading-relaxed text-neutral-600">Standardized attach rates across Mid-Market, Enterprise, and Global Strategic cohorts.</p>
+                </div>
+                <div class="border border-emerald-200 bg-white p-3.5">
+                  <div class="font-mono text-2xl font-bold text-emerald-700 tabular-nums">-50%</div>
+                  <div class="mt-0.5 text-sm font-bold text-[#151515]">Sales &amp; Delivery Time</div>
+                  <p class="mt-1 text-xs leading-relaxed text-neutral-600">Pre-redlined SKU deliverables eliminate legal SOW back-and-forth and cut go-live windows in half.</p>
+                </div>
+                <div class="border border-emerald-200 bg-white p-3.5">
+                  <div class="font-mono text-2xl font-bold text-emerald-700 tabular-nums">100%</div>
+                  <div class="mt-0.5 text-sm font-bold text-[#151515]">Deterministic Auditability</div>
+                  <p class="mt-1 text-xs leading-relaxed text-neutral-600">Zero unapproved margin erosion; automated risk guardrails enforced prior to contract signature.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- INTERACTIVE SIMULATOR HEADER                                            -->
+    <!-- ======================================================================= -->
+    <div class="mb-5 flex flex-wrap items-end justify-between gap-3 border-b border-neutral-300 pb-3">
+      <div>
+        <span class="font-mono text-xs font-semibold uppercase tracking-widest text-[#EE0000]">Interactive Reference Implementation</span>
+        <h2 class="mt-0.5 text-xl font-bold tracking-tight text-[#151515]">Deal Configuration, Rules Trace &amp; Live SOW Compiler</h2>
+      </div>
+      <p class="text-xs text-neutral-600 sm:text-sm">Adjust deal parameters below to inspect deterministic SKU pricing, governance guardrails, and PDF SOW generation in real time.</p>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- MAIN TWO-COLUMN ENTERPRISE CPQ WORKSPACE                                -->
+    <!-- ======================================================================= -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+
+      <!-- LEFT PANEL: Deal Parameters & Guardrail Inputs -->
+      <aside class="space-y-5 lg:col-span-4">
+
+        <!-- Quick Deal Presets -->
+        <section class="enterprise-panel p-5">
+          <div class="mb-3.5 flex items-center justify-between border-b border-neutral-200 pb-2.5">
+            <div class="flex items-center gap-2">
+              <i data-lucide="zap" class="h-4 w-4 text-[#EE0000]"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#151515]">Quick Deal Presets</h3>
+            </div>
+            <span id="activePresetLabel" class="font-mono text-xs font-medium text-neutral-500">Custom Config</span>
+          </div>
+          <div id="presetsContainer" class="grid grid-cols-1 gap-2.5">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- Customer Segment Radio Cards -->
+        <section class="enterprise-panel p-5">
+          <div class="mb-3.5 flex items-center justify-between border-b border-neutral-200 pb-2.5">
+            <div class="flex items-center gap-2">
+              <i data-lucide="building-2" class="h-4 w-4 text-[#151515]"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#151515]">1. Customer Segment</h3>
+            </div>
+            <span class="font-mono text-xs text-neutral-500">Base SaaS ACV</span>
+          </div>
+          <div id="segmentsContainer" class="space-y-2.5" role="radiogroup" aria-label="Customer Segment">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- Technical Complexity Checkboxes -->
+        <section class="enterprise-panel p-5">
+          <div class="mb-3.5 flex items-center justify-between border-b border-neutral-200 pb-2.5">
+            <div class="flex items-center gap-2">
+              <i data-lucide="layers" class="h-4 w-4 text-[#151515]"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#151515]">2. Technical Complexity Modules</h3>
+            </div>
+            <span id="complexityCountBadge" class="border border-neutral-300 bg-neutral-100 px-2 py-0.5 font-mono text-xs font-semibold text-neutral-700 tabular-nums">0 selected</span>
+          </div>
+          <div id="complexitiesContainer" class="space-y-2.5">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- Internal Customer IT Maturity Slider -->
+        <section class="enterprise-panel p-5">
+          <div class="mb-3.5 flex items-center justify-between border-b border-neutral-200 pb-2.5">
+            <div class="flex items-center gap-2">
+              <i data-lucide="shield-check" class="h-4 w-4 text-[#151515]"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#151515]">3. Customer IT Maturity</h3>
+            </div>
+            <span id="maturityScoreBadge" class="border border-neutral-900 bg-[#151515] px-2 py-0.5 font-mono text-xs font-semibold text-white tabular-nums">Level 3 / 5</span>
+          </div>
+
+          <div class="pt-1">
+            <input
+              id="itMaturitySlider"
+              type="range"
+              min="1"
+              max="5"
+              step="1"
+              value="3"
+              class="da-slider"
+              aria-label="Customer IT Maturity Level"
+            />
+            <div class="mt-2.5 flex justify-between px-0.5 font-mono text-xs text-neutral-500 tabular-nums">
+              <button type="button" data-maturity-tick="1" class="tick-btn px-1 hover:text-[#EE0000]">1</button>
+              <button type="button" data-maturity-tick="2" class="tick-btn px-1 hover:text-[#EE0000]">2</button>
+              <button type="button" data-maturity-tick="3" class="tick-btn px-1 hover:text-[#EE0000]">3</button>
+              <button type="button" data-maturity-tick="4" class="tick-btn px-1 hover:text-[#EE0000]">4</button>
+              <button type="button" data-maturity-tick="5" class="tick-btn px-1 hover:text-[#EE0000]">5</button>
+            </div>
+          </div>
+
+          <div class="mt-3.5 flex items-center justify-between border border-neutral-200 bg-neutral-50 px-3.5 py-2.5">
+            <span class="text-xs font-semibold uppercase tracking-wide text-neutral-500">Profile</span>
+            <span id="maturityLabelText" class="text-sm font-semibold text-[#151515]">3 — Standard Enterprise IT</span>
+          </div>
+
+          <!-- Dynamic Guardrail Callout Box -->
+          <div id="maturityGuardrailCallout" class="mt-3.5 border p-3.5 text-xs leading-relaxed sm:text-sm">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+      </aside>
+
+      <!-- RIGHT PANEL: Live Deal & SOW Engine -->
+      <div class="space-y-6 lg:col-span-8">
+
+        <!-- Top 3 KPI Summary Strip -->
+        <section class="enterprise-panel grid grid-cols-1 divide-y divide-neutral-200 md:grid-cols-3 md:divide-x md:divide-y-0" aria-label="Deal Commercial KPIs">
+          <!-- KPI 1: Total Deal ACV -->
+          <div class="p-5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Total Deal ACV</span>
+              <span class="border border-neutral-300 bg-neutral-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-neutral-700">YEAR 1 TCV</span>
+            </div>
+            <div id="kpiTotalAcv" class="mt-2.5 text-3xl font-bold tracking-tight text-[#151515] tabular-nums">$0</div>
+            <div id="kpiAcvBreakdown" class="mt-2.5 inline-block border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-xs font-medium text-neutral-700 tabular-nums">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- KPI 2: ACV Multiplier vs Base -->
+          <div class="p-5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">ACV Multiplier</span>
+              <span id="kpiMultiplierStatus" class="border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[11px] font-semibold text-emerald-800">TARGET ZONE</span>
+            </div>
+            <div class="mt-2.5 flex items-baseline gap-2.5">
+              <span id="kpiMultiplier" class="text-3xl font-bold tracking-tight text-[#151515] tabular-nums">1.00x</span>
+              <span class="text-xs font-medium text-neutral-500 tabular-nums">vs. <span id="kpiBaseSoftwareSmall">$180k</span> SaaS</span>
+            </div>
+            <!-- Target-Range Horizontal Gauge (1.0x to 2.2x, highlighting 1.3x-1.5x) -->
+            <div class="mt-3">
+              <div class="relative h-2.5 w-full overflow-hidden bg-neutral-200">
+                <div class="absolute top-0 bottom-0 bg-emerald-200" style="left: 25%; width: 16.67%;" title="1.30x - 1.50x GTM Target Zone"></div>
+                <div id="multiplierGaugeBar" class="relative z-10 h-full bg-[#151515] transition-all duration-200" style="width: 30%;"></div>
+              </div>
+              <div class="mt-1.5 flex justify-between font-mono text-[11px] text-neutral-500 tabular-nums">
+                <span>1.0x</span>
+                <span class="font-semibold text-emerald-800">1.3x–1.5x Target</span>
+                <span>2.2x+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPI 3: GTM Delivery Velocity -->
+          <div class="p-5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">GTM Delivery Velocity</span>
+              <span id="kpiVelocitySavedBadge" class="border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[11px] font-semibold text-emerald-800 tabular-nums">50% Faster</span>
+            </div>
+            <div class="mt-2.5 flex items-baseline gap-2.5">
+              <span id="kpiModularWeeks" class="text-3xl font-bold tracking-tight text-[#151515] tabular-nums">0.0 Weeks</span>
+              <span id="kpiLegacyWeeks" class="text-sm text-neutral-400 line-through tabular-nums">0.0 Weeks</span>
+            </div>
+            <div class="mt-2.5 flex items-center gap-1.5 text-xs font-medium text-neutral-600 tabular-nums">
+              <i data-lucide="clock" class="h-3.5 w-3.5 text-emerald-700"></i>
+              <span id="kpiSalesCycleInline">Sales cycle: 0d vs. 0d legacy</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Active Governance & Rules Trace Strip -->
+        <section id="governanceTraceStrip" class="border px-4 py-3 text-xs transition-colors sm:text-sm">
+          <!-- Rendered by JS -->
+        </section>
+
+        <!-- Recommended Modular Bundle Grid (3 Architectural Cards) -->
+        <section aria-label="Recommended Modular Services Bundle">
+          <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#151515]">Recommended Modular Services Architecture</h3>
+            <span id="servicesSubtotalLabel" class="font-mono text-xs font-bold text-[#151515] tabular-nums sm:text-sm">Services ACV: $0</span>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div id="cardConsulting" class="enterprise-panel flex flex-col justify-between p-5">
+              <!-- Rendered by JS -->
+            </div>
+            <div id="cardTraining" class="enterprise-panel flex flex-col justify-between p-5">
+              <!-- Rendered by JS -->
+            </div>
+            <div id="cardTam" class="enterprise-panel flex flex-col justify-between p-5">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- GTM Velocity & Sales Cycle Benchmark (Chart.js Card) -->
+        <section class="enterprise-panel p-5">
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 pb-3">
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#151515]">GTM Velocity &amp; Sales Cycle Benchmark</h3>
+              <p class="mt-0.5 text-xs text-neutral-600 sm:text-sm">Legacy Custom Scoping vs. DealArchitect Modular CPQ Engine</p>
+            </div>
+            <div id="velocitySavingsPills" class="flex flex-wrap items-center gap-2">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+          <div class="relative h-56 w-full">
+            <canvas id="velocityChart"></canvas>
+          </div>
+        </section>
+
+        <!-- Executable Statement of Work (SOW) Generator Card -->
+        <section class="enterprise-panel overflow-hidden">
+          <!-- SOW Document Header / Contract Action Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-300 bg-[#FAFAFA] px-5 py-3.5">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <div class="flex items-center gap-2 text-[#151515]">
+                <i data-lucide="file-text" class="h-4 w-4 text-[#EE0000]"></i>
+                <h3 class="text-xs font-bold uppercase tracking-wider sm:text-sm">Executable Statement of Work (SOW)</h3>
+              </div>
+              <span id="sowDocId" class="border border-neutral-300 bg-white px-2 py-0.5 font-mono text-xs font-semibold text-neutral-700">DOC ID: SOW-2026-MOD-842</span>
+              <span class="inline-flex items-center gap-1.5 border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[11px] font-semibold text-emerald-800">
+                <span class="h-1.5 w-1.5 bg-emerald-600"></span>
+                READY FOR SIGNATURE
+              </span>
+            </div>
+
+            <div class="no-print flex items-center gap-2.5">
+              <button
+                id="copySowBtn"
+                type="button"
+                class="inline-flex items-center gap-1.5 rounded-sm border border-neutral-300 bg-white px-3.5 py-2 text-xs font-semibold text-[#151515] transition hover:border-neutral-400 hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-[#151515]"
+              >
+                <i data-lucide="copy" class="h-3.5 w-3.5 text-neutral-600"></i>
+                <span>Copy SOW Text</span>
+              </button>
+              <button
+                id="exportSowPdfBtn"
+                type="button"
+                class="inline-flex items-center gap-1.5 rounded-sm bg-[#EE0000] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#A30000] focus:outline-none focus:ring-2 focus:ring-[#EE0000] focus:ring-offset-1"
+              >
+                <i data-lucide="file-down" class="h-3.5 w-3.5"></i>
+                <span>Export PDF</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- SOW Document Body -->
+          <div id="sowDocumentBody" class="space-y-5 p-6 text-sm leading-relaxed text-neutral-700 sm:text-[15px]">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div
+    id="toastBanner"
+    role="status"
+    aria-live="polite"
+    class="no-print pointer-events-none fixed bottom-5 right-5 z-50 flex translate-y-3 items-center gap-2 border border-neutral-700 bg-[#151515] px-4 py-2.5 text-xs font-semibold text-white opacity-0 shadow-lg transition-all duration-200 sm:text-sm"
+  >
+    <i data-lucide="check-circle-2" class="h-4 w-4 text-emerald-400"></i>
+    <span id="toastMessage">Statement of Work exported</span>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    (function () {
+      'use strict';
+
+      // =========================================================================
+      // 1. DETERMINISTIC CATALOG & BUSINESS RULES DATA
+      // =========================================================================
+      const SEGMENTS = {
+        mid_market: {
+          id: 'mid_market',
+          name: 'Mid-Market',
+          seatBand: '100–500 seats',
+          baseSoftwareAcv: 80000,
+          legacySalesDays: 38,
+          modularSalesDays: 18,
+          consulting: {
+            sku: 'PKG-IMP-CORE',
+            title: 'Core QuickStart Implementation',
+            price: 14000,
+            modularWeeks: 4.0,
+            legacyWeeks: 8.0,
+            deliverables: [
+              'SSO & SAML 2.0 Identity Setup',
+              'Core Workspace & RBAC Provisioning',
+              'Standard CSV Data Ingestion Pipeline'
+            ]
+          },
+          training: {
+            sku: 'TRN-ESS-01',
+            title: 'Self-Paced Academy + 2 Live Workshops',
+            price: 4000,
+            deliverables: [
+              'On-Demand Admin & End-User LMS Access',
+              '2x 90-Min Live Workflow Architecture Workshops'
+            ]
+          },
+          tam: {
+            sku: 'TAM-STD',
+            title: 'Pooled Enterprise Success + 24h SLA',
+            sla: '24h SLA',
+            price: 6000,
+            deliverables: [
+              'Quarterly Executive Business Reviews (QBRs)',
+              '24-Hour Standard Support SLA & Health Scoring'
+            ]
+          }
+        },
+        enterprise: {
+          id: 'enterprise',
+          name: 'Enterprise',
+          seatBand: '500–2,500 seats',
+          baseSoftwareAcv: 180000,
+          legacySalesDays: 54,
+          modularSalesDays: 26,
+          consulting: {
+            sku: 'PKG-IMP-ENT',
+            title: 'Enterprise Architecture & SSO Deployment',
+            price: 32000,
+            modularWeeks: 6.0,
+            legacyWeeks: 12.0,
+            deliverables: [
+              'Multi-Workspace SCIM & Okta/Entra ID Sync',
+              'Custom Approval Workflows & Audit Logging',
+              'Dedicated Sandbox Staging & UAT Sign-Off'
+            ]
+          },
+          training: {
+            sku: 'TRN-PRO-05',
+            title: 'Role-Based Enablement Pack (5 Admin Seats)',
+            price: 10000,
+            deliverables: [
+              '5 Certified System Administrator Seats',
+              'Custom Internal Playbook & Champions Kit'
+            ]
+          },
+          tam: {
+            sku: 'TAM-DED-05',
+            title: 'Dedicated Named TAM (0.25 FTE, 4h SLA)',
+            sla: '4h SLA',
+            price: 18000,
+            deliverables: [
+              'Bi-Weekly Architecture & Roadmap Cadence',
+              '4-Hour Priority Incident SLA & Release Readiness'
+            ]
+          }
+        },
+        global_strategic: {
+          id: 'global_strategic',
+          name: 'Global Strategic',
+          seatBand: '2,500+ seats',
+          baseSoftwareAcv: 350000,
+          legacySalesDays: 76,
+          modularSalesDays: 36,
+          consulting: {
+            sku: 'PKG-IMP-GLB',
+            title: 'Global Multi-Entity Reference Architecture',
+            price: 65000,
+            modularWeeks: 8.0,
+            legacyWeeks: 16.0,
+            deliverables: [
+              'Multi-Org Federation & Cross-Region Data Mesh',
+              'Custom Security Posture & SIEM Event Streaming',
+              'Full Load Testing & Cutover Runbook Execution'
+            ]
+          },
+          training: {
+            sku: 'TRN-ENT-15',
+            title: 'Center-of-Excellence Bootcamp (15 Seats)',
+            price: 22000,
+            deliverables: [
+              '15 Certified Admin & Architect Seats',
+              'Train-the-Trainer Global Enablement Curriculum'
+            ]
+          },
+          tam: {
+            sku: 'TAM-PRI-10',
+            title: 'Principal TAM + 24/7 P1 War-Room SLA',
+            sla: '1h P1 SLA',
+            price: 38000,
+            deliverables: [
+              'Weekly Executive Steering Committee & Telemetry Audit',
+              '24/7 P1 War-Room Escalation & 1-Hour SLA'
+            ]
+          }
+        }
+      };
+
+      const COMPLEXITIES = {
+        migration: {
+          id: 'migration',
+          sku: 'MOD-MIG-201',
+          title: 'Legacy Data Migration',
+          price: 35000,
+          modularWeeks: 1.5,
+          legacyWeeks: 4.0,
+          modularDays: 3,
+          legacyDays: 12,
+          deliverable: 'Automated Schema Mapping & Historical Record ETL Migration'
+        },
+        erp: {
+          id: 'erp',
+          sku: 'MOD-INT-304',
+          title: 'Custom ERP/CRM Integration',
+          price: 25000,
+          modularWeeks: 1.0,
+          legacyWeeks: 3.0,
+          modularDays: 2,
+          legacyDays: 9,
+          deliverable: 'Bi-Directional Salesforce / NetSuite Webhook & API Connector'
+        },
+        compliance: {
+          id: 'compliance',
+          sku: 'MOD-SEC-402',
+          title: 'HIPAA / GDPR Compliance Pack',
+          price: 30000,
+          modularWeeks: 1.0,
+          legacyWeeks: 3.5,
+          modularDays: 3,
+          legacyDays: 14,
+          deliverable: 'BAA Execution, Field-Level Encryption & Automated PII Retention Policies'
+        },
+        multiregion: {
+          id: 'multiregion',
+          sku: 'MOD-GLB-501',
+          title: 'Multi-Region Global Rollout',
+          price: 45000,
+          modularWeeks: 2.0,
+          legacyWeeks: 5.0,
+          modularDays: 4,
+          legacyDays: 15,
+          deliverable: 'EU/APAC Data Residency Isolation & Phased Regional Cutover'
+        }
+      };
+
+      const TAM_TIERS = {
+        'TAM-STD': {
+          sku: 'TAM-STD',
+          title: 'Pooled Enterprise Success + 24h SLA',
+          sla: '24h SLA',
+          price: 6000,
+          deliverables: [
+            'Quarterly Executive Business Reviews (QBRs)',
+            '24-Hour Standard Support SLA & Health Scoring'
+          ]
+        },
+        'TAM-DED-05': {
+          sku: 'TAM-DED-05',
+          title: 'Dedicated Named TAM (0.25 FTE, 4h SLA)',
+          sla: '4h SLA',
+          price: 18000,
+          deliverables: [
+            'Bi-Weekly Architecture & Roadmap Cadence',
+            '4-Hour Priority Incident SLA & Release Readiness'
+          ]
+        },
+        'TAM-PRI-10': {
+          sku: 'TAM-PRI-10',
+          title: 'Principal TAM + 24/7 P1 War-Room SLA',
+          sla: '1h P1 SLA',
+          price: 38000,
+          deliverables: [
+            'Weekly Executive Steering Committee & Telemetry Audit',
+            '24/7 P1 War-Room Escalation & 1-Hour SLA'
+          ]
+        },
+        'TAM-EXEC-20': {
+          sku: 'TAM-EXEC-20',
+          title: 'Executive Resident Architect',
+          sla: '30m P1 SLA',
+          price: 52000,
+          deliverables: [
+            'Embedded Named Resident Architect for Governance & Cutover',
+            '24/7 Executive Escalation Bridge & 30-Min P1 Response SLA'
+          ]
+        }
+      };
+
+      const IT_MATURITY_LABELS = {
+        1: '1 — Ad-Hoc IT (No Dedicated Admin)',
+        2: '2 — Lean Ops (Shared Bandwidth)',
+        3: '3 — Standard Enterprise IT',
+        4: '4 — Mature Platform Ops Team',
+        5: '5 — Dedicated Engineering & DevOps COE'
+      };
+
+      const PRESETS = [
+        {
+          name: 'FinTech Scale-Up',
+          subtitle: 'Enterprise • ERP Integration + Compliance Pack',
+          badge: 'Maturity 3',
+          segment: 'enterprise',
+          complexities: ['erp', 'compliance'],
+          itMaturity: 3
+        },
+        {
+          name: 'Lean Ops Rescue',
+          subtitle: 'Mid-Market • Legacy Data Migration',
+          badge: 'GR-01 Active',
+          segment: 'mid_market',
+          complexities: ['migration'],
+          itMaturity: 2
+        },
+        {
+          name: 'Global Bank Rollout',
+          subtitle: 'Global Strategic • Compliance + Multi-Region + ERP',
+          badge: 'GR-03 Credit',
+          segment: 'global_strategic',
+          complexities: ['compliance', 'multiregion', 'erp'],
+          itMaturity: 4
+        }
+      ];
+
+      // =========================================================================
+      // 2. REACTIVE APPLICATION STATE
+      // =========================================================================
+      let state = {
+        segment: 'enterprise',
+        complexities: ['erp', 'compliance'],
+        itMaturity: 3,
+        presetName: 'FinTech Scale-Up'
+      };
+
+      let velocityChartInstance = null;
+      let latestCalculation = null;
+      let toastTimeout = null;
+
+      // =========================================================================
+      // 3. FORMATTING UTILITIES
+      // =========================================================================
+      function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0
+        }).format(amount);
+      }
+
+      function formatCompactCurrency(amount) {
+        const k = amount / 1000;
+        return '$' + (Number.isInteger(k) ? k.toFixed(0) : k.toFixed(1)) + 'k';
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      // =========================================================================
+      // 4. PURE DETERMINISTIC ENGINE
+      // =========================================================================
+      function computeDealModel(currentState) {
+        const seg = SEGMENTS[currentState.segment];
+        const activeComplexities = currentState.complexities
+          .map(function (id) { return COMPLEXITIES[id]; })
+          .filter(Boolean);
+
+        const activeRules = [];
+
+        // --- A. Consulting Implementation Calculation ---
+        const baseConsultingPrice = seg.consulting.price;
+        let engineeringCredit = 0;
+        let gr03Active = false;
+
+        if (currentState.itMaturity >= 4) {
+          gr03Active = true;
+          engineeringCredit = Math.round(baseConsultingPrice * 0.10);
+          activeRules.push({
+            id: 'GR-03',
+            tone: 'emerald',
+            text: 'RULE GR-03 ACTIVE: IT Maturity >= 4 applied -10% Self-Sufficiency Engineering Credit (' + formatCurrency(-engineeringCredit) + ') on base consulting & -1.0 week delivery acceleration.'
+          });
+        }
+
+        const complexityConsultingTotal = activeComplexities.reduce(function (sum, mod) {
+          return sum + mod.price;
+        }, 0);
+
+        const consultingTotal = (baseConsultingPrice - engineeringCredit) + complexityConsultingTotal;
+        const consultingDeliverables = seg.consulting.deliverables.slice();
+        activeComplexities.forEach(function (mod) {
+          consultingDeliverables.push(mod.deliverable + ' (' + mod.sku + ')');
+        });
+
+        // --- B. Training & Certification Calculation ---
+        let trainingSku = seg.training.sku;
+        let trainingTitle = seg.training.title;
+        let trainingPrice = seg.training.price;
+        let trainingDeliverables = seg.training.deliverables.slice();
+        let trainingGuardrailBadge = null;
+
+        // --- C. TAM Tier Calculation ---
+        let tamSku = seg.tam.sku;
+        let tamTitle = seg.tam.title;
+        let tamSla = seg.tam.sla;
+        let tamPrice = seg.tam.price;
+        let tamDeliverables = seg.tam.deliverables.slice();
+        let tamGuardrailBadge = null;
+
+        // Guardrail GR-01: itMaturity <= 2
+        if (currentState.itMaturity <= 2) {
+          if (currentState.segment === 'global_strategic') {
+            trainingSku = seg.training.sku + ' + LAB';
+            trainingTitle = seg.training.title + ' + Intensive Hands-On Admin Lab';
+            trainingPrice = seg.training.price + 10000;
+            trainingDeliverables = seg.training.deliverables.concat([
+              'Intensive Hands-On Admin Lab (+$10,000 Guardrail Scope)'
+            ]);
+          } else {
+            trainingSku = 'TRN-CERT-10';
+            trainingTitle = 'Admin Certification Bootcamp (10 Seats)';
+            trainingPrice = 15000;
+            trainingDeliverables = [
+              '10 Live Instructor-Led Certification Bootcamp Seats',
+              'Guided Sandbox Configuration & Operational Runbook Sign-Off'
+            ];
+          }
+          trainingGuardrailBadge = 'Guardrail Enforced (GR-01)';
+
+          let upgradedTamSku = tamSku;
+          if (tamSku === 'TAM-STD') {
+            upgradedTamSku = 'TAM-DED-05';
+          } else if (tamSku === 'TAM-DED-05') {
+            upgradedTamSku = 'TAM-PRI-10';
+          } else if (tamSku === 'TAM-PRI-10') {
+            upgradedTamSku = 'TAM-EXEC-20';
+          }
+
+          const upgradedTam = TAM_TIERS[upgradedTamSku];
+          tamSku = upgradedTam.sku;
+          tamTitle = upgradedTam.title;
+          tamSla = upgradedTam.sla;
+          tamPrice = upgradedTam.price;
+          tamDeliverables = upgradedTam.deliverables.slice();
+          tamGuardrailBadge = 'Guardrail Enforced (GR-01)';
+
+          const trainingMsg = currentState.segment === 'global_strategic'
+            ? 'added Intensive Hands-On Admin Lab (+$10k)'
+            : 'auto-injected Admin Bootcamp (TRN-CERT-10)';
+
+          activeRules.unshift({
+            id: 'GR-01',
+            tone: 'amber',
+            text: 'RULE GR-01 ACTIVE: IT Maturity <= 2 ' + trainingMsg + ' & upgraded TAM to ' + tamSku + ' to prevent onboarding stall and churn.'
+          });
+        }
+
+        // Guardrail GR-02: multiregion is checked AND TAM is still TAM-STD
+        const hasMultiregion = currentState.complexities.indexOf('multiregion') !== -1;
+        if (hasMultiregion && tamSku === 'TAM-STD') {
+          const upgradedTam = TAM_TIERS['TAM-DED-05'];
+          tamSku = upgradedTam.sku;
+          tamTitle = upgradedTam.title;
+          tamSla = upgradedTam.sla;
+          tamPrice = upgradedTam.price;
+          tamDeliverables = upgradedTam.deliverables.slice();
+          tamGuardrailBadge = 'Guardrail Enforced (GR-02)';
+
+          activeRules.push({
+            id: 'GR-02',
+            tone: 'amber',
+            text: 'RULE GR-02 ACTIVE: Multi-Region Rollout (MOD-GLB-501) upgraded TAM from TAM-STD to TAM-DED-05 to eliminate cross-region cutover bottlenecks.'
+          });
+        }
+
+        // --- D. Financial & Velocity Benchmarks ---
+        const totalServicesAcv = consultingTotal + trainingPrice + tamPrice;
+        const totalDealAcv = seg.baseSoftwareAcv + totalServicesAcv;
+        const multiplierNumeric = totalDealAcv / seg.baseSoftwareAcv;
+        const multiplierFormatted = multiplierNumeric.toFixed(2) + 'x';
+
+        const complexityLegacyDays = activeComplexities.reduce(function (sum, mod) {
+          return sum + mod.legacyDays;
+        }, 0);
+        const complexityModularDays = activeComplexities.reduce(function (sum, mod) {
+          return sum + mod.modularDays;
+        }, 0);
+
+        const legacySalesDays = seg.legacySalesDays + complexityLegacyDays;
+        const modularSalesDays = seg.modularSalesDays + complexityModularDays;
+        const salesDaysSaved = legacySalesDays - modularSalesDays;
+        const salesDaysSavedPct = Math.round((1 - modularSalesDays / legacySalesDays) * 100);
+
+        const complexityLegacyWeeks = activeComplexities.reduce(function (sum, mod) {
+          return sum + mod.legacyWeeks;
+        }, 0);
+        const complexityModularWeeks = activeComplexities.reduce(function (sum, mod) {
+          return sum + mod.modularWeeks;
+        }, 0);
+
+        const legacyWeeks = seg.consulting.legacyWeeks + complexityLegacyWeeks;
+        const rawModularWeeks = seg.consulting.modularWeeks + complexityModularWeeks - (gr03Active ? 1.0 : 0);
+        const modularWeeks = Math.max(2.5, rawModularWeeks);
+        const deliveryWeeksSaved = Number((legacyWeeks - modularWeeks).toFixed(1));
+        const deliverySavedPct = Math.round((1 - modularWeeks / legacyWeeks) * 100);
+
+        const hashSeed = (seg.id.length * 131) + (activeComplexities.length * 47) + (currentState.itMaturity * 19) + Math.round(totalDealAcv / 1000);
+        const docId = 'SOW-2026-MOD-' + String(hashSeed).padStart(3, '0');
+
+        return {
+          segment: seg,
+          activeComplexities: activeComplexities,
+          itMaturity: currentState.itMaturity,
+          itMaturityLabel: IT_MATURITY_LABELS[currentState.itMaturity],
+          activeRules: activeRules,
+          gr03Active: gr03Active,
+          consulting: {
+            sku: seg.consulting.sku,
+            title: seg.consulting.title,
+            basePrice: baseConsultingPrice,
+            engineeringCredit: engineeringCredit,
+            complexityTotal: complexityConsultingTotal,
+            totalPrice: consultingTotal,
+            deliverables: consultingDeliverables
+          },
+          training: {
+            sku: trainingSku,
+            title: trainingTitle,
+            price: trainingPrice,
+            deliverables: trainingDeliverables,
+            guardrailBadge: trainingGuardrailBadge
+          },
+          tam: {
+            sku: tamSku,
+            title: tamTitle,
+            sla: tamSla,
+            price: tamPrice,
+            deliverables: tamDeliverables,
+            guardrailBadge: tamGuardrailBadge
+          },
+          financials: {
+            baseSoftwareAcv: seg.baseSoftwareAcv,
+            totalServicesAcv: totalServicesAcv,
+            totalDealAcv: totalDealAcv,
+            multiplierNumeric: multiplierNumeric,
+            multiplierFormatted: multiplierFormatted
+          },
+          velocity: {
+            legacySalesDays: legacySalesDays,
+            modularSalesDays: modularSalesDays,
+            salesDaysSaved: salesDaysSaved,
+            salesDaysSavedPct: salesDaysSavedPct,
+            legacyWeeks: legacyWeeks,
+            modularWeeks: modularWeeks,
+            deliveryWeeksSaved: deliveryWeeksSaved,
+            deliverySavedPct: deliverySavedPct
+          },
+          docId: docId
+        };
+      }
+
+      // =========================================================================
+      // 5. RENDER FUNCTIONS
+      // =========================================================================
+      function renderPresets() {
+        const container = document.getElementById('presetsContainer');
+        const activePresetLabel = document.getElementById('activePresetLabel');
+        activePresetLabel.textContent = state.presetName ? state.presetName : 'Custom Config';
+
+        container.innerHTML = PRESETS.map(function (preset) {
+          const isActive = state.presetName === preset.name;
+          const baseClasses = isActive
+            ? 'border-[#151515] border-l-4 border-l-[#EE0000] bg-neutral-50 text-[#151515]'
+            : 'border-neutral-300 bg-white text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50';
+          const badgeClasses = isActive
+            ? 'bg-[#151515] text-white border-[#151515]'
+            : 'bg-neutral-100 text-neutral-700 border-neutral-300';
+
+          return (
+            '<button type="button" data-preset-name="' + escapeHtml(preset.name) + '" ' +
+            'class="preset-btn flex w-full items-center justify-between gap-2 rounded-sm border px-3.5 py-2.5 text-left transition ' + baseClasses + '">' +
+              '<div>' +
+                '<div class="text-sm font-bold leading-tight">' + escapeHtml(preset.name) + '</div>' +
+                '<div class="mt-0.5 text-xs leading-tight text-neutral-600">' + escapeHtml(preset.subtitle) + '</div>' +
+              '</div>' +
+              '<span class="shrink-0 border px-2 py-0.5 font-mono text-[11px] font-semibold ' + badgeClasses + '">' + escapeHtml(preset.badge) + '</span>' +
+            '</button>'
+          );
+        }).join('');
+      }
+
+      function renderSegments() {
+        const container = document.getElementById('segmentsContainer');
+        container.innerHTML = Object.keys(SEGMENTS).map(function (key) {
+          const seg = SEGMENTS[key];
+          const isSelected = state.segment === seg.id;
+          const cardClasses = isSelected
+            ? 'border-[#151515] border-l-4 border-l-[#EE0000] bg-neutral-50'
+            : 'border-neutral-300 bg-white hover:border-neutral-400 hover:bg-neutral-50/70';
+          const radioDot = isSelected
+            ? 'border-[#EE0000] bg-[#EE0000]'
+            : 'border-neutral-400 bg-white';
+
+          return (
+            '<button type="button" role="radio" aria-checked="' + isSelected + '" data-segment-id="' + seg.id + '" ' +
+            'class="segment-card w-full rounded-sm border p-3.5 text-left transition ' + cardClasses + '">' +
+              '<div class="flex items-start justify-between gap-2">' +
+                '<div class="flex items-start gap-2.5">' +
+                  '<span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ' + radioDot + '">' +
+                    (isSelected ? '<span class="h-1.5 w-1.5 rounded-full bg-white"></span>' : '') +
+                  '</span>' +
+                  '<div>' +
+                    '<div class="flex flex-wrap items-baseline gap-1.5">' +
+                      '<span class="text-sm font-bold text-[#151515]">' + escapeHtml(seg.name) + '</span>' +
+                      '<span class="font-mono text-xs text-neutral-500">(' + escapeHtml(seg.seatBand) + ')</span>' +
+                    '</div>' +
+                    '<div class="mt-1.5 flex flex-wrap items-center gap-1.5">' +
+                      '<span class="border border-neutral-300 bg-white px-1.5 py-0.5 font-mono text-[11px] font-medium text-neutral-700">' + escapeHtml(seg.consulting.sku) + '</span>' +
+                      '<span class="border border-neutral-300 bg-white px-1.5 py-0.5 font-mono text-[11px] font-medium text-neutral-700">' + escapeHtml(seg.tam.sku) + '</span>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="text-right">' +
+                  '<div class="font-mono text-sm font-bold text-[#151515] tabular-nums">' + formatCurrency(seg.baseSoftwareAcv) + '</div>' +
+                  '<div class="text-[11px] font-medium text-neutral-500">SaaS ACV</div>' +
+                '</div>' +
+              '</div>' +
+            '</button>'
+          );
+        }).join('');
+      }
+
+      function renderComplexities() {
+        const container = document.getElementById('complexitiesContainer');
+        const countBadge = document.getElementById('complexityCountBadge');
+        countBadge.textContent = state.complexities.length + ' selected';
+
+        container.innerHTML = Object.keys(COMPLEXITIES).map(function (key) {
+          const mod = COMPLEXITIES[key];
+          const isChecked = state.complexities.indexOf(mod.id) !== -1;
+          const rowClasses = isChecked
+            ? 'border-[#151515] bg-neutral-50'
+            : 'border-neutral-300 bg-white hover:border-neutral-400 hover:bg-neutral-50/70';
+          const boxClasses = isChecked
+            ? 'border-[#EE0000] bg-[#EE0000] text-white'
+            : 'border-neutral-400 bg-white text-transparent';
+
+          return (
+            '<label data-complexity-id="' + mod.id + '" class="complexity-row flex cursor-pointer items-start justify-between gap-2.5 rounded-sm border p-3 transition ' + rowClasses + '">' +
+              '<input type="checkbox" class="sr-only" ' + (isChecked ? 'checked' : '') + ' data-complexity-checkbox="' + mod.id + '" />' +
+              '<div class="flex items-start gap-2.5">' +
+                '<span class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition ' + boxClasses + '">' +
+                  '<i data-lucide="check" class="h-3 w-3"></i>' +
+                '</span>' +
+                '<div>' +
+                  '<div class="flex flex-wrap items-center gap-1.5">' +
+                    '<span class="text-sm font-bold text-[#151515]">' + escapeHtml(mod.title) + '</span>' +
+                  '</div>' +
+                  '<div class="mt-1 flex flex-wrap items-center gap-2">' +
+                    '<span class="border border-neutral-300 bg-white px-1.5 py-0.5 font-mono text-[11px] font-semibold text-neutral-700">' + escapeHtml(mod.sku) + '</span>' +
+                    '<span class="font-mono text-xs text-neutral-600 tabular-nums">+' + mod.modularWeeks.toFixed(1) + 'w modular (vs +' + mod.legacyWeeks.toFixed(1) + 'w)</span>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<span class="shrink-0 border border-neutral-300 bg-white px-2 py-0.5 font-mono text-xs font-bold text-[#151515] tabular-nums">+' + formatCompactCurrency(mod.price) + '</span>' +
+            '</label>'
+          );
+        }).join('');
+      }
+
+      function renderMaturityControls(model) {
+        const slider = document.getElementById('itMaturitySlider');
+        const scoreBadge = document.getElementById('maturityScoreBadge');
+        const labelText = document.getElementById('maturityLabelText');
+        const callout = document.getElementById('maturityGuardrailCallout');
+
+        slider.value = String(state.itMaturity);
+        scoreBadge.textContent = 'Level ' + state.itMaturity + ' / 5';
+        labelText.textContent = IT_MATURITY_LABELS[state.itMaturity];
+
+        document.querySelectorAll('.tick-btn').forEach(function (btn) {
+          const val = Number(btn.getAttribute('data-maturity-tick'));
+          if (val === state.itMaturity) {
+            btn.classList.add('font-bold', 'text-[#EE0000]');
+          } else {
+            btn.classList.remove('font-bold', 'text-[#EE0000]');
+          }
+        });
+
+        if (state.itMaturity <= 2) {
+          callout.className = 'mt-3.5 border border-amber-300 border-l-4 border-l-amber-600 bg-amber-50/70 p-3.5 text-xs leading-relaxed text-amber-950 sm:text-sm';
+          callout.innerHTML =
+            '<div class="flex items-center gap-1.5 font-bold text-amber-900">' +
+              '<i data-lucide="alert-triangle" class="h-4 w-4 text-amber-700"></i>' +
+              '<span>Guardrail GR-01 Active (Risk Mitigation)</span>' +
+            '</div>' +
+            '<p class="mt-1 text-amber-900">' +
+              'Low internal IT capacity detected. Engine enforces <strong>' + escapeHtml(model.training.sku) + '</strong> and elevates TAM to <strong>' + escapeHtml(model.tam.sku) + '</strong> to prevent deployment stalls.' +
+            '</p>';
+        } else if (state.itMaturity >= 4) {
+          callout.className = 'mt-3.5 border border-emerald-300 border-l-4 border-l-emerald-700 bg-emerald-50/70 p-3.5 text-xs leading-relaxed text-emerald-950 sm:text-sm';
+          callout.innerHTML =
+            '<div class="flex items-center gap-1.5 font-bold text-emerald-900">' +
+              '<i data-lucide="sparkles" class="h-4 w-4 text-emerald-700"></i>' +
+              '<span>Efficiency Rule GR-03 Active (DevOps Credit)</span>' +
+            '</div>' +
+            '<p class="mt-1 text-emerald-900">' +
+              'Mature Platform/DevOps team unlocked a <strong>-10% Self-Sufficiency Engineering Credit</strong> (' + formatCurrency(-model.consulting.engineeringCredit) + ') on base consulting and <strong>-1.0 week</strong> delivery compression.' +
+            '</p>';
+        } else {
+          callout.className = 'mt-3.5 border border-neutral-300 bg-neutral-50 p-3.5 text-xs leading-relaxed text-neutral-700 sm:text-sm';
+          callout.innerHTML =
+            '<div class="flex items-center gap-1.5 font-bold text-[#151515]">' +
+              '<i data-lucide="check-circle-2" class="h-4 w-4 text-[#151515]"></i>' +
+              '<span>Baseline Governance Profile</span>' +
+            '</div>' +
+            '<p class="mt-1">' +
+              'Standard Enterprise IT aligns with baseline modular SKUs. Move slider to <strong>1–2</strong> for GR-01 Guardrail enforcement or <strong>4–5</strong> for GR-03 Engineering Credit.' +
+            '</p>';
+        }
+      }
+
+      function renderKpis(model) {
+        document.getElementById('kpiTotalAcv').textContent = formatCurrency(model.financials.totalDealAcv);
+        document.getElementById('kpiAcvBreakdown').textContent =
+          formatCompactCurrency(model.financials.baseSoftwareAcv) + ' Software + ' +
+          formatCompactCurrency(model.financials.totalServicesAcv) + ' Modular Services';
+
+        document.getElementById('kpiMultiplier').textContent = model.financials.multiplierFormatted;
+        document.getElementById('kpiBaseSoftwareSmall').textContent = formatCompactCurrency(model.financials.baseSoftwareAcv);
+
+        const clamped = Math.min(2.2, Math.max(1.0, model.financials.multiplierNumeric));
+        const pct = ((clamped - 1.0) / 1.2) * 100;
+        const gaugeBar = document.getElementById('multiplierGaugeBar');
+        gaugeBar.style.width = pct.toFixed(1) + '%';
+
+        const statusEl = document.getElementById('kpiMultiplierStatus');
+        if (model.financials.multiplierNumeric >= 1.30 && model.financials.multiplierNumeric <= 1.50) {
+          statusEl.className = 'border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[11px] font-semibold text-emerald-800';
+          statusEl.textContent = 'IN 1.3–1.5x TARGET';
+          gaugeBar.className = 'relative z-10 h-full bg-emerald-700 transition-all duration-200';
+        } else if (model.financials.multiplierNumeric > 1.50) {
+          statusEl.className = 'border border-neutral-800 bg-[#151515] px-2 py-0.5 font-mono text-[11px] font-semibold text-white';
+          statusEl.textContent = 'HIGH EXPANSION';
+          gaugeBar.className = 'relative z-10 h-full bg-[#EE0000] transition-all duration-200';
+        } else {
+          statusEl.className = 'border border-neutral-300 bg-neutral-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-neutral-700';
+          statusEl.textContent = 'BELOW 1.3x BENCHMARK';
+          gaugeBar.className = 'relative z-10 h-full bg-neutral-600 transition-all duration-200';
+        }
+
+        document.getElementById('kpiVelocitySavedBadge').textContent = model.velocity.deliverySavedPct + '% Faster Delivery';
+        document.getElementById('kpiModularWeeks').textContent = model.velocity.modularWeeks.toFixed(1) + ' Weeks';
+        document.getElementById('kpiLegacyWeeks').textContent = model.velocity.legacyWeeks.toFixed(1) + 'w Legacy';
+        document.getElementById('kpiSalesCycleInline').textContent =
+          'Sales cycle: ' + model.velocity.modularSalesDays + 'd vs. ' + model.velocity.legacySalesDays + 'd legacy (' + model.velocity.salesDaysSavedPct + '% faster)';
+      }
+
+      function renderGovernanceStrip(model) {
+        const strip = document.getElementById('governanceTraceStrip');
+        if (model.activeRules.length === 0) {
+          strip.className = 'flex flex-wrap items-center justify-between gap-2 border border-emerald-300 border-l-4 border-l-emerald-700 bg-emerald-50/70 px-4 py-3 text-xs text-emerald-950 sm:text-sm';
+          strip.innerHTML =
+            '<div class="flex items-center gap-2">' +
+              '<i data-lucide="badge-check" class="h-4 w-4 shrink-0 text-emerald-700"></i>' +
+              '<span class="font-mono font-bold text-emerald-900">STANDARD DEAL DESK AUTO-APPROVED</span>' +
+              '<span class="text-emerald-900">&mdash; Zero guardrail overrides required. Pre-approved commercial terms &amp; margin floor verified.</span>' +
+            '</div>' +
+            '<span class="border border-emerald-300 bg-white px-2 py-0.5 font-mono text-xs font-semibold text-emerald-800">RULES TRACE: 0 FLAGS</span>';
+          return;
+        }
+
+        const hasAmber = model.activeRules.some(function (r) { return r.tone === 'amber'; });
+        strip.className = hasAmber
+          ? 'space-y-2 border border-amber-300 border-l-4 border-l-amber-600 bg-amber-50/75 px-4 py-3 text-xs text-amber-950 sm:text-sm'
+          : 'space-y-2 border border-emerald-300 border-l-4 border-l-emerald-700 bg-emerald-50/75 px-4 py-3 text-xs text-emerald-950 sm:text-sm';
+
+        strip.innerHTML = model.activeRules.map(function (rule) {
+          const isAmber = rule.tone === 'amber';
+          const icon = isAmber ? 'shield-alert' : 'sparkles';
+          const iconColor = isAmber ? 'text-amber-700' : 'text-emerald-700';
+          const pillClass = isAmber
+            ? 'border-amber-400 bg-amber-100 text-amber-950'
+            : 'border-emerald-400 bg-emerald-100 text-emerald-950';
+          return (
+            '<div class="flex items-start gap-2">' +
+              '<i data-lucide="' + icon + '" class="mt-0.5 h-4 w-4 shrink-0 ' + iconColor + '"></i>' +
+              '<div class="flex flex-wrap items-center gap-2 leading-snug">' +
+                '<span class="border px-1.5 py-0.5 font-mono text-xs font-bold ' + pillClass + '">' + escapeHtml(rule.id) + '</span>' +
+                '<span>' + escapeHtml(rule.text) + '</span>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+      }
+
+      function renderBundleCards(model) {
+        document.getElementById('servicesSubtotalLabel').textContent =
+          'Total Modular Services ACV: ' + formatCurrency(model.financials.totalServicesAcv);
+
+        // Card A: Consulting Implementation
+        const cardA = document.getElementById('cardConsulting');
+        const creditLine = model.consulting.engineeringCredit > 0
+          ? '<div class="mt-1 flex items-center justify-between text-xs text-emerald-800 tabular-nums">' +
+              '<span>GR-03 Credit (-10% Base)</span>' +
+              '<span class="font-mono font-bold">' + formatCurrency(-model.consulting.engineeringCredit) + '</span>' +
+            '</div>'
+          : '';
+        const complexityLine = model.activeComplexities.length > 0
+          ? '<div class="mt-1 flex items-center justify-between text-xs text-neutral-600 tabular-nums">' +
+              '<span>' + model.activeComplexities.length + ' Complexity Add-On' + (model.activeComplexities.length > 1 ? 's' : '') + '</span>' +
+              '<span class="font-mono font-semibold text-[#151515]">+' + formatCurrency(model.consulting.complexityTotal) + '</span>' +
+            '</div>'
+          : '';
+
+        cardA.innerHTML =
+          '<div>' +
+            '<div class="flex items-center justify-between gap-2">' +
+              '<span class="font-mono text-xs font-bold text-[#EE0000]">(A) CONSULTING</span>' +
+              '<span class="border border-neutral-300 bg-neutral-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-neutral-800">' + escapeHtml(model.consulting.sku) + '</span>' +
+            '</div>' +
+            '<h4 class="mt-2.5 text-base font-bold leading-snug text-[#151515]">' + escapeHtml(model.consulting.title) + '</h4>' +
+            '<div class="mt-3 border-y border-neutral-200 py-2.5">' +
+              '<div class="flex items-baseline justify-between">' +
+                '<span class="text-xs font-medium text-neutral-600">Module Total</span>' +
+                '<span class="font-mono text-lg font-bold text-[#151515] tabular-nums">' + formatCurrency(model.consulting.totalPrice) + '</span>' +
+              '</div>' +
+              '<div class="mt-1 flex items-center justify-between text-xs text-neutral-600 tabular-nums">' +
+                '<span>Base Architecture</span>' +
+                '<span class="font-mono">' + formatCurrency(model.consulting.basePrice) + '</span>' +
+              '</div>' +
+              complexityLine +
+              creditLine +
+            '</div>' +
+            '<ul class="mt-3.5 space-y-2 text-xs leading-relaxed text-neutral-700 sm:text-sm">' +
+              model.consulting.deliverables.map(function (item) {
+                return (
+                  '<li class="flex items-start gap-2">' +
+                    '<i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-[#EE0000]"></i>' +
+                    '<span>' + escapeHtml(item) + '</span>' +
+                  '</li>'
+                );
+              }).join('') +
+            '</ul>' +
+          '</div>' +
+          '<div class="mt-4 flex items-center justify-between border-t border-neutral-200 pt-2.5 text-xs text-neutral-600 tabular-nums">' +
+            '<span>Target Delivery</span>' +
+            '<span class="font-mono font-bold text-[#151515]">' + model.velocity.modularWeeks.toFixed(1) + ' Weeks</span>' +
+          '</div>';
+
+        // Card B: Training & Certification Pack
+        const cardB = document.getElementById('cardTraining');
+        const trainingBadgeHtml = model.training.guardrailBadge
+          ? '<div class="mt-2 inline-flex items-center gap-1.5 border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-900">' +
+              '<i data-lucide="shield-alert" class="h-3.5 w-3.5 text-amber-700"></i>' +
+              '<span>' + escapeHtml(model.training.guardrailBadge) + '</span>' +
+            '</div>'
+          : '';
+
+        cardB.className = model.training.guardrailBadge
+          ? 'enterprise-panel flex flex-col justify-between border-amber-400 border-t-4 border-t-amber-600 bg-amber-50/15 p-5'
+          : 'enterprise-panel flex flex-col justify-between p-5';
+
+        cardB.innerHTML =
+          '<div>' +
+            '<div class="flex items-center justify-between gap-2">' +
+              '<span class="font-mono text-xs font-bold text-[#EE0000]">(B) TRAINING</span>' +
+              '<span class="border border-neutral-300 bg-neutral-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-neutral-800">' + escapeHtml(model.training.sku) + '</span>' +
+            '</div>' +
+            '<h4 class="mt-2.5 text-base font-bold leading-snug text-[#151515]">' + escapeHtml(model.training.title) + '</h4>' +
+            trainingBadgeHtml +
+            '<div class="mt-3 border-y border-neutral-200 py-2.5">' +
+              '<div class="flex items-baseline justify-between">' +
+                '<span class="text-xs font-medium text-neutral-600">Module Total</span>' +
+                '<span class="font-mono text-lg font-bold text-[#151515] tabular-nums">' + formatCurrency(model.training.price) + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<ul class="mt-3.5 space-y-2 text-xs leading-relaxed text-neutral-700 sm:text-sm">' +
+              model.training.deliverables.map(function (item) {
+                return (
+                  '<li class="flex items-start gap-2">' +
+                    '<i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-[#EE0000]"></i>' +
+                    '<span>' + escapeHtml(item) + '</span>' +
+                  '</li>'
+                );
+              }).join('') +
+            '</ul>' +
+          '</div>' +
+          '<div class="mt-4 flex items-center justify-between border-t border-neutral-200 pt-2.5 text-xs text-neutral-600">' +
+            '<span>Enablement Mode</span>' +
+            '<span class="font-mono font-bold text-[#151515]">' + (model.training.guardrailBadge ? 'Mandatory Cert' : 'Standard Pack') + '</span>' +
+          '</div>';
+
+        // Card C: Technical Account Management (TAM)
+        const cardC = document.getElementById('cardTam');
+        const tamBadgeHtml = model.tam.guardrailBadge
+          ? '<div class="mt-2 inline-flex items-center gap-1.5 border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-900">' +
+              '<i data-lucide="shield-alert" class="h-3.5 w-3.5 text-amber-700"></i>' +
+              '<span>' + escapeHtml(model.tam.guardrailBadge) + '</span>' +
+            '</div>'
+          : '';
+
+        cardC.className = model.tam.guardrailBadge
+          ? 'enterprise-panel flex flex-col justify-between border-amber-400 border-t-4 border-t-amber-600 bg-amber-50/15 p-5'
+          : 'enterprise-panel flex flex-col justify-between p-5';
+
+        cardC.innerHTML =
+          '<div>' +
+            '<div class="flex items-center justify-between gap-2">' +
+              '<span class="font-mono text-xs font-bold text-[#EE0000]">(C) TAM &amp; SLA</span>' +
+              '<div class="flex items-center gap-1">' +
+                '<span class="border border-emerald-300 bg-emerald-50 px-1.5 py-0.5 font-mono text-[11px] font-bold text-emerald-800">' + escapeHtml(model.tam.sla) + '</span>' +
+                '<span class="border border-neutral-300 bg-neutral-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-neutral-800">' + escapeHtml(model.tam.sku) + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<h4 class="mt-2.5 text-base font-bold leading-snug text-[#151515]">' + escapeHtml(model.tam.title) + '</h4>' +
+            tamBadgeHtml +
+            '<div class="mt-3 border-y border-neutral-200 py-2.5">' +
+              '<div class="flex items-baseline justify-between">' +
+                '<span class="text-xs font-medium text-neutral-600">Annual Retainer</span>' +
+                '<span class="font-mono text-lg font-bold text-[#151515] tabular-nums">' + formatCurrency(model.tam.price) + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<ul class="mt-3.5 space-y-2 text-xs leading-relaxed text-neutral-700 sm:text-sm">' +
+              model.tam.deliverables.map(function (item) {
+                return (
+                  '<li class="flex items-start gap-2">' +
+                    '<i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-[#EE0000]"></i>' +
+                    '<span>' + escapeHtml(item) + '</span>' +
+                  '</li>'
+                );
+              }).join('') +
+            '</ul>' +
+          '</div>' +
+          '<div class="mt-4 flex items-center justify-between border-t border-neutral-200 pt-2.5 text-xs text-neutral-600">' +
+            '<span>Governance Tier</span>' +
+            '<span class="font-mono font-bold text-[#151515]">' + (model.tam.guardrailBadge ? 'Auto-Elevated' : 'Segment Aligned') + '</span>' +
+          '</div>';
+      }
+
+      function renderVelocityChart(model) {
+        const pillsEl = document.getElementById('velocitySavingsPills');
+        pillsEl.innerHTML =
+          '<span class="inline-flex items-center gap-1.5 border border-emerald-300 bg-emerald-50 px-2.5 py-1 font-mono text-xs font-bold text-emerald-800 tabular-nums">' +
+            '<i data-lucide="trending-down" class="h-3.5 w-3.5"></i>' +
+            model.velocity.salesDaysSaved + ' Days Saved in Sales (' + model.velocity.salesDaysSavedPct + '%)' +
+          '</span>' +
+          '<span class="inline-flex items-center gap-1.5 border border-neutral-300 bg-neutral-100 px-2.5 py-1 font-mono text-xs font-bold text-[#151515] tabular-nums">' +
+            '<i data-lucide="zap" class="h-3.5 w-3.5 text-[#EE0000]"></i>' +
+            model.velocity.deliveryWeeksSaved.toFixed(1) + ' Weeks Saved in Delivery (' + model.velocity.deliverySavedPct + '%)' +
+          '</span>';
+
+        const legacyData = [model.velocity.legacySalesDays, model.velocity.legacyWeeks];
+        const modularData = [model.velocity.modularSalesDays, model.velocity.modularWeeks];
+
+        if (!velocityChartInstance) {
+          const ctx = document.getElementById('velocityChart').getContext('2d');
+          velocityChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['Sales Cycle (Days)', 'Implementation Delivery (Weeks)'],
+              datasets: [
+                {
+                  label: 'Legacy Custom Scoping',
+                  data: legacyData,
+                  backgroundColor: '#9CA3AF',
+                  borderColor: '#6B7280',
+                  borderWidth: 1,
+                  borderRadius: 2,
+                  barPercentage: 0.65,
+                  categoryPercentage: 0.72
+                },
+                {
+                  label: 'DealArchitect Modular Engine',
+                  data: modularData,
+                  backgroundColor: '#151515',
+                  borderColor: '#151515',
+                  borderWidth: 1,
+                  borderRadius: 2,
+                  barPercentage: 0.65,
+                  categoryPercentage: 0.72
+                }
+              ]
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: false,
+              animation: {
+                duration: 240
+              },
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    usePointStyle: true,
+                    pointStyle: 'rect',
+                    boxWidth: 11,
+                    padding: 16,
+                    color: '#374151',
+                    font: {
+                      family: '"Red Hat Display", sans-serif',
+                      size: 12,
+                      weight: '600'
+                    }
+                  }
+                },
+                tooltip: {
+                  backgroundColor: '#151515',
+                  titleFont: { family: '"Red Hat Display", sans-serif', size: 13, weight: '700' },
+                  bodyFont: { family: '"Red Hat Mono", monospace', size: 12 },
+                  padding: 10,
+                  cornerRadius: 2,
+                  callbacks: {
+                    label: function (context) {
+                      const unit = context.dataIndex === 0 ? ' Days' : ' Weeks';
+                      return ' ' + context.dataset.label + ': ' + context.parsed.x + unit;
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  grid: {
+                    color: '#E5E7EB',
+                    drawBorder: false
+                  },
+                  ticks: {
+                    color: '#4B5563',
+                    font: {
+                      family: '"Red Hat Mono", monospace',
+                      size: 12
+                    }
+                  }
+                },
+                y: {
+                  grid: {
+                    display: false
+                  },
+                  ticks: {
+                    color: '#151515',
+                    font: {
+                      family: '"Red Hat Display", sans-serif',
+                      size: 13,
+                      weight: '700'
+                    }
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          velocityChartInstance.data.datasets[0].data = legacyData;
+          velocityChartInstance.data.datasets[1].data = modularData;
+          velocityChartInstance.update();
+        }
+      }
+
+      function buildSowGovernanceAssumptions(model) {
+        if (model.itMaturity <= 2) {
+          return {
+            headline: 'Vendor-Led Turnkey Deployment & Mandatory Certification Governance (IT Maturity Level ' + model.itMaturity + ')',
+            bullets: [
+              'Vendor Solutions Engineering will lead 100% of identity, schema mapping, and staging environment configuration due to lean client administrative capacity.',
+              'Client designates at least one Executive Sponsor and up to 10 operational power users to complete mandatory ' + model.training.sku + ' certification prior to production cutover.',
+              'Elevated TAM cadence (' + model.tam.sku + ', ' + model.tam.sla + ') governs weekly readiness checkpoints and post-launch hypercare for the initial 90 days.'
+            ]
+          };
+        }
+        if (model.itMaturity >= 4) {
+          return {
+            headline: 'Joint API / DevOps Co-Execution Model (IT Maturity Level ' + model.itMaturity + ')',
+            bullets: [
+              'Client Platform Engineering / DevOps COE will co-execute infrastructure-as-code provisioning, SAML/SCIM automation, and CI/CD webhook validation alongside Vendor Architects.',
+              'Joint sprint execution triggers Automated Efficiency Rule GR-03 (-10% Base Consulting Credit of ' + formatCurrency(-model.consulting.engineeringCredit) + ' and -1.0 week timeline compression).',
+              'Client technical leads maintain direct API staging access and complete UAT sign-off within 3 business days of milestone readiness.'
+            ]
+          };
+        }
+        return {
+          headline: 'Standard Co-Managed Enterprise Implementation Model (IT Maturity Level 3)',
+          bullets: [
+            'Client provides a named Technical Project Manager and System Administrator (approx. 6–8 hours/week) during the ' + model.velocity.modularWeeks.toFixed(1) + '-week implementation window.',
+            'Vendor leads architectural configuration, integration connectors, and sandbox UAT validation while Client executes internal user provisioning and change management.',
+            'Governance reviews occur bi-weekly against standardized milestone exit criteria under ' + model.tam.sku + ' (' + model.tam.sla + ').'
+          ]
+        };
+      }
+
+      function renderSowDocument(model) {
+        document.getElementById('sowDocId').textContent = 'DOC ID: ' + model.docId;
+        const sowBody = document.getElementById('sowDocumentBody');
+        const assumptions = buildSowGovernanceAssumptions(model);
+
+        const complexitySummaryText = model.activeComplexities.length > 0
+          ? model.activeComplexities.map(function (c) { return c.title + ' (' + c.sku + ')'; }).join(', ')
+          : 'Core Baseline Scope (No Complexity Add-Ons)';
+
+        sowBody.innerHTML =
+          '<!-- Section 1: Executive Scope & Commercial Summary -->' +
+          '<div class="border border-neutral-300 bg-neutral-50 p-4 sm:p-5">' +
+            '<div class="mb-2 flex flex-wrap items-center justify-between gap-2">' +
+              '<h4 class="font-mono text-xs font-bold uppercase tracking-wider text-[#151515] sm:text-sm">1. Executive Scope &amp; Commercial Summary</h4>' +
+              '<span class="font-mono text-xs font-semibold text-neutral-600">SEGMENT: ' + escapeHtml(model.segment.name.toUpperCase()) + '</span>' +
+            '</div>' +
+            '<p class="text-sm leading-relaxed text-neutral-800">' +
+              'This Statement of Work (“SOW”) governs the modular deployment, enablement, and technical account governance for Client’s <strong>' + escapeHtml(model.segment.name) + '</strong> deployment (<strong>' + escapeHtml(model.segment.seatBand) + '</strong>). ' +
+              'Scoped technical modules include: <strong>' + escapeHtml(complexitySummaryText) + '</strong>. ' +
+              'Total Year-1 Commercial Commitment equals <strong class="font-mono text-[#151515] tabular-nums">' + formatCurrency(model.financials.totalDealAcv) + '</strong> ' +
+              '(<span class="font-mono tabular-nums">' + formatCurrency(model.financials.baseSoftwareAcv) + '</span> Software Subscription ACV + ' +
+              '<span class="font-mono tabular-nums">' + formatCurrency(model.financials.totalServicesAcv) + '</span> Modular Services ACV; ' +
+              '<span class="font-mono tabular-nums">' + model.financials.multiplierFormatted + '</span> Deal Multiplier), with a target production go-live of ' +
+              '<strong class="font-mono text-[#151515] tabular-nums">' + model.velocity.modularWeeks.toFixed(1) + ' weeks</strong> from kickoff.' +
+            '</p>' +
+          '</div>' +
+
+          '<!-- Section 2: Standardized Modular Deliverables -->' +
+          '<div>' +
+            '<h4 class="mb-3 font-mono text-xs font-bold uppercase tracking-wider text-[#151515] sm:text-sm">2. Standardized Modular Deliverables</h4>' +
+            '<div class="space-y-3">' +
+              // Consulting block
+              '<div class="border border-neutral-300 p-4">' +
+                '<div class="flex flex-wrap items-center justify-between gap-2">' +
+                  '<div class="flex flex-wrap items-center gap-2">' +
+                    '<span class="border border-neutral-300 bg-neutral-100 px-2 py-0.5 font-mono text-xs font-bold text-[#151515]">' + escapeHtml(model.consulting.sku) + '</span>' +
+                    '<span class="text-sm font-bold text-[#151515]">' + escapeHtml(model.consulting.title) + '</span>' +
+                  '</div>' +
+                  '<span class="font-mono text-sm font-bold text-[#151515] tabular-nums">' + formatCurrency(model.consulting.totalPrice) + '</span>' +
+                '</div>' +
+                '<ul class="mt-2.5 grid grid-cols-1 gap-1.5 text-sm text-neutral-700 sm:grid-cols-2">' +
+                  model.consulting.deliverables.map(function (d) {
+                    return '<li class="flex items-start gap-2"><span class="font-mono font-bold text-[#EE0000]">&bull;</span><span>' + escapeHtml(d) + '</span></li>';
+                  }).join('') +
+                '</ul>' +
+              '</div>' +
+              // Training block
+              '<div class="border border-neutral-300 p-4">' +
+                '<div class="flex flex-wrap items-center justify-between gap-2">' +
+                  '<div class="flex flex-wrap items-center gap-2">' +
+                    '<span class="border border-neutral-300 bg-neutral-100 px-2 py-0.5 font-mono text-xs font-bold text-[#151515]">' + escapeHtml(model.training.sku) + '</span>' +
+                    '<span class="text-sm font-bold text-[#151515]">' + escapeHtml(model.training.title) + '</span>' +
+                  '</div>' +
+                  '<span class="font-mono text-sm font-bold text-[#151515] tabular-nums">' + formatCurrency(model.training.price) + '</span>' +
+                '</div>' +
+                '<ul class="mt-2.5 grid grid-cols-1 gap-1.5 text-sm text-neutral-700 sm:grid-cols-2">' +
+                  model.training.deliverables.map(function (d) {
+                    return '<li class="flex items-start gap-2"><span class="font-mono font-bold text-[#EE0000]">&bull;</span><span>' + escapeHtml(d) + '</span></li>';
+                  }).join('') +
+                '</ul>' +
+              '</div>' +
+              // TAM block
+              '<div class="border border-neutral-300 p-4">' +
+                '<div class="flex flex-wrap items-center justify-between gap-2">' +
+                  '<div class="flex flex-wrap items-center gap-2">' +
+                    '<span class="border border-neutral-300 bg-neutral-100 px-2 py-0.5 font-mono text-xs font-bold text-[#151515]">' + escapeHtml(model.tam.sku) + '</span>' +
+                    '<span class="text-sm font-bold text-[#151515]">' + escapeHtml(model.tam.title) + '</span>' +
+                  '</div>' +
+                  '<span class="font-mono text-sm font-bold text-[#151515] tabular-nums">' + formatCurrency(model.tam.price) + '</span>' +
+                '</div>' +
+                '<ul class="mt-2.5 grid grid-cols-1 gap-1.5 text-sm text-neutral-700 sm:grid-cols-2">' +
+                  model.tam.deliverables.map(function (d) {
+                    return '<li class="flex items-start gap-2"><span class="font-mono font-bold text-[#EE0000]">&bull;</span><span>' + escapeHtml(d) + '</span></li>';
+                  }).join('') +
+                '</ul>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+
+          '<!-- Section 3: Client Resource & Governance Assumptions -->' +
+          '<div class="border border-neutral-300 bg-white p-4 sm:p-5">' +
+            '<h4 class="mb-2 font-mono text-xs font-bold uppercase tracking-wider text-[#151515] sm:text-sm">3. Client Resource &amp; Governance Assumptions</h4>' +
+            '<p class="mb-2.5 text-sm font-bold text-[#EE0000]">' + escapeHtml(assumptions.headline) + '</p>' +
+            '<ul class="space-y-2 text-sm text-neutral-700">' +
+              assumptions.bullets.map(function (b) {
+                return '<li class="flex items-start gap-2"><i data-lucide="chevron-right" class="mt-1 h-3.5 w-3.5 shrink-0 text-neutral-500"></i><span>' + escapeHtml(b) + '</span></li>';
+              }).join('') +
+            '</ul>' +
+          '</div>';
+      }
+
+      // =========================================================================
+      // 6. SOW PLAIN-TEXT CLIPBOARD SERIALIZER & CLIENT-SIDE PDF GENERATOR
+      // =========================================================================
+      function generateSowPlainText(model) {
+        const assumptions = buildSowGovernanceAssumptions(model);
+        const complexitySummaryText = model.activeComplexities.length > 0
+          ? model.activeComplexities.map(function (c) { return c.title + ' (' + c.sku + ')'; }).join(', ')
+          : 'Core Baseline Scope (No Complexity Add-Ons)';
+
+        const lines = [
+          'STATEMENT OF WORK (SOW) — DEALARCHITECT MODULAR ENGINE',
+          'Document ID: ' + model.docId + ' | Status: READY FOR SIGNATURE',
+          'Customer Segment: ' + model.segment.name + ' (' + model.segment.seatBand + ')',
+          'IT Maturity Profile: ' + model.itMaturityLabel,
+          '----------------------------------------------------------------------',
+          '1. EXECUTIVE SCOPE & COMMERCIAL SUMMARY',
+          'Scoped Technical Modules: ' + complexitySummaryText,
+          'Base Software Subscription ACV: ' + formatCurrency(model.financials.baseSoftwareAcv),
+          'Total Modular Services ACV: ' + formatCurrency(model.financials.totalServicesAcv),
+          'Total Year-1 Deal ACV: ' + formatCurrency(model.financials.totalDealAcv) + ' (' + model.financials.multiplierFormatted + ' ACV Uplift)',
+          'Target Delivery Timeline: ' + model.velocity.modularWeeks.toFixed(1) + ' Weeks (vs. ' + model.velocity.legacyWeeks.toFixed(1) + ' Weeks Legacy — ' + model.velocity.deliverySavedPct + '% Faster)',
+          '',
+          '2. STANDARDIZED MODULAR DELIVERABLES',
+          '(A) Consulting Implementation — ' + model.consulting.sku + ' (' + formatCurrency(model.consulting.totalPrice) + '): ' + model.consulting.title,
+          (model.consulting.engineeringCredit > 0 ? '  * GR-03 Self-Sufficiency Engineering Credit: ' + formatCurrency(-model.consulting.engineeringCredit) + '\n' : '') +
+          model.consulting.deliverables.map(function (d) { return '  - ' + d; }).join('\n'),
+          '',
+          '(B) Training & Certification Pack — ' + model.training.sku + ' (' + formatCurrency(model.training.price) + '): ' + model.training.title + (model.training.guardrailBadge ? ' [' + model.training.guardrailBadge + ']' : ''),
+          model.training.deliverables.map(function (d) { return '  - ' + d; }).join('\n'),
+          '',
+          '(C) Technical Account Management — ' + model.tam.sku + ' (' + formatCurrency(model.tam.price) + '): ' + model.tam.title + ' (' + model.tam.sla + ')' + (model.tam.guardrailBadge ? ' [' + model.tam.guardrailBadge + ']' : ''),
+          model.tam.deliverables.map(function (d) { return '  - ' + d; }).join('\n'),
+          '',
+          '3. CLIENT RESOURCE & GOVERNANCE ASSUMPTIONS',
+          assumptions.headline,
+          assumptions.bullets.map(function (b) { return '  - ' + b; }).join('\n')
+        ];
+
+        return lines.join('\n');
+      }
+
+      function exportSowAsPdf(model) {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          window.print();
+          showToast('Opened print-to-PDF dialog (offline fallback)');
+          return;
+        }
+
+        const jsPDF = window.jspdf.jsPDF;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });
+        const pageWidth = 612;
+        const pageHeight = 792;
+        const margin = 44;
+        const contentWidth = pageWidth - (margin * 2);
+        const assumptions = buildSowGovernanceAssumptions(model);
+        const generatedDate = new Date().toISOString().slice(0, 10);
+
+        let y = 0;
+
+        function ensureSpace(heightNeeded) {
+          if (y + heightNeeded > pageHeight - 54) {
+            doc.addPage();
+            y = 48;
+          }
+        }
+
+        function drawParagraph(text, x, fontSize, colorRgb, maxWidth, lineHeight) {
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(fontSize);
+          doc.setTextColor(colorRgb[0], colorRgb[1], colorRgb[2]);
+          const lines = doc.splitTextToSize(text, maxWidth);
+          const totalH = lines.length * lineHeight;
+          ensureSpace(totalH + 6);
+          doc.text(lines, x, y);
+          y += totalH;
+        }
+
+        // Top Dark Carbon Header Band
+        doc.setFillColor(21, 21, 21);
+        doc.rect(0, 0, pageWidth, 82, 'F');
+        // Red Hat Red Accent Stripe
+        doc.setFillColor(238, 0, 0);
+        doc.rect(0, 82, pageWidth, 3, 'F');
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(17);
+        doc.setTextColor(255, 255, 255);
+        doc.text('STATEMENT OF WORK (SOW)', margin, 34);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        doc.setTextColor(210, 214, 220);
+        doc.text('DealArchitect Modular Services & Commercial Governance Engine', margin, 52);
+
+        doc.setFont('courier', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(255, 255, 255);
+        doc.text('DOC ID: ' + model.docId, pageWidth - margin, 34, { align: 'right' });
+        doc.setFont('courier', 'normal');
+        doc.setFontSize(8.5);
+        doc.setTextColor(180, 235, 195);
+        doc.text('STATUS: READY FOR SIGNATURE  |  DATE: ' + generatedDate, pageWidth - margin, 52, { align: 'right' });
+
+        y = 112;
+
+        // Commercial Summary Strip (4 cells)
+        const boxW = contentWidth / 4;
+        doc.setFillColor(246, 247, 249);
+        doc.setDrawColor(210, 214, 220);
+        doc.rect(margin, y, contentWidth, 52, 'FD');
+        for (let i = 1; i < 4; i++) {
+          doc.line(margin + (boxW * i), y, margin + (boxW * i), y + 52);
+        }
+
+        const kpiCells = [
+          { label: 'SEGMENT', value: model.segment.name + ' (' + model.segment.seatBand + ')' },
+          { label: 'TOTAL YEAR-1 ACV', value: formatCurrency(model.financials.totalDealAcv) + ' (' + model.financials.multiplierFormatted + ')' },
+          { label: 'SERVICES ACV', value: formatCurrency(model.financials.totalServicesAcv) },
+          { label: 'TARGET DELIVERY', value: model.velocity.modularWeeks.toFixed(1) + ' Wks (' + model.velocity.deliverySavedPct + '% Faster)' }
+        ];
+
+        kpiCells.forEach(function (cell, idx) {
+          const cx = margin + (boxW * idx) + 10;
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(100, 108, 118);
+          doc.text(cell.label, cx, y + 17);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9.5);
+          doc.setTextColor(21, 21, 21);
+          const cellLines = doc.splitTextToSize(cell.value, boxW - 16);
+          doc.text(cellLines, cx, y + 32);
+        });
+
+        y += 72;
+
+        // Section 1: Executive Scope
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(21, 21, 21);
+        doc.text('1. EXECUTIVE SCOPE & COMMERCIAL SUMMARY', margin, y);
+        doc.setDrawColor(238, 0, 0);
+        doc.setLineWidth(1.2);
+        doc.line(margin, y + 5, margin + 175, y + 5);
+        doc.setLineWidth(0.5);
+        y += 22;
+
+        const complexityText = model.activeComplexities.length > 0
+          ? model.activeComplexities.map(function (c) { return c.title + ' (' + c.sku + ')'; }).join(', ')
+          : 'Core Baseline Scope (No Complexity Add-Ons)';
+
+        const scopeSummary =
+          'This Statement of Work ("SOW") governs the modular deployment, enablement, and technical account governance for Client\'s ' +
+          model.segment.name + ' deployment (' + model.segment.seatBand + '). Scoped technical modules include: ' + complexityText + '. ' +
+          'Total Year-1 Commercial Commitment equals ' + formatCurrency(model.financials.totalDealAcv) + ' (' +
+          formatCurrency(model.financials.baseSoftwareAcv) + ' Software Subscription ACV + ' +
+          formatCurrency(model.financials.totalServicesAcv) + ' Modular Services ACV; ' +
+          model.financials.multiplierFormatted + ' Deal Multiplier), with a target production go-live of ' +
+          model.velocity.modularWeeks.toFixed(1) + ' weeks from kickoff (vs. ' + model.velocity.legacyWeeks.toFixed(1) + ' weeks legacy scoping).';
+
+        drawParagraph(scopeSummary, margin, 9.5, [45, 50, 58], contentWidth, 13.5);
+        y += 14;
+
+        // Section 2: Standardized Modular Deliverables
+        ensureSpace(40);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(21, 21, 21);
+        doc.text('2. STANDARDIZED MODULAR DELIVERABLES', margin, y);
+        doc.setDrawColor(238, 0, 0);
+        doc.setLineWidth(1.2);
+        doc.line(margin, y + 5, margin + 175, y + 5);
+        doc.setLineWidth(0.5);
+        y += 22;
+
+        const modulesForPdf = [
+          {
+            pillar: '(A) CONSULTING IMPLEMENTATION',
+            sku: model.consulting.sku,
+            title: model.consulting.title,
+            price: formatCurrency(model.consulting.totalPrice),
+            note: model.consulting.engineeringCredit > 0
+              ? 'Includes GR-03 Self-Sufficiency Engineering Credit: ' + formatCurrency(-model.consulting.engineeringCredit)
+              : null,
+            deliverables: model.consulting.deliverables
+          },
+          {
+            pillar: '(B) TRAINING & CERTIFICATION',
+            sku: model.training.sku,
+            title: model.training.title,
+            price: formatCurrency(model.training.price),
+            note: model.training.guardrailBadge || null,
+            deliverables: model.training.deliverables
+          },
+          {
+            pillar: '(C) TECHNICAL ACCOUNT MANAGEMENT',
+            sku: model.tam.sku + ' | ' + model.tam.sla,
+            title: model.tam.title,
+            price: formatCurrency(model.tam.price),
+            note: model.tam.guardrailBadge || null,
+            deliverables: model.tam.deliverables
+          }
+        ];
+
+        modulesForPdf.forEach(function (mod) {
+          const itemLineCount = mod.deliverables.reduce(function (acc, item) {
+            return acc + doc.splitTextToSize('- ' + item, contentWidth - 24).length;
+          }, 0);
+          const blockHeight = 36 + (mod.note ? 14 : 0) + (itemLineCount * 13) + 12;
+          ensureSpace(blockHeight);
+
+          doc.setFillColor(250, 250, 252);
+          doc.setDrawColor(212, 215, 221);
+          doc.rect(margin, y, contentWidth, blockHeight - 6, 'FD');
+
+          doc.setFont('courier', 'bold');
+          doc.setFontSize(8.5);
+          doc.setTextColor(238, 0, 0);
+          doc.text(mod.pillar + '  [' + mod.sku + ']', margin + 10, y + 15);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10.5);
+          doc.setTextColor(21, 21, 21);
+          doc.text(mod.price, pageWidth - margin - 10, y + 16, { align: 'right' });
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+          doc.setTextColor(21, 21, 21);
+          doc.text(mod.title, margin + 10, y + 30);
+
+          let innerY = y + 44;
+          if (mod.note) {
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(8.5);
+            doc.setTextColor(146, 64, 14);
+            doc.text('Governance Note: ' + mod.note, margin + 10, innerY);
+            innerY += 14;
+          }
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(9);
+          doc.setTextColor(55, 65, 81);
+          mod.deliverables.forEach(function (deliv) {
+            const wrapped = doc.splitTextToSize('• ' + deliv, contentWidth - 24);
+            doc.text(wrapped, margin + 14, innerY);
+            innerY += wrapped.length * 13;
+          });
+
+          y += blockHeight + 4;
+        });
+
+        y += 8;
+
+        // Section 3: Client Resource & Governance Assumptions
+        ensureSpace(70);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(21, 21, 21);
+        doc.text('3. CLIENT RESOURCE & GOVERNANCE ASSUMPTIONS', margin, y);
+        doc.setDrawColor(238, 0, 0);
+        doc.setLineWidth(1.2);
+        doc.line(margin, y + 5, margin + 175, y + 5);
+        doc.setLineWidth(0.5);
+        y += 22;
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(180, 20, 20);
+        const headlineLines = doc.splitTextToSize(assumptions.headline, contentWidth);
+        ensureSpace(headlineLines.length * 14 + 10);
+        doc.text(headlineLines, margin, y);
+        y += headlineLines.length * 14 + 4;
+
+        assumptions.bullets.forEach(function (bullet) {
+          drawParagraph('• ' + bullet, margin + 8, 9.2, [55, 65, 81], contentWidth - 10, 13);
+          y += 4;
+        });
+
+        if (model.activeRules.length > 0) {
+          y += 6;
+          ensureSpace(36);
+          doc.setFont('courier', 'bold');
+          doc.setFontSize(8.5);
+          doc.setTextColor(120, 53, 15);
+          doc.text('AUTOMATED DEAL DESK RULES TRACE:', margin, y);
+          y += 13;
+          model.activeRules.forEach(function (rule) {
+            drawParagraph('[' + rule.id + '] ' + rule.text, margin + 6, 8.5, [100, 60, 20], contentWidth - 8, 12);
+            y += 3;
+          });
+        }
+
+        // Signature Block
+        y += 18;
+        ensureSpace(76);
+        doc.setDrawColor(200, 204, 212);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 18;
+
+        const sigColW = (contentWidth - 36) / 2;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.setTextColor(100, 108, 118);
+        doc.text('CLIENT AUTHORIZED SIGNATORY', margin, y);
+        doc.text('VENDOR DEAL DESK / COMMERCIAL APPROVAL', margin + sigColW + 36, y);
+
+        y += 28;
+        doc.setDrawColor(120, 125, 135);
+        doc.line(margin, y, margin + sigColW, y);
+        doc.line(margin + sigColW + 36, y, pageWidth - margin, y);
+
+        y += 13;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(110, 116, 126);
+        doc.text('Name / Title / Date', margin, y);
+        doc.text('Authorized Representative / Date', margin + sigColW + 36, y);
+
+        // Footer on all pages
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let p = 1; p <= pageCount; p++) {
+          doc.setPage(p);
+          doc.setFont('courier', 'normal');
+          doc.setFontSize(7.5);
+          doc.setTextColor(130, 136, 146);
+          doc.text(
+            'DealArchitect Commercial SOW Engine  |  ' + model.docId + '  |  Page ' + p + ' of ' + pageCount,
+            margin,
+            pageHeight - 24
+          );
+        }
+
+        doc.save(model.docId + '.pdf');
+        showToast('Exported ' + model.docId + '.pdf');
+      }
+
+      function showToast(message) {
+        const banner = document.getElementById('toastBanner');
+        const msgEl = document.getElementById('toastMessage');
+        msgEl.textContent = message;
+        banner.classList.remove('opacity-0', 'translate-y-3');
+        banner.classList.add('opacity-100', 'translate-y-0');
+
+        if (toastTimeout) {
+          clearTimeout(toastTimeout);
+        }
+        toastTimeout = setTimeout(function () {
+          banner.classList.add('opacity-0', 'translate-y-3');
+          banner.classList.remove('opacity-100', 'translate-y-0');
+        }, 2600);
+      }
+
+      // =========================================================================
+      // 7. MASTER RENDER ORCHESTRATOR
+      // =========================================================================
+      function renderAll() {
+        latestCalculation = computeDealModel(state);
+
+        renderPresets();
+        renderSegments();
+        renderComplexities();
+        renderMaturityControls(latestCalculation);
+        renderKpis(latestCalculation);
+        renderGovernanceStrip(latestCalculation);
+        renderBundleCards(latestCalculation);
+        renderVelocityChart(latestCalculation);
+        renderSowDocument(latestCalculation);
+
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      }
+
+      // =========================================================================
+      // 8. EVENT BINDINGS
+      // =========================================================================
+      function bindEvents() {
+        // Preset click delegation
+        document.getElementById('presetsContainer').addEventListener('click', function (e) {
+          const btn = e.target.closest('[data-preset-name]');
+          if (!btn) return;
+          const presetName = btn.getAttribute('data-preset-name');
+          const preset = PRESETS.find(function (p) { return p.name === presetName; });
+          if (!preset) return;
+
+          state = {
+            segment: preset.segment,
+            complexities: preset.complexities.slice(),
+            itMaturity: preset.itMaturity,
+            presetName: preset.name
+          };
+          renderAll();
+        });
+
+        // Segment click delegation
+        document.getElementById('segmentsContainer').addEventListener('click', function (e) {
+          const card = e.target.closest('[data-segment-id]');
+          if (!card) return;
+          const segmentId = card.getAttribute('data-segment-id');
+          if (!SEGMENTS[segmentId]) return;
+
+          state.segment = segmentId;
+          state.presetName = null;
+          renderAll();
+        });
+
+        // Complexity checkbox change delegation
+        document.getElementById('complexitiesContainer').addEventListener('change', function (e) {
+          const checkbox = e.target.closest('[data-complexity-checkbox]');
+          if (!checkbox) return;
+          const compId = checkbox.getAttribute('data-complexity-checkbox');
+          const exists = state.complexities.indexOf(compId) !== -1;
+
+          if (checkbox.checked && !exists) {
+            state.complexities.push(compId);
+          } else if (!checkbox.checked && exists) {
+            state.complexities = state.complexities.filter(function (id) { return id !== compId; });
+          }
+          state.presetName = null;
+          renderAll();
+        });
+
+        // IT Maturity Slider
+        document.getElementById('itMaturitySlider').addEventListener('input', function (e) {
+          state.itMaturity = Number(e.target.value);
+          state.presetName = null;
+          renderAll();
+        });
+
+        // IT Maturity Tick Buttons
+        document.querySelectorAll('.tick-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            state.itMaturity = Number(btn.getAttribute('data-maturity-tick'));
+            state.presetName = null;
+            renderAll();
+          });
+        });
+
+        // Copy SOW Text to Clipboard
+        const copyBtn = document.getElementById('copySowBtn');
+        copyBtn.addEventListener('click', function () {
+          if (!latestCalculation) return;
+          const plainText = generateSowPlainText(latestCalculation);
+
+          function onCopied() {
+            const originalHtml =
+              '<i data-lucide="copy" class="h-3.5 w-3.5 text-neutral-600"></i>' +
+              '<span>Copy SOW Text</span>';
+            copyBtn.innerHTML =
+              '<i data-lucide="check" class="h-3.5 w-3.5 text-emerald-700"></i>' +
+              '<span class="font-bold text-emerald-800">Copied!</span>';
+            copyBtn.classList.add('border-emerald-400', 'bg-emerald-50');
+            if (window.lucide) window.lucide.createIcons();
+            showToast('SOW (' + latestCalculation.docId + ') copied to clipboard');
+
+            setTimeout(function () {
+              copyBtn.innerHTML = originalHtml;
+              copyBtn.classList.remove('border-emerald-400', 'bg-emerald-50');
+              if (window.lucide) window.lucide.createIcons();
+            }, 1800);
+          }
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(plainText).then(onCopied).catch(function () {
+              fallbackCopy(plainText);
+              onCopied();
+            });
+          } else {
+            fallbackCopy(plainText);
+            onCopied();
+          }
+        });
+
+        function fallbackCopy(text) {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          try {
+            document.execCommand('copy');
+          } catch (err) {
+            // Ignore fallback error
+          }
+          document.body.removeChild(textarea);
+        }
+
+        // Export PDF
+        document.getElementById('exportSowPdfBtn').addEventListener('click', function () {
+          if (!latestCalculation) return;
+          exportSowAsPdf(latestCalculation);
+        });
+      }
+
+      // =========================================================================
+      // 9. INITIALIZATION
+      // =========================================================================
+      document.addEventListener('DOMContentLoaded', function () {
+        bindEvents();
+        renderAll();
+      });
+    })();
+  </script>
+</body>
+</html>
