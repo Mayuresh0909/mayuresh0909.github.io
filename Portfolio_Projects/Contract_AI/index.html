@@ -1,0 +1,2791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prototype - Contract AI — Enterprise Subscription, Services &amp; Renewal Intelligence</title>
+
+  <!-- Google Fonts: Red Hat Display & Red Hat Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800&family=Red+Hat+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Red Hat Display"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"Red Hat Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      color-scheme: light;
+    }
+
+    /* Enforce Red Hat Display across body and all form controls */
+    body,
+    button,
+    input,
+    select,
+    textarea,
+    optgroup {
+      font-family: 'Red Hat Display', sans-serif;
+    }
+
+    /* Strict tabular numerals for financial figures, dates, SKUs, and offsets */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1, "cv05" 1;
+    }
+
+    /* Crisp white executive card with refined golden & red ambient glow */
+    .case-study-glow-card {
+      position: relative;
+      background-color: #ffffff;
+      border: 1px solid #e6c687;
+      box-shadow:
+        0 0 0 1px rgba(204, 0, 0, 0.14),
+        0 0 28px -4px rgba(245, 158, 11, 0.28),
+        0 8px 34px -6px rgba(204, 0, 0, 0.20),
+        0 2px 8px -2px rgba(17, 24, 39, 0.06);
+    }
+
+    .case-study-top-rule {
+      height: 3px;
+      background: linear-gradient(90deg, #CC0000 0%, #D97706 52%, #F59E0B 100%);
+    }
+
+    /* Sub-card yellow + accent glows */
+    .pillar-glow-blue {
+      background-color: #FFFDF9;
+      border: 1px solid rgba(252, 211, 77, 0.85);
+      box-shadow:
+        0 0 16px -4px rgba(245, 158, 11, 0.24),
+        0 4px 14px -6px rgba(29, 78, 216, 0.16);
+    }
+
+    .pillar-glow-red {
+      background-color: #FFFDF9;
+      border: 1px solid rgba(252, 211, 77, 0.85);
+      box-shadow:
+        0 0 16px -4px rgba(245, 158, 11, 0.24),
+        0 4px 14px -6px rgba(204, 0, 0, 0.16);
+    }
+
+    .pillar-glow-green {
+      background-color: #FFFDF9;
+      border: 1px solid rgba(252, 211, 77, 0.85);
+      box-shadow:
+        0 0 16px -4px rgba(245, 158, 11, 0.24),
+        0 4px 14px -6px rgba(4, 120, 87, 0.16);
+    }
+
+    /* Crisp institutional scrollbars */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f3f5;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c1c9d2;
+      border-radius: 2px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Precision flat range slider */
+    input[type="range"].ent-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 5px;
+      background: #cbd5e1;
+      border-radius: 1px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"].ent-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 20px;
+      border-radius: 2px;
+      background: #111827;
+      border: 1px solid #ffffff;
+      box-shadow: 0 0 0 1px #475569;
+      cursor: ew-resize;
+      transition: background-color 0.12s ease;
+    }
+    input[type="range"].ent-slider::-webkit-slider-thumb:hover {
+      background: #cc0000;
+      box-shadow: 0 0 0 1px #991b1b;
+    }
+    input[type="range"].ent-slider::-moz-range-thumb {
+      width: 15px;
+      height: 20px;
+      border-radius: 2px;
+      background: #111827;
+      border: 1px solid #ffffff;
+      box-shadow: 0 0 0 1px #475569;
+      cursor: ew-resize;
+    }
+
+    /* Citation mark highlight */
+    @keyframes markFlash {
+      0% { background-color: #fde047; }
+      100% { background-color: #fef08a; }
+    }
+    .mark-highlight-active {
+      animation: markFlash 0.55s ease-out 1;
+    }
+
+    /* Toast entrance */
+    @keyframes toastSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .toast-enter {
+      animation: toastSlide 0.15s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F4F5F7] text-[#111827] font-sans antialiased selection:bg-slate-200 selection:text-[#111827] min-h-screen flex flex-col">
+
+  <!-- ==================== INSTITUTIONAL TOP BAR ==================== -->
+  <header class="sticky top-0 z-30 bg-[#111622] text-white border-b border-[#252D3D]">
+    <div class="max-w-[1560px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-7 h-7 rounded-sm bg-[#CC0000] flex items-center justify-center shrink-0">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7L12 3L20 7V17L12 21L4 17V7Z" stroke="white" stroke-width="2" />
+            <path d="M8 12H16M12 8V16" stroke="white" stroke-width="2" />
+          </svg>
+        </div>
+        <div class="flex items-center gap-2.5 min-w-0">
+          <span class="text-[15px] font-bold tracking-tight text-white truncate">Prototype - Contract AI</span>
+          <span class="text-slate-600 text-sm hidden sm:inline">|</span>
+          <span class="text-[13px] text-slate-300 hidden sm:inline truncate">Enterprise Subscription, Services &amp; Renewal Intelligence</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div id="mode-badge" class="hidden sm:inline-flex items-center gap-2 px-2.5 py-1.5 rounded-sm text-xs font-medium bg-[#1A2130] text-slate-200 border border-[#2E384D]">
+          <span id="mode-dot" class="w-2 h-2 bg-emerald-400"></span>
+          <span id="mode-label">SIMULATION ENGINE</span>
+        </div>
+
+        <button
+          id="btn-api-settings"
+          type="button"
+          aria-expanded="false"
+          aria-controls="api-settings-drawer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium text-slate-200 bg-[#1A2130] border border-[#2E384D] hover:bg-[#242D40] transition-colors"
+        >
+          <i data-lucide="key-round" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span>API Key Settings</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Collapsible API Settings Drawer -->
+    <div id="api-settings-drawer" class="hidden bg-[#171C28] border-t border-[#252D3D]">
+      <div class="max-w-[1560px] mx-auto px-4 sm:px-6 py-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div class="space-y-1 max-w-2xl">
+          <div class="flex items-center gap-2">
+            <span class="text-xs uppercase tracking-wider text-slate-200 font-semibold">Live LLM Inference Override</span>
+            <span class="text-[11px] px-2 py-0.5 bg-[#232A3B] text-slate-300 border border-[#343F56] rounded-sm">gemini-2.5-flash</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Runs deterministic contract parsing locally by default. Provide a Gemini API key to execute live <code class="text-white font-medium">responseSchema</code> extraction (stored in <code class="text-white font-medium">sessionStorage</code> only).
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0">
+          <div class="relative">
+            <input
+              id="gemini-key-input"
+              type="password"
+              autocomplete="off"
+              placeholder="Paste Gemini API Key (AIza...)"
+              class="w-full sm:w-72 pl-3 pr-9 py-2 text-xs bg-[#0E121B] text-white border border-[#343F56] rounded-sm focus:outline-none focus:border-slate-300"
+            />
+            <button
+              id="btn-toggle-key-vis"
+              type="button"
+              title="Show/Hide API Key"
+              class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+            >
+              <i data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <button
+            id="btn-save-key"
+            type="button"
+            class="px-3.5 py-2 rounded-sm text-xs font-semibold bg-[#CC0000] text-white hover:bg-[#B30000] transition-colors"
+          >
+            Enable Live API
+          </button>
+          <button
+            id="btn-clear-key"
+            type="button"
+            class="px-3.5 py-2 rounded-sm text-xs font-medium bg-[#232A3B] text-slate-200 border border-[#343F56] hover:bg-[#2E384D] transition-colors"
+          >
+            Use Simulation
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- API Error Banner -->
+  <div id="api-error-banner" class="hidden bg-amber-50 border-b border-amber-300">
+    <div class="max-w-[1560px] mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 text-[13px] text-amber-950">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-700 shrink-0"></i>
+        <span id="api-error-message">Live Gemini API request failed.</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          id="btn-fallback-sim"
+          type="button"
+          class="px-3 py-1 rounded-sm text-xs font-semibold bg-amber-800 text-white hover:bg-amber-900 transition-colors"
+        >
+          Fallback to Simulation Mode
+        </button>
+        <button id="btn-dismiss-error" type="button" class="p-1 text-amber-800 hover:text-amber-950" aria-label="Dismiss warning">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FEATURED TOP SECTION: PM CASE STUDY & ARCHITECTURE (CRISP WHITE + GOLDEN/RED GLOW) ==================== -->
+  <section class="max-w-[1560px] w-full mx-auto px-4 sm:px-6 pt-6 pb-2">
+    <div class="case-study-glow-card rounded-sm overflow-hidden">
+      <div class="case-study-top-rule"></div>
+
+      <div class="p-5 sm:p-6 lg:p-7">
+        <!-- Executive Header Row -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#E5E7EB]">
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-[11px] font-bold uppercase tracking-wider bg-red-50 text-[#CC0000] border border-red-200">
+                <i data-lucide="award" class="w-3.5 h-3.5 text-amber-600"></i>
+                PM Case Study &amp; System Architecture
+              </span>
+              <span class="text-xs text-slate-500 font-medium">Enterprise Subscription, Services &amp; Renewal Intelligence</span>
+            </div>
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight text-[#111827] leading-snug">
+              Turning Executed Red Hat Order Forms into Customer-Backed Expansion, Cross-Sell &amp; Services Recommendations
+            </h1>
+          </div>
+
+          <div class="flex items-center gap-4 shrink-0 bg-[#FFFDF7] border border-amber-300/90 px-4 py-2.5 rounded-sm">
+            <div class="text-right">
+              <span class="block text-[10.5px] uppercase tracking-wider text-amber-800 font-bold">Verified Impact</span>
+              <span class="text-xs text-[#111827] font-medium">Enterprise Account Pods</span>
+            </div>
+            <div class="h-8 w-px bg-amber-200"></div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-[#CC0000] leading-none tabular-nums">+18%</div>
+              <div class="text-[10.5px] uppercase tracking-wider text-slate-600 mt-1 font-semibold">CY27 Pipeline</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Column Executive Brief -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-5">
+          <!-- Box 1: Yellow Highlight Glow + Blue Square for 01 -->
+          <div class="pillar-glow-blue rounded-sm p-4 space-y-2">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2 py-0.5 rounded-sm text-xs font-bold bg-blue-700 text-white">01</span>
+              <h2 class="text-[13px] font-bold uppercase tracking-wider text-[#111827]">The Enterprise Bottleneck</h2>
+            </div>
+            <p class="text-[13.5px] text-slate-700 leading-[1.6]">
+              AEs managing multi-product Red Hat portfolios (RHEL, OpenShift, Ansible) miss buried subscription end-dates, ELS lifecycle traps, core true-up penalties, and expired Consulting/TAM SOWs across 50+ page agreements—leaving expansion ARR and customer adoption outcomes unrealized.
+            </p>
+          </div>
+
+          <!-- Box 2: Yellow Highlight Glow + Red Square for 02 -->
+          <div class="pillar-glow-red rounded-sm p-4 space-y-2">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2 py-0.5 rounded-sm text-xs font-bold bg-[#CC0000] text-white">02</span>
+              <h2 class="text-[13px] font-bold uppercase tracking-wider text-[#111827]">Core PM Contribution: Customer-Why Playbooks</h2>
+            </div>
+            <p class="text-[13.5px] text-slate-700 leading-[1.6]">
+              Designed the recommendation framework anchoring every SKU pitch to a concrete <strong class="text-[#111827]">Customer Why</strong> (avoided 1.25x penalties, audit blockers, outage losses) across 3 pillars: <strong class="text-[#111827]">Renewals/Tier Upgrades</strong>, <strong class="text-[#111827]">Product Cross-Sell</strong>, and <strong class="text-[#111827]">Red Hat Services</strong> (TAM, Consulting, RHLS).
+            </p>
+          </div>
+
+          <!-- Box 3: Yellow Highlight Glow + Green Square for 03 -->
+          <div class="pillar-glow-green rounded-sm p-4 space-y-2">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2 py-0.5 rounded-sm text-xs font-bold bg-emerald-700 text-white">03</span>
+              <h2 class="text-[13px] font-bold uppercase tracking-wider text-[#111827]">Zero-Hallucination Grounding &amp; HITL</h2>
+            </div>
+            <p class="text-[13.5px] text-slate-700 leading-[1.6]">
+              Strict <code class="text-[#111827] bg-white px-1.5 py-0.5 border border-[#E5E7EB] rounded-sm font-semibold text-xs">responseSchema</code> extraction paired with programmatic <code class="text-[#111827] bg-white px-1.5 py-0.5 border border-[#E5E7EB] rounded-sm font-semibold text-xs">indexOf()</code> character-offset verification, AE Verify/Dismiss controls, live ARR sizing sliders, and direct Salesforce Opportunity + Services SOW sync.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== INTERACTIVE WORKBENCH (12-COLUMN SPLIT) ==================== -->
+  <main class="flex-1 max-w-[1560px] w-full mx-auto px-4 sm:px-6 py-5">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+      <!-- ==================== LEFT PANEL (5 COLS): ENTERPRISE CONTRACT WORKSTATION ==================== -->
+      <section class="lg:col-span-5 flex flex-col bg-white border border-[#D8DEE6] rounded-sm overflow-hidden lg:sticky lg:top-16">
+
+        <!-- Account Selector -->
+        <div class="p-3.5 border-b border-[#D8DEE6] bg-[#F8FAFC]">
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-slate-500"></i>
+              Executed Customer Agreements
+            </span>
+            <span class="text-[11px] font-medium text-slate-500">SELECT SAMPLE CONTRACT</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-2" id="preset-selector">
+            <button type="button" data-preset="apex" class="preset-pill text-left px-3 py-2.5 rounded-sm border transition-colors">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[13px] font-bold text-[#111827] truncate">Apex Financial</span>
+                <span class="text-xs text-emerald-700 font-bold tabular-nums">$485K</span>
+              </div>
+              <p class="text-[11.5px] text-slate-500 mt-0.5 truncate">RHEL/OCP/AAP • No Services</p>
+            </button>
+
+            <button type="button" data-preset="meridian" class="preset-pill text-left px-3 py-2.5 rounded-sm border transition-colors">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[13px] font-bold text-[#111827] truncate">Meridian Retail</span>
+                <span class="text-xs text-rose-700 font-bold tabular-nums">$620K</span>
+              </div>
+              <p class="text-[11.5px] text-slate-500 mt-0.5 truncate">22d Notice • Lapsed TAM</p>
+            </button>
+
+            <button type="button" data-preset="vanguard" class="preset-pill text-left px-3 py-2.5 rounded-sm border transition-colors">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[13px] font-bold text-[#111827] truncate">Vanguard Health</span>
+                <span class="text-xs text-blue-700 font-bold tabular-nums">$790K</span>
+              </div>
+              <p class="text-[11.5px] text-slate-500 mt-0.5 truncate">HIPAA/OPP Tier Gap</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metadata Ribbon -->
+        <div class="px-3.5 py-2.5 border-b border-[#D8DEE6] bg-white grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
+          <div class="min-w-0">
+            <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Order Form</span>
+            <span id="meta-doc-id" class="font-semibold text-[#111827] truncate block tabular-nums">APEX-OF-2026</span>
+          </div>
+          <div class="min-w-0">
+            <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Effective</span>
+            <span id="meta-effective" class="font-semibold text-[#111827] truncate block tabular-nums">Nov 1, 2025</span>
+          </div>
+          <div class="min-w-0">
+            <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Gov. Law</span>
+            <span id="meta-law" class="font-semibold text-[#111827] truncate block">Delaware</span>
+          </div>
+          <div class="min-w-0">
+            <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Size</span>
+            <span id="meta-sections" class="font-semibold text-[#111827] block tabular-nums">12 Sections</span>
+          </div>
+          <div class="min-w-0 col-span-2 sm:col-span-1">
+            <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Grounding</span>
+            <span id="meta-grounding" class="font-bold text-emerald-700 block tabular-nums">4/4 Synced</span>
+          </div>
+        </div>
+
+        <!-- Toolbar: Consolidated Citation View vs Full Contract vs Edit -->
+        <div class="px-3.5 py-2 border-b border-[#D8DEE6] bg-[#F8FAFC] flex flex-wrap items-center justify-between gap-2">
+          <div class="inline-flex border border-[#D8DEE6] rounded-sm bg-white p-0.5" role="tablist" aria-label="Document view mode">
+            <button
+              id="tab-citation-key"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              class="px-2.5 py-1 rounded-sm text-xs font-semibold bg-[#111827] text-white transition-colors"
+              title="Consolidated view showing only schedules & commercial triggers"
+            >
+              Key Clauses
+            </button>
+            <button
+              id="tab-citation-full"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              class="px-2.5 py-1 rounded-sm text-xs font-medium text-slate-600 hover:text-[#111827] transition-colors"
+              title="Full legal & technical contract text"
+            >
+              Full Contract
+            </button>
+            <button
+              id="tab-edit-text"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              class="px-2.5 py-1 rounded-sm text-xs font-medium text-slate-600 hover:text-[#111827] transition-colors"
+            >
+              Edit Text
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button
+              id="btn-clear-highlight"
+              type="button"
+              class="hidden inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[11px] font-semibold bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200 transition-colors"
+            >
+              <i data-lucide="eraser" class="w-3.5 h-3.5"></i>
+              CLEAR
+            </button>
+            <span id="word-count-badge" class="text-[11px] text-slate-500 tabular-nums font-medium">1,620w full</span>
+          </div>
+        </div>
+
+        <!-- Legal Document Surface -->
+        <div class="relative bg-white">
+          <div
+            id="contract-viewer"
+            class="h-[480px] lg:h-[580px] overflow-y-auto custom-scrollbar divide-y divide-slate-100 text-[13px] leading-[1.68] text-slate-800 select-text"
+          ></div>
+
+          <textarea
+            id="contract-editor"
+            spellcheck="false"
+            aria-label="Edit full enterprise contract text"
+            class="hidden w-full h-[480px] lg:h-[580px] p-4 text-[13px] leading-[1.68] text-[#111827] bg-white focus:outline-none focus:ring-1 focus:ring-inset focus:ring-[#111827] resize-none custom-scrollbar"
+          ></textarea>
+        </div>
+
+        <!-- Analyze CTA -->
+        <div class="p-3.5 border-t border-[#D8DEE6] bg-[#F8FAFC]">
+          <button
+            id="btn-analyze"
+            type="button"
+            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-sm text-[13px] font-semibold text-white bg-[#CC0000] hover:bg-[#AD0000] active:bg-[#940000] disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
+          >
+            <i id="analyze-icon" data-lucide="scan-search" class="w-4 h-4"></i>
+            <svg id="analyze-spinner" class="hidden animate-spin w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span id="analyze-btn-text">Analyze Contract &amp; Generate AE Playbook</span>
+          </button>
+
+          <div id="processing-status-bar" class="hidden mt-2.5 pt-2.5 border-t border-[#D8DEE6]">
+            <div class="flex items-center justify-between text-xs font-medium text-[#111827] mb-1.5">
+              <span id="processing-step-text">1. Parsing schedules...</span>
+              <span id="processing-pct" class="tabular-nums">33%</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-200 overflow-hidden">
+              <div id="processing-progress" class="h-full bg-[#CC0000] transition-all duration-150" style="width: 33%"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== RIGHT PANEL (7 COLS): AE RECOMMENDATION & REVENUE WORKBENCH ==================== -->
+      <section class="lg:col-span-7 flex flex-col gap-4" id="dashboard-panel">
+
+        <!-- Account Header Strip -->
+        <div class="bg-white px-4 py-3 border border-[#D8DEE6] rounded-sm flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div id="account-avatar" class="w-9 h-9 rounded-sm bg-[#111622] text-white flex items-center justify-center font-bold text-xs shrink-0">
+              AF
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h2 id="dash-account-name" class="text-base font-bold text-[#111827] truncate">Apex Financial Group, Inc.</h2>
+                <span id="dash-signal-pill" class="px-2 py-0.5 rounded-sm text-[11px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300">
+                  EXPANSION + SERVICES
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-right shrink-0">
+            <span id="grounding-status" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 tabular-nums">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              4/4 Spans Grounded
+            </span>
+          </div>
+        </div>
+
+        <!-- 4-Column Executive KPI Ledger -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-white p-3.5 border border-[#D8DEE6] rounded-sm">
+            <span class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">Contracted ACV</span>
+            <div id="kpi-acv" class="text-2xl font-bold text-[#111827] mt-1 tabular-nums">$485,000</div>
+            <div id="kpi-billing" class="text-xs text-slate-500 mt-1 truncate">Annual Upfront</div>
+          </div>
+
+          <div class="bg-white p-3.5 border border-[#D8DEE6] rounded-sm">
+            <span class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">Notice Cutoff</span>
+            <div class="flex items-center gap-2 mt-1">
+              <span id="kpi-days" class="text-2xl font-bold text-[#111827] tabular-nums">45 Days</span>
+              <span id="kpi-urgency-dot" class="w-2 h-2 bg-amber-600"></span>
+            </div>
+            <div id="kpi-deadline" class="text-xs text-slate-500 mt-1 tabular-nums truncate">Cutoff: Sep 16, 2026</div>
+          </div>
+
+          <div class="bg-white p-3.5 border border-[#D8DEE6] rounded-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Propensity</span>
+              <span id="kpi-signal-badge" class="text-[10.5px] font-bold text-emerald-700">HIGH</span>
+            </div>
+            <div id="kpi-confidence" class="text-2xl font-bold text-[#111827] mt-1 tabular-nums">95%</div>
+            <div class="w-full h-1.5 bg-slate-200 mt-2">
+              <div id="kpi-confidence-bar" class="h-full bg-emerald-700 transition-all duration-200" style="width: 95%"></div>
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 border border-[#D8DEE6] rounded-sm border-l-[3px] border-l-[#0F766E]">
+            <span class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">Projected Expansion ARR</span>
+            <div id="kpi-uplift-value" class="text-2xl font-bold text-[#0F766E] mt-1 tabular-nums">+$398,000</div>
+            <div id="kpi-uplift-sub" class="text-xs text-slate-500 mt-1 tabular-nums truncate">Subs + Services</div>
+          </div>
+        </div>
+
+        <!-- Tabbed Intelligence Panel -->
+        <div class="bg-white border border-[#D8DEE6] rounded-sm overflow-hidden">
+          <div class="px-4 bg-[#F8FAFC] border-b border-[#D8DEE6] flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center" role="tablist" aria-label="Intelligence panels">
+              <button
+                id="right-tab-playbook"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                class="px-3.5 py-3 text-[13px] font-bold border-b-2 border-[#CC0000] text-[#111827] transition-colors"
+              >
+                AE Recommendations &amp; Dates
+              </button>
+              <button
+                id="right-tab-clauses"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                class="px-3.5 py-3 text-[13px] font-medium border-b-2 border-transparent text-slate-500 hover:text-[#111827] transition-colors"
+              >
+                Clause Audit &amp; HITL
+              </button>
+              <button
+                id="right-tab-trace"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                class="px-3.5 py-3 text-[13px] font-medium border-b-2 border-transparent text-slate-500 hover:text-[#111827] transition-colors"
+              >
+                Trace &amp; Schema
+              </button>
+            </div>
+
+            <span id="hitl-summary-pill" class="text-xs font-medium text-slate-500 tabular-nums py-1">
+              4/4 Active
+            </span>
+          </div>
+
+          <!-- ==================== TAB 1: SUBSCRIPTION DATES, CUSTOMER-BACKED RECOMMENDATIONS & SIMULATOR ==================== -->
+          <div id="panel-tab-playbook" class="p-4 sm:p-5 space-y-5">
+
+            <!-- 1A. Subscribed Red Hat Products & Services Schedule -->
+            <div class="overflow-x-auto border border-[#D8DEE6] rounded-sm">
+              <table class="w-full text-left border-collapse text-[12.5px]">
+                <thead>
+                  <tr class="bg-[#F8FAFC] border-b border-[#D8DEE6] text-[11px] uppercase tracking-wider text-slate-500 font-bold">
+                    <th class="py-2.5 px-3">Red Hat Product / Service</th>
+                    <th class="py-2.5 px-3">Tier &amp; Qty</th>
+                    <th class="py-2.5 px-3">Start</th>
+                    <th class="py-2.5 px-3">End</th>
+                    <th class="py-2.5 px-3">Status</th>
+                    <th class="py-2.5 px-3 text-right">ACV</th>
+                  </tr>
+                </thead>
+                <tbody id="subscriptions-tbody" class="divide-y divide-slate-100 tabular-nums">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 1B. Razor-Sharp 3-Pillar AE Recommendations (Customer WHY + AE Move) -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="compass" class="w-4 h-4 text-[#CC0000]"></i>
+                  AE Action Plan (Customer Value &amp; Commercial Levers)
+                </h3>
+              </div>
+
+              <div id="recommendations-container" class="space-y-3">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- 1C. Interactive Projected Expansion ARR Simulator -->
+            <div class="border border-[#D8DEE6] rounded-sm bg-[#F8FAFC]">
+              <div class="px-4 py-2.5 border-b border-[#D8DEE6] bg-white flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#111827]">
+                  Projected Expansion ARR Simulator
+                </span>
+                <span id="sim-total-value" class="text-base font-bold text-[#0F766E] tabular-nums">+$398,000</span>
+              </div>
+
+              <div id="simulator-container" class="p-4 space-y-3">
+                <!-- Mounted once per contract load; smooth slider -->
+              </div>
+            </div>
+
+            <!-- 1D. Customer-Value Talk Track & CRM Sync -->
+            <div class="border border-[#D8DEE6] rounded-sm p-4 bg-white space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  Customer-First AE Talk Track
+                </span>
+              </div>
+
+              <p id="nba-pitch" class="text-[13.5px] text-slate-800 leading-[1.65] bg-[#F8FAFC] p-3.5 border border-[#D8DEE6] rounded-sm"></p>
+
+              <div class="flex flex-wrap items-center gap-2.5">
+                <button
+                  id="btn-copy-pitch"
+                  type="button"
+                  class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-sm text-[13px] font-semibold bg-[#111622] text-white hover:bg-[#1E2638] transition-colors"
+                >
+                  <i data-lucide="copy" class="w-4 h-4"></i>
+                  <span id="copy-pitch-label">Copy Talk Track</span>
+                </button>
+
+                <button
+                  id="btn-push-crm"
+                  type="button"
+                  class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-sm text-[13px] font-semibold bg-[#0F766E] text-white hover:bg-[#0D635C] transition-colors"
+                >
+                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                  <span>Sync Opportunity to CRM</span>
+                </button>
+              </div>
+
+              <div id="crm-sync-summary" class="hidden p-3 rounded-sm bg-emerald-50/60 border border-emerald-300 space-y-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5 text-[13px] font-semibold text-emerald-900">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-700"></i>
+                    <span>Salesforce Opportunity &amp; Services SOW Mapped</span>
+                  </div>
+                  <span id="crm-sync-timestamp" class="text-[11px] text-emerald-800 tabular-nums font-medium"></span>
+                </div>
+                <div id="crm-mapped-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <!-- Populated on sync -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ==================== TAB 2: CLAUSE AUDIT & HITL ==================== -->
+          <div id="panel-tab-clauses" class="hidden p-4 sm:p-5 space-y-3">
+            <div class="pb-2.5 border-b border-[#D8DEE6] flex flex-wrap items-center justify-between gap-2">
+              <span class="text-[13px] font-semibold text-[#111827]">Click any clause to locate &amp; highlight in contract</span>
+              <span class="text-xs text-slate-500 font-medium">Verify / Dismiss adjusts ARR &amp; Propensity</span>
+            </div>
+
+            <div id="clauses-container" class="space-y-3">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- ==================== TAB 3: TRACE & SCHEMA ==================== -->
+          <div id="panel-tab-trace" class="hidden p-4 sm:p-5 space-y-4">
+            <div class="border border-[#D8DEE6] rounded-sm overflow-hidden">
+              <div class="px-4 py-2.5 border-b border-[#D8DEE6] bg-[#F8FAFC] flex items-center justify-between">
+                <span class="text-[13px] font-semibold text-[#111827] flex items-center gap-1.5">
+                  <i data-lucide="terminal" class="w-4 h-4 text-slate-600"></i>
+                  Pipeline Execution Telemetry
+                </span>
+                <span id="trace-total-latency" class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-sm border border-emerald-200 tabular-nums">
+                  Total: 357ms
+                </span>
+              </div>
+              <div id="trace-steps-container" class="divide-y divide-slate-100 bg-white">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <div class="border border-[#D8DEE6] rounded-sm overflow-hidden">
+              <button
+                id="btn-toggle-json"
+                type="button"
+                aria-expanded="true"
+                aria-controls="json-inspector-body"
+                class="w-full px-4 py-2.5 flex items-center justify-between text-left bg-[#F8FAFC] hover:bg-slate-100 transition-colors border-b border-[#D8DEE6]"
+              >
+                <div class="flex items-center gap-2">
+                  <i data-lucide="braces" class="w-4 h-4 text-slate-600"></i>
+                  <span class="text-[13px] font-semibold text-[#111827]">Structured JSON Output</span>
+                  <span class="text-[11px] px-2 py-0.5 bg-white text-slate-600 border border-[#D8DEE6] rounded-sm font-medium">responseSchema</span>
+                </div>
+                <i id="json-chevron" data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform duration-150" style="transform: rotate(180deg);"></i>
+              </button>
+
+              <div id="json-inspector-body" class="bg-[#11151D]">
+                <div class="px-4 py-2 border-b border-[#232A38] flex items-center justify-between">
+                  <span class="text-[11px] text-slate-400">application/json • validated</span>
+                  <button
+                    id="btn-copy-json"
+                    type="button"
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-medium bg-[#1E2430] text-slate-200 border border-[#323B4E] hover:bg-[#283040]"
+                  >
+                    <i data-lucide="clipboard" class="w-3.5 h-3.5"></i>
+                    <span id="copy-json-label">Copy JSON</span>
+                  </button>
+                </div>
+                <pre id="json-output" class="p-4 text-xs font-mono text-emerald-400 overflow-x-auto max-h-96 custom-scrollbar leading-relaxed"></pre>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ==================== TOAST CONTAINER ==================== -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ==================== APPLICATION SCRIPT ==================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // =========================================================================
+      // 1. REALISTIC, DEEP TECHNICAL RED HAT ENTERPRISE CONTRACTS
+      //    + CONCISE, CUSTOMER-CENTRIC AE RECOMMENDATIONS
+      // =========================================================================
+      const PRESETS = {
+        apex: {
+          id: 'apex',
+          docId: 'APEX-OF-2026-0419',
+          initials: 'AF',
+          governingLaw: 'Delaware',
+          simDefaults: {
+            metricType: 'cores',
+            contractedCap: 64,
+            liveUsage: 92,
+            minUsage: 64,
+            maxUsage: 160,
+            unitAnnualPrice: 4062,
+            trueUpMultiplier: 1.25,
+            attachTierUpgrade: true,
+            attachCrossSell: true,
+            attachTam: true,
+            attachConsulting: true,
+            attachTraining: true
+          },
+          contractText: `ENTERPRISE ORDER FORM NO. APEX-OF-2026-0419
+MASTER BUSINESS AGREEMENT INCORPORATION & SUBSCRIPTION SCHEDULE
+Customer Entity: Apex Financial Group, Inc. ("Customer"), a Delaware corporation with principal offices at 200 West Street, New York, NY 10282.
+Master Business Agreement Reference: RH-MBA-2024-9012 (executed October 14, 2024).
+Order Form Effective Date: November 1, 2025 | Governing Law: State of Delaware.
+Total Contracted Annual Recurring Value (ACV): $485,000 USD (Invoiced Annually in Advance, Net 30).
+
+PREAMBLE AND ORDER OF PRECEDENCE
+This Enterprise Order Form ("Order Form") is entered into pursuant to and incorporates by reference the terms of Master Business Agreement No. RH-MBA-2024-9012 ("MBA") between Red Hat, Inc. ("Provider") and Customer. In the event of any conflict between the body of the MBA, the Product Appendix, and this Order Form, the commercial terms, entitlement caps, lifecycle restrictions, and SLA exclusions expressly set forth in this Order Form shall govern and supersede. Capitalized terms not defined herein carry the meanings ascribed in the MBA Product Appendix.
+
+SCHEDULE A: SUBSCRIBED RED HAT SOFTWARE & SERVICES LINE ITEMS
+Line 1 | SKU RH00004 — Red Hat Enterprise Linux Server, Standard (Physical or Virtual Nodes, 1-2 Sockets): Quantity: 120 Subscriptions (240 Socket Capacity). Subscription Start Date: November 1, 2025 | Subscription End Date: October 31, 2026 | Net Annual Fee: $145,000 USD.
+Line 2 | SKU MW01485 — Red Hat OpenShift Container Platform, Standard (Bare Metal or Virtual, 2-Core Pairs): Quantity: 64 Subscriptions (128 vCPU/Physical Cores). Subscription Start Date: February 1, 2026 | Subscription End Date: January 31, 2027 | Net Annual Fee: $260,000 USD.
+Line 3 | SKU MCR0012 — Red Hat Ansible Automation Platform, Standard (100 Managed Nodes Pack): Quantity: 10 Packs (1,000 Managed Nodes). Subscription Start Date: February 1, 2026 | Subscription End Date: January 31, 2027 | Net Annual Fee: $80,000 USD.
+Line 4 | SKU GPS-QS-OCP — Red Hat OpenShift Quickstart Consulting (30-Day Fixed-Scope Foundation SOW): Engagement Start Date: February 1, 2026 | Engagement End Date: April 1, 2026 (EXPIRED / CLOSED).
+Line 5 | Technical Account Management (TAM) & Red Hat Learning Subscription (RHLS): Quantity: 0 (NONE CONTRACTED).
+
+SECTION 1. DEFINITIONS AND SUBSCRIPTION UNIT COUNTING RULES
+1.1 "Socket Pair" means up to two (2) physical processor sockets on a physical server or up to two (2) virtual nodes deployed on a certified hypervisor under SKU RH00004.
+1.2 "2-Core Pair" means two (2) physical processor cores or, where deployed in virtualized or public cloud environments with simultaneous multithreading enabled, two (2) vCPUs dedicated to OpenShift worker nodes (control plane and infrastructure nodes remain excluded solely when running certified cluster services without application pods).
+1.3 "Managed Node" means any discrete operating system instance, network switch, cloud VPC endpoint, or bare-metal host configured, inventoried, or remediated by Ansible Automation Controller under SKU MCR0012.
+1.4 Customer may not pool, split, or transfer partial Socket Pairs or 2-Core Pairs across non-affiliated corporate entities unless an Enterprise Subsidiary Rider is mutually executed.
+
+SECTION 2. CAPACITY CEILINGS, TELEMETRY METERING & 1.25X TRUE-UP PROVISIONS
+2.1 Customer's production, staging, and disaster-recovery OpenShift Container Platform deployment under SKU MW01485 is capped at 64 two-core pairs (128 compute cores). Customer maintains Red Hat Insights and OpenShift Cluster Telemetry enabled for continuous entitlement reconciliation.
+2.2 If Customer's peak concurrent OpenShift worker-node consumption exceeds 64 two-core pairs during any calendar quarter, Provider shall issue a mandatory quarterly true-up invoice calculated at 1.25x then-current List Price per excess 2-core pair for the remainder of the Subscription Term without volume discounting, payable Net 30.
+2.3 Operational Mandate Disclosure (Exhibit B): Customer's Chief Technology Officer has certified an enterprise Core Banking Modernization initiative requiring the decommission of legacy VMware vSphere clusters and migration of 380 mission-critical virtual machines onto Red Hat OpenShift prior to December 15, 2026 to avoid a $142,000/year third-party hypervisor renewal.
+
+SECTION 3. SUPPORT TIER EXCLUSIONS & RHEL 7.9 EXTENDED LIFECYCLE (ELS) OBLIGATIONS
+3.1 All 120 RHEL Server Standard subscriptions (SKU RH00004) and 64 OCP Standard subscriptions (SKU MW01485) are restricted to Standard Support (8x5 local business hours for Severity-1 and Severity-2 tickets; excludes 24x7 weekend or after-hours Severity-1 engineering escalation).
+3.2 Asset reconciliation schedules attached as Exhibit B-2 confirm that 42 of Customer's core ACH and wire-settlement production servers remain pinned to Red Hat Enterprise Linux 7.9 due to legacy COBOL/C++ middleware dependencies. RHEL 7 has exited Maintenance Support Phase 2 and entered the Extended Lifecycle Support (ELS) phase. Customer acknowledges that Standard SKU RH00004 provides zero CVE security patches, zero kernel bug fixes, and zero compliance errata for RHEL 7.9 without executing a separate RHEL ELS Add-On (SKU RH00270). Operation of unpatched settlement hosts constitutes an explicit PCI-DSS v4.0 Requirement 6.3 compliance exception.
+
+SECTION 4. EXPIRED CONSULTING & ABSENCE OF TAM / TRAINING SERVICES
+4.1 Following completion of the 30-day OpenShift Quickstart SOW (Line 4) on April 1, 2026, Customer currently operates zero active Red Hat Consulting migration engineering hours, zero Technical Account Management (TAM) coverage, and zero Red Hat Learning Subscription (RHLS) seats.
+4.2 Support telemetry over the trailing 60-day period indicates Customer's internal platform team has logged 19 Severity-2 support cases concerning OVN-Kubernetes ingress routing, ArgoCD GitOps operator drift, and Ansible Automation Controller RBAC delegation, creating a projected 7-week delay against the December 15, 2026 Core Banking cutover deadline.
+
+SECTION 5. SECURITY, CONTAINER GOVERNANCE & PLATFORM PLUS BOUNDARIES
+5.1 SKU MW01485 (OCP Standard) excludes Red Hat Advanced Cluster Security (ACS), Red Hat Advanced Cluster Management (ACM), and Red Hat Quay Enterprise Registry. Customer is prohibited from activating ACS admission controllers, RHACS runtime eBPF threat detection, or ACM multi-cluster policy governance unless Customer executes an upgrade to Red Hat OpenShift Platform Plus (OPP).
+5.2 Customer currently incurs $54,000/year in third-party container image vulnerability scanning tools that overlap functionally with Red Hat OpenShift Platform Plus.
+
+SECTION 6. SUBSCRIPTION TERM, AUTO-RENEWAL UPLIFT & CO-TERM OPTION
+6.1 Line 1 (SKU RH00004, $145,000/yr) expires October 31, 2026 and shall automatically renew for twelve (12) months at a 7.0% price uplift unless Customer delivers written non-renewal notice at least forty-five (45) days prior to expiration (Binding Non-Renewal Notice Deadline: September 16, 2026).
+6.2 Upon Customer's written election prior to September 16, 2026, Provider grants a one-time contractual co-term option allowing Line 1 to align to the January 31, 2027 anniversary date of Lines 2 and 3 without short-term proration surcharges, conditioned upon a multi-year expansion or tier upgrade commitment.
+
+SECTION 7. INVOICING, TAXES, PAYMENT TERMS & LATE CHARGES
+7.1 All annual subscription fees are invoiced annually in advance and payable within thirty (30) days of invoice date in U.S. Dollars via ACH or wire transfer. Undisputed overdue balances accrue interest at 1.0% per month or the maximum rate permitted by Delaware law, whichever is lower. Fees exclude applicable state and local sales, use, or value-added taxes.
+
+SECTION 8. INTELLECTUAL PROPERTY, OPEN SOURCE LICENSING & INDEMNIFICATION
+8.1 Red Hat software components are licensed under applicable open source licenses (including GPLv2, Apache 2.0, and MIT) as specified in the Red Hat Open Source Assurance Program. Provider retains all right, title, and interest in its trademarks, subscription telemetry portals, and consulting methodologies. Subject to Section 9, Provider shall defend Customer against third-party claims alleging that unmodified Red Hat Enterprise Linux or OpenShift code infringes a U.S. patent or copyright.
+
+SECTION 9. LIMITATION OF LIABILITY
+9.1 EXCEPT FOR BREACHES OF CONFIDENTIALITY, INDEMNIFICATION OBLIGATIONS, OR UNPAID SUBSCRIPTION FEES, NEITHER PARTY SHALL BE LIABLE FOR INDIRECT, INCIDENTAL, CONSEQUENTIAL, OR LOST-PROFIT DAMAGES. PROVIDER'S AGGREGATE LIABILITY UNDER THIS ORDER FORM SHALL NOT EXCEED THE TOTAL SUBSCRIPTION FEES PAID BY CUSTOMER IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.
+
+SECTION 10. CONFIDENTIALITY, DATA SOVEREIGNTY & EXPORT COMPLIANCE
+10.1 All pricing schedules, telemetry disclosures, and architectural assessments constitute Confidential Information for a period of five (5) years following termination. Customer warrants that it shall not export or re-export Red Hat cryptographic software in violation of U.S. Export Administration Regulations (EAR) or OFAC sanctions.
+
+SECTION 11. GOVERNING LAW, DISPUTE RESOLUTION & ENTIRE AGREEMENT
+11.1 This Order Form shall be governed by and construed in accordance with the laws of the State of Delaware, excluding conflict-of-law rules and the U.N. Convention on Contracts for the International Sale of Goods. Executed electronically by authorized corporate officers of Apex Financial Group, Inc. and Red Hat, Inc.`,
+          analysis: {
+            accountName: 'Apex Financial Group, Inc.',
+            currentAcv: 485000,
+            billingFrequency: 'Annual Upfront (Net 30)',
+            signalType: 'EXPANSION',
+            confidenceScore: 95,
+            daysToNotice: 45,
+            noticeDeadlineDate: 'Sep 16, 2026',
+            subscriptions: [
+              { product: 'RHEL Server (RH00004)', tierQty: 'Standard • 120 Nodes', startDate: '2025-11-01', endDate: '2026-10-31', status: 'NOTICE SEP 16', acv: 145000 },
+              { product: 'OpenShift OCP (MW01485)', tierQty: 'Standard • 64 (2-Core)', startDate: '2026-02-01', endDate: '2027-01-31', status: '64-PAIR CAP', acv: 260000 },
+              { product: 'Ansible AAP (MCR0012)', tierQty: 'Standard • 1,000 Nodes', startDate: '2026-02-01', endDate: '2027-01-31', status: 'ACTIVE', acv: 80000 },
+              { product: 'OCP Quickstart Consulting', tierQty: '30-Day SOW', startDate: '2026-02-01', endDate: '2026-04-01', status: 'EXPIRED', acv: 0 },
+              { product: 'TAM & RHLS Training', tierQty: '0 Seats / 0 TAM', startDate: '—', endDate: '—', status: 'UNCONTRACTED', acv: 0 }
+            ],
+            recommendations: {
+              renewalAndUpgrade: {
+                title: 'Co-Term RHEL (Oct 31 -> Jan 31) + Upgrade to RHEL Premium/ELS & OpenShift Platform Plus (OPP)',
+                targetSkus: ['RH00003 (RHEL Premium)', 'RH00270 (RHEL 7 ELS)', 'OPP (Platform Plus)'],
+                arrImpact: 142000,
+                customerWhy: 'Fixes PCI-DSS audit exposure on 42 unpatched RHEL 7.9 payment hosts, adds 24x7 Sev-1 SLA, and retires $54K/yr in redundant 3rd-party container scanners.',
+                aeMove: 'Exercise § 6.2 co-term option before Sep 16 to bundle RHEL Premium/ELS + OPP upgrade without proration penalties.'
+              },
+              productCrossSell: {
+                title: 'Expand OpenShift Capacity (+28 Pairs) & Activate OpenShift Virtualization',
+                targetSkus: ['OPP Expansion (+28 Pairs)', 'OpenShift Virtualization'],
+                arrImpact: 98000,
+                customerWhy: 'Eliminates a $142K/yr VMware hypervisor renewal by migrating all 380 VMs onto OpenShift and avoids 1.25x list-price true-up fees.',
+                aeMove: 'Size the 28-pair capacity expansion now at contracted discount ahead of the Dec 15 VM cutover.'
+              },
+              servicesIntroduction: {
+                title: 'Attach Dedicated TAM + Migration Consulting SOW + 20x RHLS Training Seats',
+                targetSkus: ['SVC-TAM-OCP', 'GPS-MIG-OCP', 'RHLS-STD-20'],
+                arrImpact: 158000,
+                shortTermImpact: 'Clears 19 stalled Sev-2 ingress/GitOps/Ansible RBAC tickets so engineering hits the Dec 15 Core Banking cutover on time.',
+                longTermImpact: 'Certifies internal ops staff (RHCE/DO280) and locks in TAM architectural governance for multi-year platform autonomy.'
+              }
+            },
+            clauses: [
+              {
+                category: 'Core Cap & 1.25x True-Up',
+                severity: 'OPPORTUNITY',
+                exactQuote: 'If Customer\'s peak concurrent OpenShift worker-node consumption exceeds 64 two-core pairs during any calendar quarter, Provider shall issue a mandatory quarterly true-up invoice calculated at 1.25x then-current List Price per excess 2-core pair for the remainder of the Subscription Term without volume discounting, payable Net 30.',
+                implication: '380-VM migration breaches 64 pairs; customer saves ~20% vs. punitive 1.25x list true-up by expanding early.'
+              },
+              {
+                category: 'RHEL 7.9 ELS & PCI-DSS Exposure',
+                severity: 'HIGH',
+                exactQuote: 'Standard SKU RH00004 provides zero CVE security patches, zero kernel bug fixes, and zero compliance errata for RHEL 7.9 without executing a separate RHEL ELS Add-On (SKU RH00270). Operation of unpatched settlement hosts constitutes an explicit PCI-DSS v4.0 Requirement 6.3 compliance exception.',
+                implication: '42 payment hosts fail PCI-DSS v4.0 without RHEL ELS + Premium 24x7 support.'
+              },
+              {
+                category: 'Stalled Cutover & Services Deficit',
+                severity: 'OPPORTUNITY',
+                exactQuote: 'Support telemetry over the trailing 60-day period indicates Customer\'s internal platform team has logged 19 Severity-2 support cases concerning OVN-Kubernetes ingress routing, ArgoCD GitOps operator drift, and Ansible Automation Controller RBAC delegation, creating a projected 7-week delay against the December 15, 2026 Core Banking cutover deadline.',
+                implication: '7-week schedule slip proves customer needs Consulting + TAM + RHLS Training to protect cutover.'
+              },
+              {
+                category: 'Sep 16 Notice & Co-Term Option',
+                severity: 'MEDIUM',
+                exactQuote: 'Line 1 (SKU RH00004, $145,000/yr) expires October 31, 2026 and shall automatically renew for twelve (12) months at a 7.0% price uplift unless Customer delivers written non-renewal notice at least forty-five (45) days prior to expiration (Binding Non-Renewal Notice Deadline: September 16, 2026).',
+                implication: '45-day deadline to trigger § 6.2 co-term and waive 7% auto-uplift on RHEL renewal.'
+              }
+            ],
+            nextBestAction: {
+              recommendedSku: 'RHEL Premium/ELS + OPP Upgrade + Red Hat Services Bundle',
+              estimatedUpsellAcv: 398000,
+              aePitch: 'Ahead of your September 16 notice deadline, co-terming RHEL to Premium/ELS and upgrading OpenShift to Platform Plus closes your PCI-DSS exposure on 42 payment hosts, retires $54K in third-party scanners, and eliminates your $142K VMware renewal while avoiding 1.25x core true-ups. Adding a Dedicated TAM, Migration Consulting SOW, and 20 RHLS seats clears your 19 open GitOps/Ansible blockers so you hit the December 15 Core Banking cutover on schedule.'
+            }
+          }
+        },
+
+        meridian: {
+          id: 'meridian',
+          docId: 'MER-OF-2025-1182',
+          initials: 'MR',
+          governingLaw: 'New York',
+          simDefaults: {
+            metricType: 'latency',
+            contractedCap: 350,
+            liveUsage: 425,
+            minUsage: 200,
+            maxUsage: 550,
+            slaCreditPct: 15,
+            attachTierUpgrade: true,
+            attachCrossSell: true,
+            attachTam: true,
+            attachConsulting: true,
+            attachTraining: true
+          },
+          contractText: `ENTERPRISE ORDER FORM NO. MER-OF-2025-1182
+OMNI-CHANNEL RETAIL SUBSCRIPTION SCHEDULE & PEAK SLA ADDENDUM
+Customer Entity: Meridian Omni-Retail Corp. ("Customer"), a New York corporation with headquarters at 550 Madison Avenue, New York, NY 10022.
+Master Business Agreement Reference: RH-MBA-2023-5540 (executed November 10, 2023).
+Order Form Effective Date: December 1, 2025 | Governing Law: State of New York.
+Total Contracted Annual Recurring Value (ACV): $620,000 USD (Invoiced Quarterly in Arrears).
+
+PREAMBLE AND INCORPORATION
+This Order Form is governed by Master Business Agreement No. RH-MBA-2023-5540 ("MBA") between Red Hat, Inc. ("Provider") and Customer. All Enhanced Peak Window SLAs, termination triggers, edge appliance counting rules, and notice cutoffs in this Order Form take precedence over general MBA provisions.
+
+SCHEDULE A: SUBSCRIBED RED HAT SOFTWARE & SERVICES LINE ITEMS
+Line 1 | SKU MW01486 — Red Hat OpenShift Container Platform, Premium (2-Core Pairs, 24x7 Support): Quantity: 140 Subscriptions (280 Cores). Subscription Start Date: December 1, 2025 | Subscription End Date: November 30, 2026 | Net Annual Fee: $490,000 USD.
+Line 2 | SKU RH00810 — Red Hat Enterprise Linux for Edge, Standard (Single-Node Store Appliances): Quantity: 400 Store Subscriptions. Subscription Start Date: December 1, 2025 | Subscription End Date: November 30, 2026 | Net Annual Fee: $130,000 USD.
+Line 3 | SKU SVC-TAM-PRIOR — Dedicated OpenShift Technical Account Manager (1x Named TAM): Prior Term Start Date: December 1, 2024 | Prior Term End Date: November 30, 2025 (LAPSED / NOT RENEWED).
+Line 4 | Red Hat Consulting, Red Hat Ansible Automation Platform (AAP), & RHLS Training: Quantity: 0 (NONE CONTRACTED IN CURRENT TERM).
+
+SECTION 1. RETAIL EDGE ENTITLEMENT SCOPE & STORE APPLIANCE DEPLOYMENT
+1.1 SKU RH00810 entitles Customer to deploy one (1) RHEL for Edge image per retail store point-of-sale (POS) gateway appliance across 400 North American brick-and-mortar locations. Standard support provides 8x5 coverage only and excludes weekend or holiday retail emergency escalation.
+1.2 SKU MW01486 covers Customer's central e-commerce checkout, inventory orchestration, and loyalty microservices hosted across three active-active regional OpenShift clusters (280 aggregate worker cores).
+
+SECTION 2. PEAK Q4 RETAIL SLA, FEE CREDITS & TERMINATION FOR CONVENIENCE
+2.1 During Customer's designated Peak Q4 Retail Window (November 1 through January 10), Provider guarantees P95 ingress failover latency below 350 milliseconds and monthly cluster availability of 99.95% for workloads running on SKU MW01486, conditioned upon Customer maintaining supported OpenShift z-stream patch levels.
+2.2 If two (2) or more Severity-1 checkout incidents exceed a four-hour Mean Time to Resolution (MTTR) or breach the 350ms failover threshold during the Peak Window, Customer accrues a 15% quarterly fee credit ($93,000 annualized credit exposure) and obtains a unilateral right to terminate this Order Form for convenience upon fifteen (15) days' written notice without early termination liability.
+
+SECTION 3. UNMANAGED 400-STORE EDGE DRIFT & OUTAGE POST-MORTEMS (SCHEDULE C)
+3.1 Customer manages all 400 RHEL for Edge store appliances (SKU RH00810) using legacy SSH shell scripts without Red Hat Ansible Automation Platform (AAP) or Red Hat Advanced Cluster Management (ACM).
+3.2 Post-incident operational audits appended as Schedule C confirm that three (3) regional POS store outages in Q2–Q3 2026 (resulting in $280,000 in estimated lost store checkout volume and 140 hours of emergency IT triage) were caused directly by configuration drift and partial kernel updates from ad-hoc bash scripts.
+
+SECTION 4. LAPSED TAM COVERAGE, VERSION LAG & TRAINING DEFICIT
+4.1 Customer elected not to renew its Dedicated OpenShift TAM (SKU SVC-TAM-PRIOR) on December 1, 2025 to reduce operating expense, and holds zero Red Hat Learning Subscription (RHLS) seats for its 18 store-infrastructure engineers.
+4.2 Without TAM lifecycle planning or Red Hat Consulting automation blueprints, Customer's production OpenShift clusters currently lag two (2) minor releases behind recommended security advisories entering the November 1 Q4 retail code freeze, invalidating rapid-patch readiness for Black Friday peak volume.
+
+SECTION 5. CRITICAL 30-DAY NON-RENEWAL NOTICE WINDOW
+5.1 All subscriptions under Schedule A ($620,000 ACV) expire on November 30, 2026 and automatically renew for twelve (12) months unless Customer delivers written non-renewal notice at least thirty (30) days prior to expiration.
+5.2 As of the current analysis date, twenty-two (22) calendar days remain before the binding October 31, 2026 non-renewal notice cutoff. Customer's VP of Infrastructure has flagged Q4 cluster stability as a mandatory executive review item prior to authorizing renewal.
+
+SECTION 6. BILLING SCHEDULE, TAXATION & AUDIT RIGHTS
+6.1 Subscription fees are invoiced quarterly in arrears ($155,000 per quarter), Net 30. Provider may audit active store node deployments upon thirty (30) days' written notice no more than once annually during normal business hours.
+
+SECTION 7. INDEMNIFICATION, LIMITATION OF LIABILITY & INSURANCE
+7.1 Neither party shall be liable for consequential or indirect damages. Except for Customer payment obligations and SLA fee credits expressly accrued under Section 2.2, Provider's aggregate liability shall not exceed twelve (12) months' fees paid under this Order Form.
+
+SECTION 8. CONFIDENTIALITY, DATA OWNERSHIP & GOVERNING LAW
+8.1 Customer retains exclusive ownership of all POS transaction logs and loyalty telemetry. This Order Form is governed by the laws of the State of New York, and any disputes shall be adjudicated exclusively in state or federal courts located in New York County, NY.`,
+          analysis: {
+            accountName: 'Meridian Omni-Retail Corp.',
+            currentAcv: 620000,
+            billingFrequency: 'Quarterly Arrears',
+            signalType: 'CHURN_RISK',
+            confidenceScore: 93,
+            daysToNotice: 22,
+            noticeDeadlineDate: 'Oct 31, 2026',
+            subscriptions: [
+              { product: 'OpenShift OCP (MW01486)', tierQty: 'Premium • 140 (2-Core)', startDate: '2025-12-01', endDate: '2026-11-30', status: 'NOTICE IN 22d', acv: 490000 },
+              { product: 'RHEL for Edge (RH00810)', tierQty: 'Standard • 400 Stores', startDate: '2025-12-01', endDate: '2026-11-30', status: '8x5 ONLY • DRIFT', acv: 130000 },
+              { product: 'Dedicated OpenShift TAM', tierQty: '1x Named TAM', startDate: '2024-12-01', endDate: '2025-11-30', status: 'LAPSED', acv: 0 },
+              { product: 'AAP / Consulting / RHLS', tierQty: '0 Contracted', startDate: '—', endDate: '—', status: 'UNCONTRACTED', acv: 0 }
+            ],
+            recommendations: {
+              renewalAndUpgrade: {
+                title: 'Renew $620K Base Before Oct 31 + Upgrade OCP to OPP & RHEL Edge to Premium (24x7)',
+                targetSkus: ['OPP (Platform Plus — 140 Pairs)', 'RH00811 (RHEL Edge Premium)'],
+                arrImpact: 112000,
+                customerWhy: 'Gives 400 retail stores 24x7 Black Friday holiday SLA and centralized ACM fleet control, preventing repeat Q4 POS outages and SLA breach risk.',
+                aeMove: 'Escalate executive Q4 readiness renewal this week before the Oct 31 cutoff, bundling OPP + RHEL Edge Premium.'
+              },
+              productCrossSell: {
+                title: 'Cross-Sell Ansible Automation Platform (AAP) Premium for 400 Store Appliances',
+                targetSkus: ['MCR0013 (AAP Premium — 500 Nodes)'],
+                arrImpact: 68000,
+                customerWhy: 'Eliminates manual SSH patching drift that already cost Meridian $280K in lost POS sales and 140 hrs of emergency IT triage.',
+                aeMove: 'Attach AAP Premium with automated edge rollback playbooks as the direct fix to Schedule C store outages.'
+              },
+              servicesIntroduction: {
+                title: 'Reinstate Dedicated TAM + Q4 Readiness Consulting Sprint + 15x RHLS Seats',
+                targetSkus: ['SVC-TAM-OCP', 'GPS-Q4-EDGE', 'RHLS-STD-15'],
+                arrImpact: 175000,
+                shortTermImpact: 'Clears the 2-version OpenShift patch lag and runs a Black Friday failover rehearsal before the Nov 1 Q4 code freeze.',
+                longTermImpact: 'Trains 18 store-ops engineers on automated edge operations so holiday freezes never rely on manual heroics again.'
+              }
+            },
+            clauses: [
+              {
+                category: 'Peak SLA & 15-Day Termination',
+                severity: 'HIGH',
+                exactQuote: 'If two (2) or more Severity-1 checkout incidents exceed a four-hour Mean Time to Resolution (MTTR) or breach the 350ms failover threshold during the Peak Window, Customer accrues a 15% quarterly fee credit ($93,000 annualized credit exposure) and obtains a unilateral right to terminate this Order Form for convenience upon fifteen (15) days\' written notice without early termination liability.',
+                implication: 'Unpatched clusters entering Q4 expose $93K credits and $620K unilateral churn.'
+              },
+              {
+                category: '3 POS Outages ($280K Loss)',
+                severity: 'OPPORTUNITY',
+                exactQuote: 'Post-incident operational audits appended as Schedule C confirm that three (3) regional POS store outages in Q2–Q3 2026 (resulting in $280,000 in estimated lost store checkout volume and 140 hours of emergency IT triage) were caused directly by configuration drift and partial kernel updates from ad-hoc bash scripts.',
+                implication: '$280K documented outage loss creates an immediate 4x ROI proof point for Ansible Automation Platform.'
+              },
+              {
+                category: 'Lapsed TAM & 2-Version Lag',
+                severity: 'HIGH',
+                exactQuote: 'Without TAM lifecycle planning or Red Hat Consulting automation blueprints, Customer\'s production OpenShift clusters currently lag two (2) minor releases behind recommended security advisories entering the November 1 Q4 retail code freeze, invalidating rapid-patch readiness for Black Friday peak volume.',
+                implication: 'Customer cannot safely enter Nov 1 freeze unpatched—justifies immediate TAM + Q4 Readiness Consulting.'
+              },
+              {
+                category: 'Critical 22-Day Notice Cutoff',
+                severity: 'HIGH',
+                exactQuote: 'As of the current analysis date, twenty-two (22) calendar days remain before the binding October 31, 2026 non-renewal notice cutoff.',
+                implication: 'Immediate AE executive alignment needed prior to Oct 31 cutoff.'
+              }
+            ],
+            nextBestAction: {
+              recommendedSku: 'OPP + RHEL Edge Premium + AAP + Q4 TAM/Consulting Save Play',
+              estimatedUpsellAcv: 355000,
+              aePitch: 'Your Schedule C post-mortems show manual store patching already cost $280K in lost POS checkout volume, and your OpenShift clusters are entering the November 1 Q4 freeze two minor releases behind. Ahead of your October 31 notice cutoff, adding Ansible Automation Platform, 24x7 RHEL Edge Premium, a Q4 Readiness Consulting Sprint, and a reinstated TAM automates all 400 stores and protects Black Friday uptime.'
+            }
+          }
+        },
+
+        vanguard: {
+          id: 'vanguard',
+          docId: 'VAN-OF-2026-0734',
+          initials: 'VH',
+          governingLaw: 'Delaware',
+          simDefaults: {
+            metricType: 'phi',
+            contractedCap: 0,
+            liveUsage: 84000,
+            minUsage: 0,
+            maxUsage: 250000,
+            attachTierUpgrade: true,
+            attachCrossSell: true,
+            attachTam: true,
+            attachConsulting: true,
+            attachTraining: true
+          },
+          contractText: `ENTERPRISE ORDER FORM NO. VAN-OF-2026-0734
+HEALTHCARE PLATFORM SUBSCRIPTION & HIPAA COMPLIANCE SCHEDULE
+Customer Entity: Vanguard Health Systems, Inc. ("Customer"), a Delaware non-profit healthcare corporation with principal offices at 400 Medical Center Parkway, Nashville, TN 37203.
+Master Business Agreement Reference: RH-MBA-2025-3318 (executed December 18, 2025).
+Order Form Effective Date: January 15, 2026 | Governing Law: State of Delaware.
+Total Contracted Annual Recurring Value (ACV): $790,000 USD (Invoiced Annually in Advance, Net 30).
+
+PREAMBLE AND INCORPORATION
+This Order Form incorporates Master Business Agreement No. RH-MBA-2025-3318 ("MBA") between Red Hat, Inc. ("Provider") and Customer. Because Customer operates acute-care hospitals subject to the Health Insurance Portability and Accountability Act of 1996 ("HIPAA") and HITECH regulations, the workload restrictions, security entitlement boundaries, and BAA prerequisites below strictly govern deployment.
+
+SCHEDULE A: SUBSCRIBED RED HAT SOFTWARE & SERVICES LINE ITEMS
+Line 1 | SKU MW01485 — Red Hat OpenShift Container Platform, Standard (2-Core Pairs, 8x5 Support): Quantity: 180 Subscriptions (360 Cores). Subscription Start Date: January 15, 2026 | Subscription End Date: January 14, 2027 | Net Annual Fee: $540,000 USD.
+Line 2 | SKU RH00004 — Red Hat Enterprise Linux Server, Standard (Physical or Virtual Nodes, 8x5 Support): Quantity: 200 Subscriptions (400 Socket Capacity). Subscription Start Date: January 15, 2026 | Subscription End Date: January 14, 2027 | Net Annual Fee: $250,000 USD.
+Line 3 | SKU TRN-IL-2026 — OpenShift 2-Day Introductory Workshop (One-Time Virtual Cohort): Delivery Start Date: February 10, 2026 | Delivery End Date: February 11, 2026 (COMPLETED).
+Line 4 | Ongoing RHLS Training, Red Hat Security Consulting, AAP, & TAM: Quantity: 0 (NONE CONTRACTED).
+
+SECTION 1. HIPAA / ePHI PROHIBITION & STANDARD TIER COMPLIANCE BOUNDARIES
+1.1 Customer licenses OpenShift Container Platform Standard (SKU MW01485) and RHEL Server Standard (SKU RH00004) exclusively for de-identified operational, supply-chain, and hospital bed-staffing workloads.
+1.2 Section 9.4 of the MBA expressly prohibits running regulated Electronic Protected Health Information (ePHI) clinical workloads under Standard 8x5 subscriptions lacking 24x7 clinical SLA coverage, continuous container runtime vulnerability enforcement (Red Hat Advanced Cluster Security), FIPS 140-3 validated cryptographic policy automation, and multi-cluster compliance audit trails.
+1.3 No Business Associate Agreement (BAA) covering production clinical OpenShift workloads is effective under Standard Tier SKUs without upgrading to OpenShift Platform Plus (OPP) Premium and RHEL Premium.
+
+SECTION 2. STAGED CLINICAL FHIR TELEMETRY & EPIC EHR GO-LIVE EXPOSURE (EXHIBIT D)
+2.1 Architecture review logs in Exhibit D document that three regional hospital integration squads have staged HL7/FHIR patient-intake APIs processing approximately 84,000 patient records within Customer's non-production OpenShift clusters ahead of a mandatory Q1 2027 Epic EHR cutover.
+2.2 Customer currently owns zero Red Hat Advanced Cluster Security (ACS), zero Red Hat Quay Enterprise Registry, and zero Red Hat Ansible Automation Platform (AAP) entitlements for automated CIS/HIPAA security benchmark remediation across its 200 RHEL nodes.
+2.3 Customer's Chief Information Security Officer (CISO) has issued an unresolved HIPAA Security Readiness Audit blocker prohibiting promotion of the FHIR workloads to production until container runtime enforcement, immutable audit logging, and automated OS compliance drift checks are operational, currently delaying Epic integration and costing $45,000/month in third-party clinical security contractors.
+
+SECTION 3. WORKFORCE CERTIFICATION & SERVICES DEFICIT
+3.1 Aside from a 2-day introductory workshop completed February 11, 2026 (Line 3), Customer holds zero ongoing Red Hat Learning Subscription (RHLS) seats for its 24 DevSecOps and clinical platform engineers, zero Red Hat Security Consulting engagements, and zero Dedicated Healthcare TAM coverage.
+3.2 Internal IT leadership estimates 160+ engineering hours per quarter are currently spent manually compiling SOC2/HIPAA audit spreadsheets across RHEL and OpenShift clusters.
+
+SECTION 4. SUBSCRIPTION TERM, RENEWAL & 60-DAY BUDGET NOTICE WINDOW
+4.1 All Schedule A subscriptions ($790,000 ACV) run through January 14, 2027 and require sixty (60) days' written notice prior to expiration for non-renewal or tier modification.
+4.2 Sixty-two (62) calendar days remain before the November 15, 2026 renewal notice deadline, aligning directly with Customer's FY27 clinical IT capital and operating budget approval cycle.
+
+SECTION 5. FEES, INVOICING, TAXES & AUDIT COOPERATION
+5.1 Fees are invoiced annually in advance, Net 30. Customer maintains tax-exempt non-profit certificate verification on file with Provider's tax administration desk.
+
+SECTION 6. INTELLECTUAL PROPERTY, INDEMNIFICATION & LIABILITY CAP
+6.1 Provider's Open Source Assurance indemnification applies to unmodified Red Hat binaries. Aggregate liability under this Order Form is capped at subscription fees paid during the preceding twelve (12) months.
+
+SECTION 7. CONFIDENTIALITY, PHI SAFEGUARDS & GOVERNING LAW
+7.1 Customer shall not transmit unencrypted live patient identifiers to Provider support portals prior to executing a clinical BAA addendum. This Order Form is governed by the laws of the State of Delaware.`,
+          analysis: {
+            accountName: 'Vanguard Health Systems, Inc.',
+            currentAcv: 790000,
+            billingFrequency: 'Annual Upfront (Net 30)',
+            signalType: 'COMPLIANCE_UPSELL',
+            confidenceScore: 96,
+            daysToNotice: 62,
+            noticeDeadlineDate: 'Nov 15, 2026',
+            subscriptions: [
+              { product: 'OpenShift OCP (MW01485)', tierQty: 'Standard • 180 (2-Core)', startDate: '2026-01-15', endDate: '2027-01-14', status: 'NO ACS / NO ePHI', acv: 540000 },
+              { product: 'RHEL Server (RH00004)', tierQty: 'Standard • 200 Nodes', startDate: '2026-01-15', endDate: '2027-01-14', status: '8x5 STANDARD', acv: 250000 },
+              { product: '2-Day Intro Workshop', tierQty: 'One-Time Cohort', startDate: '2026-02-10', endDate: '2026-02-11', status: 'COMPLETED', acv: 0 },
+              { product: 'TAM / Consulting / RHLS', tierQty: '0 Contracted', startDate: '—', endDate: '—', status: 'UNCONTRACTED', acv: 0 }
+            ],
+            recommendations: {
+              renewalAndUpgrade: {
+                title: 'Upgrade 180-Pair OCP to OpenShift Platform Plus (OPP) Premium & 200 RHEL to Premium',
+                targetSkus: ['OPP-PREM (24x7 + ACS/ACM/Quay)', 'RH00003 (RHEL Premium 24x7)'],
+                arrImpact: 260000,
+                customerWhy: 'Unblocks the CISO HIPAA audit gate so Q1 2027 Epic EHR FHIR APIs launch on schedule under a compliant 24x7 clinical BAA.',
+                aeMove: 'Position unified FY27 upgrade before the Nov 15 notice window, tying OPP runtime security directly to Epic go-live.'
+              },
+              productCrossSell: {
+                title: 'Cross-Sell Ansible Automation Platform (AAP) for Automated HIPAA/CIS Compliance',
+                targetSkus: ['MCR0013 (AAP Premium — 500 Nodes)'],
+                arrImpact: 72000,
+                customerWhy: 'Replaces 160 hrs/quarter of manual HIPAA/SOC2 audit spreadsheet prep across 200 RHEL nodes with automated compliance-as-code.',
+                aeMove: 'Attach AAP Premium with certified Red Hat HIPAA/CIS collections alongside OPP.'
+              },
+              servicesIntroduction: {
+                title: 'Attach Healthcare Security TAM + HIPAA Hardening Consulting + 24x RHLS Seats',
+                targetSkus: ['SVC-TAM-SEC', 'GPS-SEC-HIPAA', 'RHLS-ENT-24'],
+                arrImpact: 230000,
+                shortTermImpact: 'Clears the CISO security audit fast and replaces $45K/month ($540K/yr) in external clinical security contractors.',
+                longTermImpact: 'Certifies 24 internal DevSecOps engineers (DO380/Security Specialist) to operate regulated hospital clusters independently.'
+              }
+            },
+            clauses: [
+              {
+                category: 'Standard Tier ePHI Prohibition',
+                severity: 'HIGH',
+                exactQuote: 'Section 9.4 of the MBA expressly prohibits running regulated Electronic Protected Health Information (ePHI) clinical workloads under Standard 8x5 subscriptions lacking 24x7 clinical SLA, continuous container runtime vulnerability enforcement (Red Hat Advanced Cluster Security), FIPS 140-3 validated cryptographic policy automation, and multi-cluster compliance audit trails.',
+                implication: 'Clinical Epic workloads cannot legally go live on $790K Standard Tier without upgrading to OPP + Premium.'
+              },
+              {
+                category: 'CISO Audit Gate & $45K/mo Burn',
+                severity: 'OPPORTUNITY',
+                exactQuote: 'Customer\'s Chief Information Security Officer (CISO) has issued an unresolved HIPAA Security Readiness Audit blocker prohibiting promotion of the FHIR workloads to production until container runtime enforcement, immutable audit logging, and automated OS compliance drift checks are operational, currently delaying Epic integration and costing $45,000/month in third-party clinical security contractors.',
+                implication: 'Upgrading + Security Consulting replaces $540K/yr in external contractors while unblocking Epic.'
+              },
+              {
+                category: 'Manual Audit Burden (160h/qtr)',
+                severity: 'OPPORTUNITY',
+                exactQuote: 'Internal IT leadership estimates 160+ engineering hours per quarter are currently spent manually compiling SOC2/HIPAA audit spreadsheets across RHEL and OpenShift clusters.',
+                implication: 'Quantified labor waste creates an instant ROI justification for Ansible Automation Platform + RHLS.'
+              },
+              {
+                category: '62-Day FY27 Budget Window',
+                severity: 'MEDIUM',
+                exactQuote: 'Sixty-two (62) calendar days remain before the November 15, 2026 renewal notice deadline, aligning directly with Customer\'s FY27 clinical IT capital and operating budget approval cycle.',
+                implication: 'Optimal timing before Nov 15 to bundle OPP, AAP, and Services into FY27 budget.'
+              }
+            ],
+            nextBestAction: {
+              recommendedSku: 'OPP Premium + RHEL Premium + AAP + HIPAA Services & RHLS',
+              estimatedUpsellAcv: 562000,
+              aePitch: 'With 84,000 FHIR records staged for Q1 Epic go-live, your CISO audit blocker is currently costing $45K/month in external security contractors and 160 hours a quarter in manual compliance spreadsheets. Upgrading to OpenShift Platform Plus and RHEL Premium with Ansible ahead of your November 15 notice window, paired with a HIPAA Hardening Consulting SOW, Security TAM, and 24 RHLS seats, clears your CISO gate and pays for itself by retiring external contractor spend.'
+            }
+          }
+        }
+      };
+
+      // =========================================================================
+      // 2. APPLICATION STATE
+      // =========================================================================
+      const state = {
+        activePresetId: 'apex',
+        contractText: PRESETS.apex.contractText,
+        isCustomEdited: false,
+        viewMode: 'key',
+        rightTab: 'playbook',
+        currentAnalysis: structuredClone(PRESETS.apex.analysis),
+        clauseDispositions: ['accepted', 'accepted', 'accepted', 'accepted'],
+        activeClauseIndex: null,
+        isAnalyzing: false,
+        apiKey: sessionStorage.getItem('gemini_api_key') || '',
+        isDrawerOpen: false,
+        isJsonExpanded: true,
+        simParams: structuredClone(PRESETS.apex.simDefaults),
+        traceLogs: []
+      };
+
+      // =========================================================================
+      // 3. DOM REFERENCES
+      // =========================================================================
+      const el = {
+        modeBadge: document.getElementById('mode-badge'),
+        modeDot: document.getElementById('mode-dot'),
+        modeLabel: document.getElementById('mode-label'),
+        btnApiSettings: document.getElementById('btn-api-settings'),
+        apiSettingsDrawer: document.getElementById('api-settings-drawer'),
+        geminiKeyInput: document.getElementById('gemini-key-input'),
+        btnToggleKeyVis: document.getElementById('btn-toggle-key-vis'),
+        btnSaveKey: document.getElementById('btn-save-key'),
+        btnClearKey: document.getElementById('btn-clear-key'),
+
+        apiErrorBanner: document.getElementById('api-error-banner'),
+        apiErrorMessage: document.getElementById('api-error-message'),
+        btnFallbackSim: document.getElementById('btn-fallback-sim'),
+        btnDismissError: document.getElementById('btn-dismiss-error'),
+
+        presetButtons: document.querySelectorAll('.preset-pill'),
+        metaDocId: document.getElementById('meta-doc-id'),
+        metaEffective: document.getElementById('meta-effective'),
+        metaLaw: document.getElementById('meta-law'),
+        metaSections: document.getElementById('meta-sections'),
+        metaGrounding: document.getElementById('meta-grounding'),
+
+        tabCitationKey: document.getElementById('tab-citation-key'),
+        tabCitationFull: document.getElementById('tab-citation-full'),
+        tabEditText: document.getElementById('tab-edit-text'),
+        btnClearHighlight: document.getElementById('btn-clear-highlight'),
+        wordCountBadge: document.getElementById('word-count-badge'),
+        contractViewer: document.getElementById('contract-viewer'),
+        contractEditor: document.getElementById('contract-editor'),
+
+        btnAnalyze: document.getElementById('btn-analyze'),
+        analyzeIcon: document.getElementById('analyze-icon'),
+        analyzeSpinner: document.getElementById('analyze-spinner'),
+        analyzeBtnText: document.getElementById('analyze-btn-text'),
+        processingStatusBar: document.getElementById('processing-status-bar'),
+        processingStepText: document.getElementById('processing-step-text'),
+        processingPct: document.getElementById('processing-pct'),
+        processingProgress: document.getElementById('processing-progress'),
+
+        accountAvatar: document.getElementById('account-avatar'),
+        dashAccountName: document.getElementById('dash-account-name'),
+        dashSignalPill: document.getElementById('dash-signal-pill'),
+        groundingStatus: document.getElementById('grounding-status'),
+
+        kpiAcv: document.getElementById('kpi-acv'),
+        kpiBilling: document.getElementById('kpi-billing'),
+        kpiDays: document.getElementById('kpi-days'),
+        kpiUrgencyDot: document.getElementById('kpi-urgency-dot'),
+        kpiDeadline: document.getElementById('kpi-deadline'),
+        kpiSignalBadge: document.getElementById('kpi-signal-badge'),
+        kpiConfidence: document.getElementById('kpi-confidence'),
+        kpiConfidenceBar: document.getElementById('kpi-confidence-bar'),
+        kpiUpliftValue: document.getElementById('kpi-uplift-value'),
+        kpiUpliftSub: document.getElementById('kpi-uplift-sub'),
+
+        rightTabPlaybook: document.getElementById('right-tab-playbook'),
+        rightTabClauses: document.getElementById('right-tab-clauses'),
+        rightTabTrace: document.getElementById('right-tab-trace'),
+        panelTabPlaybook: document.getElementById('panel-tab-playbook'),
+        panelTabClauses: document.getElementById('panel-tab-clauses'),
+        panelTabTrace: document.getElementById('panel-tab-trace'),
+        hitlSummaryPill: document.getElementById('hitl-summary-pill'),
+
+        subscriptionsTbody: document.getElementById('subscriptions-tbody'),
+        recommendationsContainer: document.getElementById('recommendations-container'),
+        simulatorContainer: document.getElementById('simulator-container'),
+        simTotalValue: document.getElementById('sim-total-value'),
+
+        nbaPitch: document.getElementById('nba-pitch'),
+        btnCopyPitch: document.getElementById('btn-copy-pitch'),
+        copyPitchLabel: document.getElementById('copy-pitch-label'),
+        btnPushCrm: document.getElementById('btn-push-crm'),
+        crmSyncSummary: document.getElementById('crm-sync-summary'),
+        crmSyncTimestamp: document.getElementById('crm-sync-timestamp'),
+        crmMappedFields: document.getElementById('crm-mapped-fields'),
+
+        clausesContainer: document.getElementById('clauses-container'),
+
+        traceTotalLatency: document.getElementById('trace-total-latency'),
+        traceStepsContainer: document.getElementById('trace-steps-container'),
+        btnToggleJson: document.getElementById('btn-toggle-json'),
+        jsonChevron: document.getElementById('json-chevron'),
+        jsonInspectorBody: document.getElementById('json-inspector-body'),
+        jsonOutput: document.getElementById('json-output'),
+        btnCopyJson: document.getElementById('btn-copy-json'),
+        copyJsonLabel: document.getElementById('copy-json-label'),
+
+        toastContainer: document.getElementById('toast-container')
+      };
+
+      // =========================================================================
+      // 4. UTILITIES
+      // =========================================================================
+      function refreshIcons() {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function formatCurrency(num) {
+        const val = Number(num) || 0;
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0
+        }).format(val);
+      }
+
+      function formatNumber(num) {
+        return new Intl.NumberFormat('en-US').format(Math.round(Number(num) || 0));
+      }
+
+      function getWordCount(text) {
+        const trimmed = text.trim();
+        return trimmed ? trimmed.split(/\s+/).length : 0;
+      }
+
+      function getInitials(name) {
+        const parts = String(name || 'RH').trim().split(/\s+/);
+        if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+
+      function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        const iconName = type === 'success' ? 'check-circle-2' : type === 'warning' ? 'alert-circle' : 'info';
+        const palette =
+          type === 'success'
+            ? 'bg-[#111622] text-white border-[#252D3D]'
+            : type === 'warning'
+            ? 'bg-amber-950 text-amber-50 border-amber-800'
+            : 'bg-slate-800 text-white border-slate-700';
+
+        toast.className = `toast-enter pointer-events-auto flex items-center gap-2 px-3.5 py-2.5 rounded-sm border text-[13px] font-medium ${palette}`;
+        toast.innerHTML = `
+          <i data-lucide="${iconName}" class="w-4 h-4 shrink-0 ${type === 'success' ? 'text-emerald-400' : 'text-amber-300'}"></i>
+          <span>${escapeHtml(message)}</span>
+        `;
+        el.toastContainer.appendChild(toast);
+        refreshIcons();
+
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(4px)';
+          toast.style.transition = 'all 0.15s ease';
+          setTimeout(() => toast.remove(), 160);
+        }, 2400);
+      }
+
+      function getExactSubstringOffset(sourceText, exactQuote) {
+        if (!sourceText || !exactQuote) return null;
+        const idx = sourceText.indexOf(exactQuote);
+        if (idx === -1) return null;
+        return { start: idx, end: idx + exactQuote.length };
+      }
+
+      // =========================================================================
+      // 5. METADATA RIBBON & CONSOLIDATED / FULL CONTRACT VIEWER
+      // =========================================================================
+      function updateMetadataRibbon() {
+        const text = state.contractText || '';
+        const preset = PRESETS[state.activePresetId];
+
+        const docIdMatch = text.match(/Order Form (?:ID|No\.):\s*([A-Z0-9\-]+)/i);
+        const docId = docIdMatch ? docIdMatch[1].trim() : (!state.isCustomEdited && preset ? preset.docId : 'CUSTOM-OF');
+
+        const effMatch = text.match(/Effective Date:\s*([^\n|]+)/i);
+        const effectiveDate = effMatch ? effMatch[1].trim() : 'Unspecified';
+
+        const lawMatch = text.match(/State of\s+(Delaware|New York|California|Texas)/i);
+        const govLaw = lawMatch ? lawMatch[1] : preset ? preset.governingLaw : 'Delaware';
+
+        const sectionMatches = text.match(/^SECTION\s+\d+\./gm);
+        const sectionCount = sectionMatches ? sectionMatches.length + 1 : 2;
+
+        const clauses = state.currentAnalysis?.clauses || [];
+        const verifiedCount = clauses.filter((c) => getExactSubstringOffset(text, c.exactQuote) !== null).length;
+
+        el.metaDocId.textContent = docId;
+        el.metaEffective.textContent = effectiveDate;
+        el.metaLaw.textContent = govLaw;
+        el.metaSections.textContent = `${sectionCount} Sections`;
+
+        if (verifiedCount === clauses.length && clauses.length > 0) {
+          el.metaGrounding.className = 'font-bold text-emerald-700 block tabular-nums';
+          el.metaGrounding.textContent = `${verifiedCount}/${clauses.length} Synced`;
+        } else {
+          el.metaGrounding.className = 'font-bold text-amber-700 block tabular-nums';
+          el.metaGrounding.textContent = `${verifiedCount}/${clauses.length} Partial`;
+        }
+      }
+
+      function isBoilerplateBlock(blockText, hasActiveHighlightInside) {
+        if (hasActiveHighlightInside) return false;
+        return /^(PREAMBLE|SECTION\s+(?:6|7|8|9|10|11)\.\s+(?:BILLING|INVOICING|INTELLECTUAL|LIMITATION|CONFIDENTIALITY|GOVERNING))/i.test(blockText) ||
+               /^SECTION\s+(?:5|6|7)\.\s+(?:FEES|INTELLECTUAL|CONFIDENTIALITY)/i.test(blockText);
+      }
+
+      function renderContractViewer(highlightQuote = null) {
+        const text = state.contractText || '';
+        const fullWords = getWordCount(text);
+
+        let activeOffset = null;
+        if (highlightQuote) {
+          activeOffset = getExactSubstringOffset(text, highlightQuote);
+          if (!activeOffset) {
+            el.btnClearHighlight.classList.add('hidden');
+            showToast('Span unverified: exact quote no longer matches edited text.', 'warning');
+          } else {
+            el.btnClearHighlight.classList.remove('hidden');
+          }
+        } else {
+          el.btnClearHighlight.classList.add('hidden');
+        }
+
+        const blocks = [];
+        const sepRegex = /\n{2,}/g;
+        let lastIdx = 0;
+        let m;
+        while ((m = sepRegex.exec(text)) !== null) {
+          blocks.push({ text: text.slice(lastIdx, m.index), start: lastIdx, end: m.index });
+          lastIdx = m.index + m[0].length;
+        }
+        if (lastIdx < text.length) {
+          blocks.push({ text: text.slice(lastIdx), start: lastIdx, end: text.length });
+        }
+
+        let visibleWords = 0;
+        let hiddenSectionsCount = 0;
+        const rowsHtml = [];
+
+        blocks.forEach((block) => {
+          const hasHighlight =
+            activeOffset && activeOffset.start < block.end && activeOffset.end > block.start;
+
+          if (state.viewMode === 'key' && isBoilerplateBlock(block.text, hasHighlight)) {
+            hiddenSectionsCount += 1;
+            return;
+          }
+
+          visibleWords += getWordCount(block.text);
+
+          let gutterLabel = 'HDR';
+          const secMatch = block.text.match(/^SECTION\s+(\d+)\./);
+          if (secMatch) gutterLabel = `§ ${secMatch[1]}`;
+          else if (/^SCHEDULE\s+A/i.test(block.text)) gutterLabel = 'SCH-A';
+          else if (/^PREAMBLE/i.test(block.text)) gutterLabel = 'PRE';
+
+          let bodyHtml = '';
+          if (hasHighlight) {
+            const localStart = Math.max(0, activeOffset.start - block.start);
+            const localEnd = Math.min(block.text.length, activeOffset.end - block.start);
+            bodyHtml =
+              escapeHtml(block.text.slice(0, localStart)) +
+              `<mark id="active-citation-mark" class="bg-amber-200 text-[#111827] font-semibold px-0.5 border-b-2 border-amber-600 mark-highlight-active">${escapeHtml(block.text.slice(localStart, localEnd))}</mark>` +
+              escapeHtml(block.text.slice(localEnd));
+          } else {
+            bodyHtml = escapeHtml(block.text);
+          }
+
+          rowsHtml.push(`
+            <div class="flex items-stretch">
+              <div class="w-14 shrink-0 py-3 px-2 bg-[#F8FAFC] border-r border-slate-200 text-[11px] font-semibold text-slate-400 text-right select-none tabular-nums">
+                ${gutterLabel}
+              </div>
+              <div class="flex-1 py-3 px-4 whitespace-pre-wrap break-words">${bodyHtml}</div>
+            </div>
+          `);
+        });
+
+        if (state.viewMode === 'key' && hiddenSectionsCount > 0) {
+          rowsHtml.push(`
+            <div class="px-4 py-2.5 bg-[#F8FAFC] flex items-center justify-between text-xs text-slate-600 font-medium">
+              <span>${hiddenSectionsCount} boilerplate legal sections condensed (Liability, IP, Confidentiality, Governing Law)</span>
+              <button type="button" id="btn-inline-show-full" class="text-[#CC0000] font-semibold hover:underline shrink-0 ml-2">
+                Show Full ${formatNumber(fullWords)}w
+              </button>
+            </div>
+          `);
+        }
+
+        el.contractViewer.innerHTML = rowsHtml.join('');
+        el.wordCountBadge.textContent =
+          state.viewMode === 'key'
+            ? `${formatNumber(visibleWords)}w key / ${formatNumber(fullWords)}w full`
+            : `${formatNumber(fullWords)}w full`;
+
+        const inlineFullBtn = document.getElementById('btn-inline-show-full');
+        if (inlineFullBtn) {
+          inlineFullBtn.addEventListener('click', () => setViewMode('full'));
+        }
+
+        updateMetadataRibbon();
+        refreshIcons();
+
+        if (activeOffset) {
+          const markEl = document.getElementById('active-citation-mark');
+          if (markEl) {
+            requestAnimationFrame(() => {
+              markEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+          }
+        }
+      }
+
+      function setViewMode(mode) {
+        if (mode === state.viewMode) return;
+        const prevMode = state.viewMode;
+        state.viewMode = mode;
+
+        const tabs = [
+          { k: 'key', btn: el.tabCitationKey },
+          { k: 'full', btn: el.tabCitationFull },
+          { k: 'edit', btn: el.tabEditText }
+        ];
+        tabs.forEach((t) => {
+          const active = t.k === mode;
+          t.btn.setAttribute('aria-selected', String(active));
+          t.btn.className = active
+            ? 'px-2.5 py-1 rounded-sm text-xs font-semibold bg-[#111827] text-white transition-colors'
+            : 'px-2.5 py-1 rounded-sm text-xs font-medium text-slate-600 hover:text-[#111827] transition-colors';
+        });
+
+        if (mode === 'edit') {
+          el.contractEditor.value = state.contractText;
+          el.contractViewer.classList.add('hidden');
+          el.contractEditor.classList.remove('hidden');
+          el.btnClearHighlight.classList.add('hidden');
+          el.wordCountBadge.textContent = `${formatNumber(getWordCount(state.contractText))}w full`;
+          el.contractEditor.focus();
+        } else {
+          if (prevMode === 'edit') {
+            const updated = el.contractEditor.value;
+            if (updated !== state.contractText) {
+              state.contractText = updated;
+              const preset = PRESETS[state.activePresetId];
+              state.isCustomEdited = !preset || updated.trim() !== preset.contractText.trim();
+              updatePresetPillsUI();
+            }
+          }
+
+          el.contractEditor.classList.add('hidden');
+          el.contractViewer.classList.remove('hidden');
+
+          const activeQuote =
+            state.activeClauseIndex !== null && state.currentAnalysis?.clauses?.[state.activeClauseIndex]
+              ? state.currentAnalysis.clauses[state.activeClauseIndex].exactQuote
+              : null;
+          renderContractViewer(activeQuote);
+          renderClauseCards(state.currentAnalysis?.clauses || []);
+          updateHeaderGroundingBadge();
+        }
+      }
+
+      // =========================================================================
+      // 6. REACTIVE CONTRACT TEXT PARSER (SIMULATION MODE)
+      // =========================================================================
+      function parseContractDynamics(text, presetId) {
+        const clean = text.trim();
+
+        let currentAcv = PRESETS[presetId]?.analysis.currentAcv || 485000;
+        const acvMatch = clean.match(/(?:Total Contracted Annual Recurring Value|ACV)[^\n$]*\$\s*([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{5,7})/i);
+        if (acvMatch) currentAcv = parseInt(acvMatch[1].replace(/,/g, ''), 10);
+
+        let daysToNotice = PRESETS[presetId]?.analysis.daysToNotice || 45;
+        const daysMatch =
+          clean.match(/(\d{1,3})\s*(?:calendar\s*)?days?\s*(?:remain|currently remain)/i) ||
+          clean.match(/at least\s+(?:[a-z-]+\s*\()?(\d{1,3})\)?\s*days?\s*(?:prior|notice)/i) ||
+          clean.match(/(\d{1,3})\s*days?\s*(?:prior to|notice)/i);
+        if (daysMatch) {
+          const d = parseInt(daysMatch[1], 10);
+          if (d > 0 && d <= 365) daysToNotice = d;
+        }
+
+        let contractedCap = PRESETS[presetId]?.simDefaults.contractedCap || 64;
+        if (presetId === 'apex') {
+          const capMatch = clean.match(/exceeds\s+(\d{2,4})\s+two-core\s+pairs/i) || clean.match(/capped at\s+(\d{2,4})\s+two-core/i);
+          if (capMatch) contractedCap = parseInt(capMatch[1], 10);
+        } else if (presetId === 'meridian') {
+          const latMatch = clean.match(/below\s+(\d{2,4})\s*milliseconds/i);
+          if (latMatch) contractedCap = parseInt(latMatch[1], 10);
+        }
+
+        let trueUpMultiplier = 1.25;
+        const multMatch = clean.match(/(\d+(?:\.\d+)?)x\s*(?:then-current\s*)?List Price/i);
+        if (multMatch) trueUpMultiplier = parseFloat(multMatch[1]);
+
+        let slaCreditPct = 15;
+        const creditMatch = clean.match(/(\d{1,2})%\s*(?:quarterly\s*)?fee\s*credit/i);
+        if (creditMatch) slaCreditPct = parseInt(creditMatch[1], 10);
+
+        let accountName = PRESETS[presetId]?.analysis.accountName || 'Enterprise Account';
+        const acctMatch = clean.match(/Customer Entity:\s*([^("]+)/i);
+        if (acctMatch) accountName = acctMatch[1].trim().replace(/,$/, '');
+
+        return { currentAcv, daysToNotice, contractedCap, trueUpMultiplier, slaCreditPct, accountName };
+      }
+
+      function runReactiveAnalyzer(text) {
+        const clean = text.trim();
+        for (const key of Object.keys(PRESETS)) {
+          if (clean === PRESETS[key].contractText.trim()) {
+            state.activePresetId = key;
+            state.simParams = structuredClone(PRESETS[key].simDefaults);
+            return structuredClone(PRESETS[key].analysis);
+          }
+        }
+
+        const basePreset = PRESETS[state.activePresetId] || PRESETS.apex;
+        const result = structuredClone(basePreset.analysis);
+        const parsed = parseContractDynamics(clean, state.activePresetId);
+
+        result.accountName = parsed.accountName;
+        result.currentAcv = parsed.currentAcv;
+        result.daysToNotice = parsed.daysToNotice;
+
+        if (result.signalType === 'EXPANSION') {
+          state.simParams.contractedCap = parsed.contractedCap;
+          state.simParams.minUsage = parsed.contractedCap;
+          state.simParams.maxUsage = parsed.contractedCap + 96;
+          state.simParams.liveUsage = Math.max(parsed.contractedCap + 28, state.simParams.liveUsage);
+          state.simParams.trueUpMultiplier = parsed.trueUpMultiplier;
+        } else if (result.signalType === 'CHURN_RISK') {
+          state.simParams.contractedCap = parsed.contractedCap;
+          state.simParams.slaCreditPct = parsed.slaCreditPct;
+          state.simParams.liveUsage = Math.max(parsed.contractedCap + 75, state.simParams.liveUsage);
+        }
+
+        const sentences = clean
+          .split(/(?<=[.!?])\s+|\n{2,}/)
+          .map((s) => s.trim())
+          .filter((s) => s.length > 24);
+
+        result.clauses = result.clauses.map((clause, idx) => {
+          if (getExactSubstringOffset(clean, clause.exactQuote) !== null) return clause;
+          const keywords = clause.category.toLowerCase().split(/\W+/).filter((w) => w.length > 3);
+          const matchedSentence = sentences.find((s) => keywords.some((kw) => s.toLowerCase().includes(kw)));
+          return {
+            ...clause,
+            exactQuote: matchedSentence || sentences[idx % Math.max(sentences.length, 1)] || clause.exactQuote
+          };
+        });
+
+        return result;
+      }
+
+      // =========================================================================
+      // 7. LIVE GEMINI 2.5 FLASH API INTEGRATION
+      // =========================================================================
+      async function callGeminiApi(contractText, apiKey) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+        const systemInstruction = `You are ContractSignal AI for Red Hat Enterprise Sales.
+Extract all Red Hat subscription & service line items (startDate, endDate, status, acv) and produce concise, customer-first AE recommendations across:
+1) renewalAndUpgrade (renewals & tier upgrades),
+2) productCrossSell (net-new Red Hat products),
+3) servicesIntroduction (Consulting, Training & Certification [RHLS], TAM — shortTermImpact & longTermImpact).
+Always explain "customerWhy" concisely (<20 words) showing concrete risk avoided or ROI for the customer.
+CRITICAL GROUNDING RULE: Every "exactQuote" in "clauses" MUST be an exact verbatim substring copied character-for-character from the input contract text.`;
+
+        const payload = {
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          contents: [{ role: 'user', parts: [{ text: `Analyze this enterprise contract:\n\n${contractText}` }] }],
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: 'OBJECT',
+              properties: {
+                accountName: { type: 'STRING' },
+                currentAcv: { type: 'NUMBER' },
+                billingFrequency: { type: 'STRING' },
+                signalType: { type: 'STRING', enum: ['EXPANSION', 'CHURN_RISK', 'COMPLIANCE_UPSELL'] },
+                confidenceScore: { type: 'NUMBER' },
+                daysToNotice: { type: 'NUMBER' },
+                noticeDeadlineDate: { type: 'STRING' },
+                subscriptions: {
+                  type: 'ARRAY',
+                  items: {
+                    type: 'OBJECT',
+                    properties: {
+                      product: { type: 'STRING' },
+                      tierQty: { type: 'STRING' },
+                      startDate: { type: 'STRING' },
+                      endDate: { type: 'STRING' },
+                      status: { type: 'STRING' },
+                      acv: { type: 'NUMBER' }
+                    },
+                    required: ['product', 'tierQty', 'startDate', 'endDate', 'status', 'acv']
+                  }
+                },
+                recommendations: {
+                  type: 'OBJECT',
+                  properties: {
+                    renewalAndUpgrade: {
+                      type: 'OBJECT',
+                      properties: {
+                        title: { type: 'STRING' },
+                        targetSkus: { type: 'ARRAY', items: { type: 'STRING' } },
+                        arrImpact: { type: 'NUMBER' },
+                        customerWhy: { type: 'STRING' },
+                        aeMove: { type: 'STRING' }
+                      },
+                      required: ['title', 'targetSkus', 'arrImpact', 'customerWhy', 'aeMove']
+                    },
+                    productCrossSell: {
+                      type: 'OBJECT',
+                      properties: {
+                        title: { type: 'STRING' },
+                        targetSkus: { type: 'ARRAY', items: { type: 'STRING' } },
+                        arrImpact: { type: 'NUMBER' },
+                        customerWhy: { type: 'STRING' },
+                        aeMove: { type: 'STRING' }
+                      },
+                      required: ['title', 'targetSkus', 'arrImpact', 'customerWhy', 'aeMove']
+                    },
+                    servicesIntroduction: {
+                      type: 'OBJECT',
+                      properties: {
+                        title: { type: 'STRING' },
+                        targetSkus: { type: 'ARRAY', items: { type: 'STRING' } },
+                        arrImpact: { type: 'NUMBER' },
+                        shortTermImpact: { type: 'STRING' },
+                        longTermImpact: { type: 'STRING' }
+                      },
+                      required: ['title', 'targetSkus', 'arrImpact', 'shortTermImpact', 'longTermImpact']
+                    }
+                  },
+                  required: ['renewalAndUpgrade', 'productCrossSell', 'servicesIntroduction']
+                },
+                clauses: {
+                  type: 'ARRAY',
+                  items: {
+                    type: 'OBJECT',
+                    properties: {
+                      category: { type: 'STRING' },
+                      severity: { type: 'STRING', enum: ['HIGH', 'MEDIUM', 'OPPORTUNITY'] },
+                      exactQuote: { type: 'STRING' },
+                      implication: { type: 'STRING' }
+                    },
+                    required: ['category', 'severity', 'exactQuote', 'implication']
+                  }
+                },
+                nextBestAction: {
+                  type: 'OBJECT',
+                  properties: {
+                    recommendedSku: { type: 'STRING' },
+                    estimatedUpsellAcv: { type: 'NUMBER' },
+                    aePitch: { type: 'STRING' }
+                  },
+                  required: ['recommendedSku', 'estimatedUpsellAcv', 'aePitch']
+                }
+              },
+              required: ['accountName', 'currentAcv', 'billingFrequency', 'signalType', 'confidenceScore', 'daysToNotice', 'noticeDeadlineDate', 'subscriptions', 'recommendations', 'clauses', 'nextBestAction']
+            }
+          }
+        };
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          let msg = `HTTP ${response.status}`;
+          try {
+            const errJson = await response.json();
+            if (errJson?.error?.message) msg = errJson.error.message;
+          } catch (_) {}
+          throw new Error(msg);
+        }
+
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawText) throw new Error('Empty structured response from Gemini API.');
+        return JSON.parse(rawText);
+      }
+
+      // =========================================================================
+      // 8. EXPANSION ARR & HITL FINANCIAL ENGINE
+      // =========================================================================
+      function calculateExpansionArrBreakdown() {
+        const analysis = state.currentAnalysis;
+        const recs = analysis.recommendations || {};
+        const clauses = analysis.clauses || [];
+        const totalClauses = Math.max(1, clauses.length);
+        const activeClauses = clauses.filter((_, i) => state.clauseDispositions[i] !== 'dismissed').length;
+        const hitlFactor = activeClauses === 0 ? 0 : activeClauses / totalClauses;
+
+        const baseScore = Math.max(0, Math.min(100, Math.round(Number(analysis.confidenceScore) || 0)));
+        const adjustedScore = activeClauses === 0 ? 0 : Math.round(baseScore * (0.25 + 0.75 * hitlFactor));
+
+        let usageExpansionArr = 0;
+        let isSlaBreached = false;
+
+        if (state.simParams.metricType === 'cores') {
+          const overageCores = Math.max(0, state.simParams.liveUsage - state.simParams.contractedCap);
+          usageExpansionArr = Math.round(overageCores * (state.simParams.unitAnnualPrice || 4062) * (state.simParams.trueUpMultiplier || 1.25));
+        } else if (state.simParams.metricType === 'latency') {
+          isSlaBreached = state.simParams.liveUsage > state.simParams.contractedCap;
+        } else if (state.simParams.metricType === 'phi') {
+          usageExpansionArr = state.simParams.liveUsage > 0 ? Math.round((state.simParams.liveUsage / 1000) * 650) : 0;
+        }
+
+        const tierUpgradeArr = state.simParams.attachTierUpgrade ? Number(recs.renewalAndUpgrade?.arrImpact || 0) : 0;
+        const crossSellArr = state.simParams.attachCrossSell ? Number(recs.productCrossSell?.arrImpact || 0) : 0;
+
+        const servicesBase = Number(recs.servicesIntroduction?.arrImpact || 0);
+        const tamVal = state.simParams.attachTam ? Math.round(servicesBase * 0.42) : 0;
+        const consultingVal = state.simParams.attachConsulting ? Math.round(servicesBase * 0.38) : 0;
+        const trainingVal = state.simParams.attachTraining ? Math.round(servicesBase * 0.20) : 0;
+        const totalServicesBookings = tamVal + consultingVal + trainingVal;
+
+        const rawExpansionArr = usageExpansionArr + tierUpgradeArr + crossSellArr + totalServicesBookings;
+        const projectedExpansionArr = Math.round(rawExpansionArr * hitlFactor);
+
+        return {
+          activeClauses,
+          totalClauses,
+          adjustedScore,
+          usageExpansionArr,
+          tierUpgradeArr,
+          crossSellArr,
+          totalServicesBookings,
+          isSlaBreached,
+          projectedExpansionArr
+        };
+      }
+
+      // =========================================================================
+      // 9. SMOOTH SIMULATOR (SLIDER MOUNTED ONCE — UPDATED IN-PLACE)
+      // =========================================================================
+      function buildSimulatorDOM() {
+        const p = state.simParams;
+        const type = p.metricType;
+
+        let sliderTitle = '';
+        let sliderUnit = '';
+        let capLabel = '';
+
+        if (type === 'cores') {
+          sliderTitle = 'OpenShift Core Consumption Telemetry';
+          sliderUnit = '2-Core Pairs';
+          capLabel = `Cap: ${p.contractedCap} Pairs`;
+        } else if (type === 'latency') {
+          sliderTitle = 'Peak Q4 Ingress Failover Latency';
+          sliderUnit = 'ms P95';
+          capLabel = `SLA Ceiling: ${p.contractedCap}ms`;
+        } else {
+          sliderTitle = 'Clinical FHIR / ePHI Records Staged';
+          sliderUnit = 'Records';
+          capLabel = 'Standard Limit: 0 ePHI';
+        }
+
+        const step = type === 'phi' ? 2000 : type === 'latency' ? 5 : 1;
+
+        el.simulatorContainer.innerHTML = `
+          <div class="bg-white p-3.5 border border-[#D8DEE6] rounded-sm space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label for="sim-range-input" class="text-[13px] font-semibold text-[#111827] flex items-center gap-1.5">
+                <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#CC0000]"></i>
+                <span>${escapeHtml(sliderTitle)}</span>
+              </label>
+              <span id="sim-live-readout" class="text-xs font-semibold px-2.5 py-0.5 bg-[#111622] text-white rounded-sm tabular-nums">
+                ${formatNumber(p.liveUsage)} ${sliderUnit}
+              </span>
+            </div>
+
+            <input
+              id="sim-range-input"
+              type="range"
+              min="${p.minUsage}"
+              max="${p.maxUsage}"
+              step="${step}"
+              value="${p.liveUsage}"
+              class="w-full ent-slider"
+            />
+
+            ${
+              type === 'latency'
+                ? `<div class="relative w-full h-2 bg-slate-200 overflow-hidden">
+                     <div id="sim-latency-bar" class="h-full bg-rose-600" style="width: 50%"></div>
+                     <div id="sim-latency-marker" class="absolute top-0 bottom-0 w-0.5 bg-[#111827]" style="left: 42%"></div>
+                   </div>`
+                : ''
+            }
+
+            <div class="flex justify-between text-[11px] text-slate-500 tabular-nums">
+              <span>Min: ${formatNumber(p.minUsage)}</span>
+              <span class="font-semibold text-[#111827]">${escapeHtml(capLabel)}</span>
+              <span>Max: ${formatNumber(p.maxUsage)}</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+            <label class="flex items-center justify-between gap-1.5 px-2.5 py-2 bg-white border border-[#D8DEE6] rounded-sm cursor-pointer">
+              <span class="flex items-center gap-1.5 font-medium truncate">
+                <input id="chk-tier-upgrade" type="checkbox" ${p.attachTierUpgrade ? 'checked' : ''} class="w-3.5 h-3.5 accent-[#111827]" />
+                Tier Upgrade
+              </span>
+              <span id="lbl-tier-arr" class="text-[11px] font-bold text-emerald-700 tabular-nums"></span>
+            </label>
+
+            <label class="flex items-center justify-between gap-1.5 px-2.5 py-2 bg-white border border-[#D8DEE6] rounded-sm cursor-pointer">
+              <span class="flex items-center gap-1.5 font-medium truncate">
+                <input id="chk-cross-sell" type="checkbox" ${p.attachCrossSell ? 'checked' : ''} class="w-3.5 h-3.5 accent-[#111827]" />
+                Cross-Sell
+              </span>
+              <span id="lbl-cross-arr" class="text-[11px] font-bold text-emerald-700 tabular-nums"></span>
+            </label>
+
+            <label class="flex items-center justify-between gap-1.5 px-2.5 py-2 bg-white border border-[#D8DEE6] rounded-sm cursor-pointer">
+              <span class="flex items-center gap-1.5 font-medium truncate">
+                <input id="chk-tam" type="checkbox" ${p.attachTam ? 'checked' : ''} class="w-3.5 h-3.5 accent-[#CC0000]" />
+                TAM
+              </span>
+              <span id="lbl-tam-val" class="text-[11px] text-slate-600 font-semibold tabular-nums"></span>
+            </label>
+
+            <label class="flex items-center justify-between gap-1.5 px-2.5 py-2 bg-white border border-[#D8DEE6] rounded-sm cursor-pointer">
+              <span class="flex items-center gap-1.5 font-medium truncate">
+                <input id="chk-consulting" type="checkbox" ${p.attachConsulting ? 'checked' : ''} class="w-3.5 h-3.5 accent-[#CC0000]" />
+                Consulting
+              </span>
+              <span id="lbl-consulting-val" class="text-[11px] text-slate-600 font-semibold tabular-nums"></span>
+            </label>
+
+            <label class="flex items-center justify-between gap-1.5 px-2.5 py-2 bg-white border border-[#D8DEE6] rounded-sm cursor-pointer">
+              <span class="flex items-center gap-1.5 font-medium truncate">
+                <input id="chk-training" type="checkbox" ${p.attachTraining ? 'checked' : ''} class="w-3.5 h-3.5 accent-[#CC0000]" />
+                RHLS
+              </span>
+              <span id="lbl-training-val" class="text-[11px] text-slate-600 font-semibold tabular-nums"></span>
+            </label>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5 text-xs">
+            <div class="bg-white px-3 py-2 border border-[#D8DEE6] rounded-sm">
+              <span id="sim-box1-label" class="block text-[10px] uppercase text-slate-400 font-semibold">Overage</span>
+              <span id="sim-box1-val" class="text-sm font-bold text-[#111827] tabular-nums">+0</span>
+            </div>
+            <div class="bg-white px-3 py-2 border border-[#D8DEE6] rounded-sm">
+              <span id="sim-box2-label" class="block text-[10px] uppercase text-slate-400 font-semibold">Usage ARR</span>
+              <span id="sim-box2-val" class="text-sm font-bold text-emerald-700 tabular-nums">+$0</span>
+            </div>
+            <div class="bg-white px-3 py-2 border border-[#D8DEE6] rounded-sm">
+              <span id="sim-box3-label" class="block text-[10px] uppercase text-slate-400 font-semibold">Services Attach</span>
+              <span id="sim-box3-val" class="text-sm font-bold text-[#111827] tabular-nums">+$0</span>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('sim-range-input').addEventListener('input', (e) => {
+          state.simParams.liveUsage = parseInt(e.target.value, 10);
+          updateSimulatorReadouts();
+        });
+        document.getElementById('chk-tier-upgrade').addEventListener('change', (e) => {
+          state.simParams.attachTierUpgrade = e.target.checked;
+          updateSimulatorReadouts();
+        });
+        document.getElementById('chk-cross-sell').addEventListener('change', (e) => {
+          state.simParams.attachCrossSell = e.target.checked;
+          updateSimulatorReadouts();
+        });
+        document.getElementById('chk-tam').addEventListener('change', (e) => {
+          state.simParams.attachTam = e.target.checked;
+          updateSimulatorReadouts();
+        });
+        document.getElementById('chk-consulting').addEventListener('change', (e) => {
+          state.simParams.attachConsulting = e.target.checked;
+          updateSimulatorReadouts();
+        });
+        document.getElementById('chk-training').addEventListener('change', (e) => {
+          state.simParams.attachTraining = e.target.checked;
+          updateSimulatorReadouts();
+        });
+
+        refreshIcons();
+        updateSimulatorReadouts();
+      }
+
+      function updateSimulatorReadouts() {
+        const fin = calculateExpansionArrBreakdown();
+        const p = state.simParams;
+        const analysis = state.currentAnalysis;
+
+        const readoutEl = document.getElementById('sim-live-readout');
+        if (readoutEl) {
+          if (p.metricType === 'cores') {
+            readoutEl.textContent = `${formatNumber(p.liveUsage)} 2-Core Pairs`;
+            readoutEl.className = 'text-xs font-semibold px-2.5 py-0.5 bg-[#111622] text-white rounded-sm tabular-nums';
+          } else if (p.metricType === 'latency') {
+            readoutEl.textContent = `${p.liveUsage}ms P95`;
+            readoutEl.className = `text-xs font-semibold px-2.5 py-0.5 rounded-sm tabular-nums ${
+              fin.isSlaBreached ? 'bg-rose-700 text-white' : 'bg-emerald-700 text-white'
+            }`;
+            const bar = document.getElementById('sim-latency-bar');
+            const marker = document.getElementById('sim-latency-marker');
+            if (bar && marker) {
+              const pct = Math.max(0, Math.min(100, ((p.liveUsage - p.minUsage) / (p.maxUsage - p.minUsage)) * 100));
+              const mPct = Math.max(0, Math.min(100, ((p.contractedCap - p.minUsage) / (p.maxUsage - p.minUsage)) * 100));
+              bar.style.width = `${pct}%`;
+              bar.className = `h-full ${fin.isSlaBreached ? 'bg-rose-600' : 'bg-emerald-600'}`;
+              marker.style.left = `${mPct}%`;
+            }
+          } else {
+            readoutEl.textContent = `${formatNumber(p.liveUsage)} Records`;
+            readoutEl.className = `text-xs font-semibold px-2.5 py-0.5 rounded-sm tabular-nums ${
+              p.liveUsage > 0 ? 'bg-[#111622] text-white' : 'bg-emerald-700 text-white'
+            }`;
+          }
+        }
+
+        const recs = analysis.recommendations || {};
+        const fullServices = Number(recs.servicesIntroduction?.arrImpact || 0);
+        document.getElementById('lbl-tier-arr').textContent = fin.tierUpgradeArr > 0 ? `+${Math.round(fin.tierUpgradeArr / 1000)}K` : '$0';
+        document.getElementById('lbl-cross-arr').textContent = fin.crossSellArr > 0 ? `+${Math.round(fin.crossSellArr / 1000)}K` : '$0';
+        document.getElementById('lbl-tam-val').textContent = p.attachTam ? `${Math.round((fullServices * 0.42) / 1000)}K` : '$0';
+        document.getElementById('lbl-consulting-val').textContent = p.attachConsulting ? `${Math.round((fullServices * 0.38) / 1000)}K` : '$0';
+        document.getElementById('lbl-training-val').textContent = p.attachTraining ? `${Math.round((fullServices * 0.20) / 1000)}K` : '$0';
+
+        const b1L = document.getElementById('sim-box1-label');
+        const b1V = document.getElementById('sim-box1-val');
+        const b2L = document.getElementById('sim-box2-label');
+        const b2V = document.getElementById('sim-box2-val');
+        const b3L = document.getElementById('sim-box3-label');
+        const b3V = document.getElementById('sim-box3-val');
+
+        if (p.metricType === 'cores') {
+          const over = Math.max(0, p.liveUsage - p.contractedCap);
+          b1L.textContent = 'Overage (1.25x)';
+          b1V.textContent = `+${over} Pairs`;
+          b2L.textContent = 'Core Expansion ARR';
+          b2V.textContent = `+${formatCurrency(fin.usageExpansionArr)}`;
+        } else if (p.metricType === 'latency') {
+          const creditAmt = fin.isSlaBreached ? Math.round(analysis.currentAcv * ((p.slaCreditPct || 15) / 100)) : 0;
+          b1L.textContent = 'SLA Status';
+          b1V.textContent = fin.isSlaBreached ? 'BREACHED' : 'COMPLIANT';
+          b1V.className = `text-sm font-bold ${fin.isSlaBreached ? 'text-rose-700' : 'text-emerald-700'}`;
+          b2L.textContent = 'Fee Credit Exposure';
+          b2V.textContent = formatCurrency(creditAmt);
+          b2V.className = `text-sm font-bold tabular-nums ${fin.isSlaBreached ? 'text-rose-700' : 'text-slate-600'}`;
+        } else {
+          b1L.textContent = 'Audit Status';
+          b1V.textContent = p.liveUsage >= 50000 ? 'CRITICAL' : p.liveUsage > 0 ? 'ELEVATED' : 'CLEAN';
+          b1V.className = `text-sm font-bold ${p.liveUsage >= 50000 ? 'text-rose-700' : p.liveUsage > 0 ? 'text-amber-700' : 'text-emerald-700'}`;
+          b2L.textContent = 'Compliance ARR';
+          b2V.textContent = `+${formatCurrency(fin.usageExpansionArr)}`;
+        }
+
+        b3L.textContent = 'Services Attach';
+        b3V.textContent = `+${formatCurrency(fin.totalServicesBookings)}`;
+
+        el.simTotalValue.textContent = `+${formatCurrency(fin.projectedExpansionArr)}`;
+        el.kpiUpliftValue.textContent = `+${formatCurrency(fin.projectedExpansionArr)}`;
+        el.kpiUpliftSub.textContent = `${formatCurrency(Math.max(0, fin.projectedExpansionArr - fin.totalServicesBookings))} Subs + ${formatCurrency(fin.totalServicesBookings)} Svc`;
+
+        el.kpiConfidence.textContent = `${fin.adjustedScore}%`;
+        el.kpiConfidenceBar.style.width = `${fin.adjustedScore}%`;
+        el.hitlSummaryPill.textContent = `${fin.activeClauses}/${fin.totalClauses} Active`;
+      }
+
+      // =========================================================================
+      // 10. RENDER TABLES, CUSTOMER-CENTRIC RECOMMENDATIONS & CLAUSES
+      // =========================================================================
+      function renderSubscriptionsTable(subs) {
+        const list = Array.isArray(subs) ? subs : [];
+        el.subscriptionsTbody.innerHTML = list
+          .map((item) => {
+            const st = String(item.status || '');
+            let badgeCls = 'bg-slate-100 text-slate-700 border-slate-200';
+            if (/EXPIR|LAPSED|NOTICE IN 22/i.test(st)) badgeCls = 'bg-rose-50 text-rose-800 border-rose-200';
+            else if (/CAP|8x5|NO ACS|NOTICE SEP/i.test(st)) badgeCls = 'bg-amber-50 text-amber-800 border-amber-200';
+            else if (/ACTIVE/i.test(st)) badgeCls = 'bg-emerald-50 text-emerald-800 border-emerald-200';
+
+            return `
+              <tr class="hover:bg-slate-50/80">
+                <td class="py-2.5 px-3 font-semibold text-[#111827]">${escapeHtml(item.product)}</td>
+                <td class="py-2.5 px-3 text-slate-600">${escapeHtml(item.tierQty)}</td>
+                <td class="py-2.5 px-3 text-slate-500">${escapeHtml(item.startDate)}</td>
+                <td class="py-2.5 px-3 text-[#111827] font-semibold">${escapeHtml(item.endDate)}</td>
+                <td class="py-2.5 px-3">
+                  <span class="inline-block px-2 py-0.5 rounded-sm text-[10px] font-bold border ${badgeCls}">
+                    ${escapeHtml(st)}
+                  </span>
+                </td>
+                <td class="py-2.5 px-3 font-bold text-right text-[#111827]">
+                  ${item.acv > 0 ? formatCurrency(item.acv) : '—'}
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      }
+
+      function renderRecommendationsPlaybook(recs) {
+        if (!recs) {
+          el.recommendationsContainer.innerHTML = '';
+          return;
+        }
+
+        const r1 = recs.renewalAndUpgrade || {};
+        const r2 = recs.productCrossSell || {};
+        const r3 = recs.servicesIntroduction || {};
+
+        const skuPills = (skus) =>
+          (Array.isArray(skus) ? skus : [])
+            .map((s) => `<span class="px-2 py-0.5 rounded-sm text-[11px] font-medium bg-slate-100 text-slate-700 border border-[#D8DEE6]">${escapeHtml(s)}</span>`)
+            .join('');
+
+        el.recommendationsContainer.innerHTML = `
+          <!-- Play 1 -->
+          <div class="border border-[#D8DEE6] rounded-sm p-4 bg-white">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase bg-blue-50 text-blue-800 border border-blue-200 shrink-0">01 • Renewal / Tier</span>
+                <h4 class="text-sm font-bold text-[#111827] truncate">${escapeHtml(r1.title)}</h4>
+              </div>
+              <span class="text-[13px] font-bold text-[#0F766E] tabular-nums shrink-0">+${formatCurrency(r1.arrImpact)}</span>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mb-2.5">${skuPills(r1.targetSkus)}</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-[13px] leading-[1.55]">
+              <div class="p-3 bg-emerald-50/40 border border-emerald-200/80 rounded-sm">
+                <span class="text-[10.5px] font-bold uppercase tracking-wider text-emerald-800 block mb-0.5">Why Customer Buys (ROI / Risk Avoided)</span>
+                <span class="text-[#111827]">${escapeHtml(r1.customerWhy || r1.rationale || '')}</span>
+              </div>
+              <div class="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-sm">
+                <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block mb-0.5">AE Move</span>
+                <span class="text-slate-700">${escapeHtml(r1.aeMove || r1.aeAction || '')}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Play 2 -->
+          <div class="border border-[#D8DEE6] rounded-sm p-4 bg-white">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase bg-indigo-50 text-indigo-800 border border-indigo-200 shrink-0">02 • Cross-Sell</span>
+                <h4 class="text-sm font-bold text-[#111827] truncate">${escapeHtml(r2.title)}</h4>
+              </div>
+              <span class="text-[13px] font-bold text-[#0F766E] tabular-nums shrink-0">+${formatCurrency(r2.arrImpact)}</span>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mb-2.5">${skuPills(r2.targetSkus)}</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-[13px] leading-[1.55]">
+              <div class="p-3 bg-emerald-50/40 border border-emerald-200/80 rounded-sm">
+                <span class="text-[10.5px] font-bold uppercase tracking-wider text-emerald-800 block mb-0.5">Why Customer Buys (ROI / Risk Avoided)</span>
+                <span class="text-[#111827]">${escapeHtml(r2.customerWhy || r2.rationale || '')}</span>
+              </div>
+              <div class="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-sm">
+                <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block mb-0.5">AE Move</span>
+                <span class="text-slate-700">${escapeHtml(r2.aeMove || r2.aeAction || '')}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Play 3 -->
+          <div class="border border-[#D8DEE6] border-l-[3px] border-l-[#CC0000] rounded-sm p-4 bg-white">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase bg-rose-50 text-[#CC0000] border border-rose-200 shrink-0">03 • Services Attach</span>
+                <h4 class="text-sm font-bold text-[#111827] truncate">${escapeHtml(r3.title)}</h4>
+              </div>
+              <span class="text-[13px] font-bold text-[#0F766E] tabular-nums shrink-0">+${formatCurrency(r3.arrImpact)}</span>
+            </div>
+            <div class="flex flex-wrap gap-1.5 mb-2.5">${skuPills(r3.targetSkus)}</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-[13px] leading-[1.55]">
+              <div class="p-3 bg-emerald-50/40 border border-emerald-200/80 rounded-sm">
+                <span class="text-[10.5px] font-bold uppercase tracking-wider text-[#CC0000] block mb-0.5">Short-Term Customer Value</span>
+                <span class="text-[#111827]">${escapeHtml(r3.shortTermImpact || '')}</span>
+              </div>
+              <div class="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-sm">
+                <span class="text-[10.5px] font-bold uppercase tracking-wider text-[#0F766E] block mb-0.5">Long-Term Customer Value</span>
+                <span class="text-slate-700">${escapeHtml(r3.longTermImpact || '')}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function updateHeaderGroundingBadge() {
+        const clauses = state.currentAnalysis?.clauses || [];
+        const verifiedCount = clauses.filter((c) => getExactSubstringOffset(state.contractText, c.exactQuote) !== null).length;
+
+        if (verifiedCount === clauses.length && clauses.length > 0) {
+          el.groundingStatus.className = 'inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 tabular-nums';
+          el.groundingStatus.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i> ${verifiedCount}/${clauses.length} Spans Grounded`;
+        } else {
+          el.groundingStatus.className = 'inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 tabular-nums';
+          el.groundingStatus.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4"></i> ${verifiedCount}/${clauses.length} Spans Grounded`;
+        }
+        updateMetadataRibbon();
+        refreshIcons();
+      }
+
+      function renderClauseCards(clauses) {
+        el.clausesContainer.innerHTML = '';
+
+        (clauses || []).forEach((clause, index) => {
+          const isSelected = state.activeClauseIndex === index;
+          const isDismissed = state.clauseDispositions[index] === 'dismissed';
+          const offset = getExactSubstringOffset(state.contractText, clause.exactQuote);
+
+          const sevStyles = {
+            HIGH: 'bg-rose-50 text-rose-800 border-rose-200',
+            MEDIUM: 'bg-amber-50 text-amber-800 border-amber-200',
+            OPPORTUNITY: 'bg-emerald-50 text-emerald-800 border-emerald-200'
+          };
+          const sevBadge = sevStyles[clause.severity] || sevStyles.MEDIUM;
+
+          const groundingBadge = offset
+            ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 tabular-nums">
+                 ✓ Verified • [${offset.start}–${offset.end}]
+               </span>`
+            : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[11px] font-semibold bg-amber-50 text-amber-900 border border-amber-300">
+                 ⚠ Unverified Span
+               </span>`;
+
+          const card = document.createElement('div');
+          card.className = `p-3.5 border rounded-sm transition-colors cursor-pointer ${
+            isDismissed
+              ? 'opacity-50 bg-slate-50 border-[#D8DEE6]'
+              : isSelected
+              ? 'bg-amber-50/20 border-[#CC0000] ring-1 ring-[#CC0000]'
+              : 'bg-white border-[#D8DEE6] hover:border-slate-400'
+          }`;
+
+          card.innerHTML = `
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2.5 py-0.5 rounded-sm text-xs font-bold bg-slate-100 text-[#111827] border border-[#D8DEE6]">
+                  ${escapeHtml(clause.category)}
+                </span>
+                <span class="px-2 py-0.5 rounded-sm text-[10.5px] font-bold uppercase border ${sevBadge}">
+                  ${escapeHtml(clause.severity)}
+                </span>
+                ${groundingBadge}
+              </div>
+
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  data-action="accept"
+                  data-idx="${index}"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm text-[11px] font-semibold border ${
+                    !isDismissed
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                      : 'bg-white text-slate-500 border-[#D8DEE6]'
+                  }"
+                >
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  Verify
+                </button>
+                <button
+                  type="button"
+                  data-action="dismiss"
+                  data-idx="${index}"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm text-[11px] font-semibold border ${
+                    isDismissed
+                      ? 'bg-slate-200 text-slate-800 border-slate-300'
+                      : 'bg-white text-slate-500 border-[#D8DEE6] hover:text-rose-700'
+                  }"
+                >
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                  Dismiss
+                </button>
+              </div>
+            </div>
+
+            <blockquote class="pl-3 py-1.5 border-l-2 ${isSelected ? 'border-amber-500 bg-amber-50/40' : 'border-slate-300 bg-[#F8FAFC]'} text-[12.5px] leading-relaxed text-slate-700 mb-2">
+              "${escapeHtml(clause.exactQuote)}"
+            </blockquote>
+
+            <div class="flex items-center justify-between gap-2 text-[13px]">
+              <p class="text-slate-700">${escapeHtml(clause.implication)}</p>
+              <span class="shrink-0 text-[11px] font-bold ${isSelected ? 'text-[#CC0000]' : 'text-slate-400'}">
+                ${isSelected ? '[CITED]' : '[CITE]'}
+              </span>
+            </div>
+          `;
+
+          card.addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-action]');
+            if (btn) {
+              e.stopPropagation();
+              const idx = parseInt(btn.dataset.idx, 10);
+              const act = btn.dataset.action;
+              state.clauseDispositions[idx] = act === 'dismiss' ? 'dismissed' : 'accepted';
+              renderClauseCards(clauses);
+              updateSimulatorReadouts();
+              showToast(
+                act === 'dismiss'
+                  ? `Clause "${clauses[idx].category}" dismissed — ARR & propensity updated.`
+                  : `Clause "${clauses[idx].category}" verified.`,
+                act === 'dismiss' ? 'info' : 'success'
+              );
+              return;
+            }
+
+            state.activeClauseIndex = index;
+            if (state.viewMode === 'edit') {
+              setViewMode('key');
+            } else {
+              renderContractViewer(clause.exactQuote);
+              renderClauseCards(clauses);
+            }
+          });
+
+          el.clausesContainer.appendChild(card);
+        });
+
+        refreshIcons();
+      }
+
+      function renderExecutionTrace(traceData) {
+        state.traceLogs = traceData;
+        const total = traceData.reduce((s, item) => s + item.ms, 0);
+        el.traceTotalLatency.textContent = `Total: ${total}ms`;
+
+        el.traceStepsContainer.innerHTML = traceData
+          .map(
+            (step, idx) => `
+            <div class="px-4 py-3 flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <span class="mt-0.5 w-5 h-5 rounded-sm bg-slate-100 border border-[#D8DEE6] text-[11px] font-bold text-slate-700 flex items-center justify-center shrink-0 tabular-nums">
+                  ${idx + 1}
+                </span>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[13px] font-semibold text-[#111827]">${escapeHtml(step.stage)}</span>
+                    <span class="px-2 py-0.5 rounded-sm text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      ${escapeHtml(step.status)}
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-0.5">${escapeHtml(step.detail)}</p>
+                </div>
+              </div>
+              <span class="text-[13px] font-bold text-[#111827] shrink-0 tabular-nums">${step.ms}ms</span>
+            </div>
+          `
+          )
+          .join('');
+      }
+
+      function renderFullDashboard() {
+        const analysis = state.currentAnalysis;
+
+        el.accountAvatar.textContent = getInitials(analysis.accountName);
+        el.dashAccountName.textContent = analysis.accountName;
+
+        const sigStyles = {
+          EXPANSION: {
+            pill: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+            bar: 'bg-emerald-700',
+            label: 'EXPANSION + SERVICES',
+            badge: 'HIGH'
+          },
+          CHURN_RISK: {
+            pill: 'bg-rose-50 text-rose-800 border-rose-300',
+            bar: 'bg-rose-700',
+            label: 'CHURN RISK + SAVE PLAY',
+            badge: 'CRITICAL'
+          },
+          COMPLIANCE_UPSELL: {
+            pill: 'bg-blue-50 text-blue-800 border-blue-300',
+            bar: 'bg-blue-700',
+            label: 'COMPLIANCE UPSELL',
+            badge: 'HIGH'
+          }
+        }[analysis.signalType] || {
+          pill: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+          bar: 'bg-emerald-700',
+          label: 'EXPANSION',
+          badge: 'HIGH'
+        };
+
+        el.dashSignalPill.className = `px-2 py-0.5 rounded-sm text-[11px] font-bold uppercase tracking-wider border ${sigStyles.pill}`;
+        el.dashSignalPill.textContent = sigStyles.label;
+
+        el.kpiAcv.textContent = formatCurrency(analysis.currentAcv);
+        el.kpiBilling.textContent = analysis.billingFrequency || 'Annual Upfront';
+
+        const days = Number(analysis.daysToNotice) || 0;
+        const isUrgent = days < 30;
+        el.kpiDays.textContent = `${days} Days`;
+        el.kpiDays.className = `text-2xl font-bold tabular-nums ${isUrgent ? 'text-rose-700' : 'text-[#111827]'}`;
+        el.kpiUrgencyDot.className = `w-2 h-2 ${isUrgent ? 'bg-rose-600 animate-ping' : days <= 45 ? 'bg-amber-600' : 'bg-emerald-700'}`;
+        el.kpiDeadline.textContent = `Cutoff: ${analysis.noticeDeadlineDate}`;
+
+        el.kpiSignalBadge.textContent = sigStyles.badge;
+        el.kpiConfidenceBar.className = `h-full transition-all duration-200 ${sigStyles.bar}`;
+
+        renderSubscriptionsTable(analysis.subscriptions);
+        renderRecommendationsPlaybook(analysis.recommendations);
+        buildSimulatorDOM();
+        el.nbaPitch.textContent = analysis.nextBestAction?.aePitch || '';
+        el.crmSyncSummary.classList.add('hidden');
+
+        renderClauseCards(analysis.clauses || []);
+        updateHeaderGroundingBadge();
+        el.jsonOutput.textContent = JSON.stringify(analysis, null, 2);
+        refreshIcons();
+      }
+
+      // =========================================================================
+      // 11. TAB SWITCHING, PRESETS & ANALYSIS PIPELINE
+      // =========================================================================
+      function setRightTab(tab) {
+        state.rightTab = tab;
+        const tabs = [
+          { key: 'playbook', btn: el.rightTabPlaybook, panel: el.panelTabPlaybook },
+          { key: 'clauses', btn: el.rightTabClauses, panel: el.panelTabClauses },
+          { key: 'trace', btn: el.rightTabTrace, panel: el.panelTabTrace }
+        ];
+        tabs.forEach((t) => {
+          const active = t.key === tab;
+          t.panel.classList.toggle('hidden', !active);
+          t.btn.setAttribute('aria-selected', String(active));
+          t.btn.className = active
+            ? 'px-3.5 py-3 text-[13px] font-bold border-b-2 border-[#CC0000] text-[#111827] transition-colors'
+            : 'px-3.5 py-3 text-[13px] font-medium border-b-2 border-transparent text-slate-500 hover:text-[#111827] transition-colors';
+        });
+        refreshIcons();
+      }
+
+      function updatePresetPillsUI() {
+        el.presetButtons.forEach((btn) => {
+          const active = btn.dataset.preset === state.activePresetId && !state.isCustomEdited;
+          btn.className = active
+            ? 'preset-pill text-left px-3 py-2.5 rounded-sm border border-[#111827] bg-white ring-1 ring-[#111827] transition-colors'
+            : 'preset-pill text-left px-3 py-2.5 rounded-sm border border-[#D8DEE6] bg-white hover:border-slate-400 transition-colors';
+        });
+      }
+
+      function buildPipelineTrace(modeName, extractMs, clauses) {
+        const verified = (clauses || []).filter((c) => getExactSubstringOffset(state.contractText, c.exactQuote) !== null).length;
+        return [
+          {
+            stage: 'Schedule A & Clause Segmentation',
+            status: 'PASS',
+            ms: 41,
+            detail: `Parsed ${getWordCount(state.contractText)} words & extracted ${(state.currentAnalysis.subscriptions || []).length} subscription/service dates`
+          },
+          {
+            stage: modeName,
+            status: 'PASS',
+            ms: extractMs,
+            detail: 'Synthesized 3-pillar Customer-Why & AE Recommendations'
+          },
+          {
+            stage: 'Deterministic indexOf() Substring Audit',
+            status: verified === clauses.length ? 'VERIFIED' : 'PARTIAL',
+            ms: 4,
+            detail: `${verified}/${clauses.length} verbatim spans matched character offsets`
+          },
+          {
+            stage: 'Expansion ARR & Services Rules Engine',
+            status: 'PASS',
+            ms: 2,
+            detail: `Bound ${state.simParams.metricType} telemetry & HITL disposition weights`
+          }
+        ];
+      }
+
+      function loadPreset(presetId, shouldAnimate = true) {
+        const preset = PRESETS[presetId];
+        if (!preset) return;
+
+        state.activePresetId = presetId;
+        state.contractText = preset.contractText;
+        state.isCustomEdited = false;
+        state.activeClauseIndex = null;
+        state.simParams = structuredClone(preset.simDefaults);
+        state.clauseDispositions = preset.analysis.clauses.map(() => 'accepted');
+
+        el.contractEditor.value = preset.contractText;
+        updatePresetPillsUI();
+
+        if (state.viewMode === 'edit') {
+          setViewMode('key');
+        } else {
+          renderContractViewer(null);
+        }
+
+        if (shouldAnimate) {
+          runAnalysisPipeline(false);
+        } else {
+          state.currentAnalysis = structuredClone(preset.analysis);
+          renderFullDashboard();
+          renderExecutionTrace(buildPipelineTrace('Recommendation Engine (Simulated)', 310, preset.analysis.clauses));
+        }
+      }
+
+      function setAnalyzingUI(isLoading) {
+        state.isAnalyzing = isLoading;
+        el.btnAnalyze.disabled = isLoading;
+        el.analyzeIcon.classList.toggle('hidden', isLoading);
+        el.analyzeSpinner.classList.toggle('hidden', !isLoading);
+        el.analyzeBtnText.textContent = isLoading ? 'Analyzing Contract & Generating Playbook...' : 'Analyze Contract & Generate AE Playbook';
+        el.processingStatusBar.classList.toggle('hidden', !isLoading);
+      }
+
+      function sleep(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+      }
+
+      async function runSimulationSteps() {
+        const steps = [
+          { text: '1. Parsing subscription start/end dates & SOWs...', pct: '33%' },
+          { text: '2. Verifying indexOf() character offsets...', pct: '67%' },
+          { text: '3. Mapping Customer-Why & Services attach...', pct: '100%' }
+        ];
+        for (const s of steps) {
+          el.processingStepText.textContent = s.text;
+          el.processingPct.textContent = s.pct;
+          el.processingProgress.style.width = s.pct;
+          await sleep(165);
+        }
+      }
+
+      async function runAnalysisPipeline(forceSimulation = false) {
+        if (state.isAnalyzing) return;
+
+        if (state.viewMode === 'edit') {
+          const val = el.contractEditor.value;
+          if (val !== state.contractText) {
+            state.contractText = val;
+            const preset = PRESETS[state.activePresetId];
+            state.isCustomEdited = !preset || val.trim() !== preset.contractText.trim();
+            updatePresetPillsUI();
+          }
+          setViewMode('key');
+        }
+
+        if (!state.contractText.trim()) {
+          showToast('Contract workspace is empty.', 'warning');
+          return;
+        }
+
+        el.apiErrorBanner.classList.add('hidden');
+        setAnalyzingUI(true);
+        state.activeClauseIndex = null;
+        renderContractViewer(null);
+
+        const useLiveApi = !forceSimulation && Boolean(state.apiKey && state.apiKey.trim().length > 0);
+        const t0 = performance.now();
+
+        try {
+          if (useLiveApi) {
+            el.processingStepText.textContent = 'Calling Gemini 2.5 Flash (responseSchema)...';
+            el.processingPct.textContent = 'LIVE';
+            el.processingProgress.style.width = '75%';
+
+            const liveResult = await callGeminiApi(state.contractText, state.apiKey.trim());
+            const elapsed = Math.round(performance.now() - t0);
+            el.processingProgress.style.width = '100%';
+
+            state.currentAnalysis = liveResult;
+            state.clauseDispositions = (liveResult.clauses || []).map(() => 'accepted');
+            renderFullDashboard();
+            renderExecutionTrace(buildPipelineTrace('Gemini 2.5 Flash Structured Extraction', elapsed, liveResult.clauses || []));
+            showToast('Live Gemini 2.5 Flash analysis complete.', 'success');
+          } else {
+            await runSimulationSteps();
+            const result = runReactiveAnalyzer(state.contractText);
+            state.currentAnalysis = result;
+            state.clauseDispositions = (result.clauses || []).map(() => 'accepted');
+            renderFullDashboard();
+            renderExecutionTrace(buildPipelineTrace('Recommendation Engine (Simulated)', 310, result.clauses || []));
+          }
+        } catch (err) {
+          el.apiErrorMessage.textContent = `Live Gemini API failed (${err.message}).`;
+          el.apiErrorBanner.classList.remove('hidden');
+          refreshIcons();
+        } finally {
+          setAnalyzingUI(false);
+        }
+      }
+
+      // =========================================================================
+      // 12. MODE, CRM SYNC & EVENT LISTENERS
+      // =========================================================================
+      function updateModeUI() {
+        const hasKey = Boolean(state.apiKey && state.apiKey.trim().length > 0);
+        if (hasKey) {
+          el.modeBadge.className = 'hidden sm:inline-flex items-center gap-2 px-2.5 py-1.5 rounded-sm text-xs font-medium bg-[#232A3B] text-amber-300 border border-[#343F56]';
+          el.modeDot.className = 'w-2 h-2 bg-amber-400 animate-pulse';
+          el.modeLabel.textContent = 'LIVE GEMINI 2.5 FLASH';
+          el.geminiKeyInput.value = state.apiKey;
+        } else {
+          el.modeBadge.className = 'hidden sm:inline-flex items-center gap-2 px-2.5 py-1.5 rounded-sm text-xs font-medium bg-[#1A2130] text-slate-200 border border-[#2E384D]';
+          el.modeDot.className = 'w-2 h-2 bg-emerald-400';
+          el.modeLabel.textContent = 'SIMULATION ENGINE';
+          el.geminiKeyInput.value = '';
+        }
+      }
+
+      function renderCrmSyncDrawer() {
+        const analysis = state.currentAnalysis;
+        const fin = calculateExpansionArrBreakdown();
+        const isRisk = analysis.signalType === 'CHURN_RISK';
+
+        const attachedPlays = [];
+        if (state.simParams.attachTierUpgrade) attachedPlays.push('Tier Upgrade');
+        if (state.simParams.attachCrossSell) attachedPlays.push('Cross-Sell');
+        const servicesList = [];
+        if (state.simParams.attachTam) servicesList.push('TAM');
+        if (state.simParams.attachConsulting) servicesList.push('Consulting');
+        if (state.simParams.attachTraining) servicesList.push('RHLS');
+
+        const fields = [
+          { k: 'Account.Name', v: analysis.accountName },
+          { k: 'Opportunity.Type', v: isRisk ? 'Renewal Save + Expansion' : 'Expansion + Services' },
+          { k: 'Subscription_Expansion_ARR__c', v: formatCurrency(Math.max(0, fin.projectedExpansionArr - fin.totalServicesBookings)) },
+          { k: 'Services_SOW_Bookings__c', v: `${formatCurrency(fin.totalServicesBookings)} (${servicesList.join('+') || 'None'})` },
+          { k: 'Total_Deal_Impact__c', v: formatCurrency(fin.projectedExpansionArr) },
+          { k: 'Notice_Deadline__c', v: `${analysis.noticeDeadlineDate} (${analysis.daysToNotice}d)` },
+          { k: 'Attached_Playbooks__c', v: attachedPlays.join(' + ') || 'Usage True-Up' },
+          { k: 'HITL_Verified_Clauses__c', v: `${fin.activeClauses}/${fin.totalClauses} (${fin.adjustedScore}%)` }
+        ];
+
+        el.crmSyncTimestamp.textContent = `Synced ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+        el.crmMappedFields.innerHTML = fields
+          .map(
+            (f) => `
+            <div class="flex items-center justify-between gap-2 bg-white px-2.5 py-1.5 border border-emerald-200 rounded-sm">
+              <span class="text-slate-500 truncate">${escapeHtml(f.k)}</span>
+              <span class="text-[#111827] font-semibold truncate tabular-nums">${escapeHtml(f.v)}</span>
+            </div>
+          `
+          )
+          .join('');
+
+        el.crmSyncSummary.classList.remove('hidden');
+        refreshIcons();
+      }
+
+      function attachEventListeners() {
+        el.presetButtons.forEach((btn) => {
+          btn.addEventListener('click', () => loadPreset(btn.dataset.preset, true));
+        });
+
+        el.tabCitationKey.addEventListener('click', () => setViewMode('key'));
+        el.tabCitationFull.addEventListener('click', () => setViewMode('full'));
+        el.tabEditText.addEventListener('click', () => setViewMode('edit'));
+
+        el.contractEditor.addEventListener('input', () => {
+          const val = el.contractEditor.value;
+          state.contractText = val;
+          const preset = PRESETS[state.activePresetId];
+          state.isCustomEdited = !preset || val.trim() !== preset.contractText.trim();
+          el.wordCountBadge.textContent = `${formatNumber(getWordCount(val))}w full`;
+          updatePresetPillsUI();
+          updateMetadataRibbon();
+        });
+
+        el.btnClearHighlight.addEventListener('click', () => {
+          state.activeClauseIndex = null;
+          renderContractViewer(null);
+          renderClauseCards(state.currentAnalysis?.clauses || []);
+        });
+
+        el.btnAnalyze.addEventListener('click', () => runAnalysisPipeline(false));
+
+        el.rightTabPlaybook.addEventListener('click', () => setRightTab('playbook'));
+        el.rightTabClauses.addEventListener('click', () => setRightTab('clauses'));
+        el.rightTabTrace.addEventListener('click', () => setRightTab('trace'));
+
+        el.btnApiSettings.addEventListener('click', () => {
+          state.isDrawerOpen = !state.isDrawerOpen;
+          el.apiSettingsDrawer.classList.toggle('hidden', !state.isDrawerOpen);
+          el.btnApiSettings.setAttribute('aria-expanded', String(state.isDrawerOpen));
+        });
+
+        el.btnToggleKeyVis.addEventListener('click', () => {
+          const isPw = el.geminiKeyInput.type === 'password';
+          el.geminiKeyInput.type = isPw ? 'text' : 'password';
+          el.btnToggleKeyVis.innerHTML = `<i data-lucide="${isPw ? 'eye-off' : 'eye'}" class="w-4 h-4"></i>`;
+          refreshIcons();
+        });
+
+        el.btnSaveKey.addEventListener('click', () => {
+          const key = el.geminiKeyInput.value.trim();
+          if (!key) {
+            showToast('Enter a valid Gemini API key.', 'warning');
+            return;
+          }
+          state.apiKey = key;
+          sessionStorage.setItem('gemini_api_key', key);
+          updateModeUI();
+          state.isDrawerOpen = false;
+          el.apiSettingsDrawer.classList.add('hidden');
+          showToast('Live Gemini 2.5 Flash mode enabled.', 'success');
+        });
+
+        el.btnClearKey.addEventListener('click', () => {
+          state.apiKey = '';
+          sessionStorage.removeItem('gemini_api_key');
+          updateModeUI();
+          state.isDrawerOpen = false;
+          el.apiSettingsDrawer.classList.add('hidden');
+          showToast('Switched to Simulation Engine.', 'info');
+        });
+
+        el.btnFallbackSim.addEventListener('click', () => {
+          state.apiKey = '';
+          sessionStorage.removeItem('gemini_api_key');
+          updateModeUI();
+          el.apiErrorBanner.classList.add('hidden');
+          runAnalysisPipeline(true);
+        });
+        el.btnDismissError.addEventListener('click', () => el.apiErrorBanner.classList.add('hidden'));
+
+        el.btnCopyPitch.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(el.nbaPitch.textContent.trim());
+            el.copyPitchLabel.textContent = 'Copied!';
+            showToast('AE talk track copied to clipboard.', 'success');
+            setTimeout(() => {
+              el.copyPitchLabel.textContent = 'Copy Talk Track';
+            }, 2000);
+          } catch (_) {
+            showToast('Clipboard permission unavailable.', 'warning');
+          }
+        });
+
+        el.btnPushCrm.addEventListener('click', () => {
+          renderCrmSyncDrawer();
+          showToast('Opportunity & Services SOW synced to Salesforce.', 'success');
+        });
+
+        el.btnToggleJson.addEventListener('click', () => {
+          state.isJsonExpanded = !state.isJsonExpanded;
+          el.jsonInspectorBody.classList.toggle('hidden', !state.isJsonExpanded);
+          el.btnToggleJson.setAttribute('aria-expanded', String(state.isJsonExpanded));
+          el.jsonChevron.style.transform = state.isJsonExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        el.btnCopyJson.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(el.jsonOutput.textContent);
+            el.copyJsonLabel.textContent = 'Copied!';
+            showToast('JSON payload copied.', 'success');
+            setTimeout(() => {
+              el.copyJsonLabel.textContent = 'Copy JSON';
+            }, 2000);
+          } catch (_) {
+            showToast('Clipboard access unavailable.', 'warning');
+          }
+        });
+      }
+
+      // =========================================================================
+      // 13. INITIALIZATION
+      // =========================================================================
+      document.addEventListener('DOMContentLoaded', () => {
+        updateModeUI();
+        attachEventListeners();
+        loadPreset('apex', false);
+        refreshIcons();
+      });
+    })();
+  </script>
+</body>
+</html>
